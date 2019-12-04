@@ -11,8 +11,8 @@ namespace FilesOnDvdLocal {
         public double SizeInBytes { get; set; }
         public List<FileInfo> Files { get; set; }
 
-        public DvdBin(string name) {
-            SizeInBytes = 4692251770.88;
+        public DvdBin(string name, double bytes = 4692251770.88) {
+            SizeInBytes = bytes;
             Name = name;
             Files = new List<FileInfo>();
         }
