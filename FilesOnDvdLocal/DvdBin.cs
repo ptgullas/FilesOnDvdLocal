@@ -28,7 +28,6 @@ namespace FilesOnDvdLocal {
             else {
                 return false;
             }
-
         }
 
         public double GetFreeRoomOnDisc() {

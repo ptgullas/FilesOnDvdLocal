@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Serilog;
 
 namespace FilesOnDvdLocal {
     public class BinPacker {
@@ -24,10 +25,10 @@ namespace FilesOnDvdLocal {
 
         public void ProcessFolder() {
             GetFiles();
-            Console.WriteLine($"read {Files.Count} files");
+            Log.Information("read {a} files", Files.Count);
             SortFilesByDescendingSize();
             foreach (FileToPack file in Files) {
-                Console.WriteLine($"{file.File.Name} \t {file.File.Length}");
+                Log.Information("{a} \t {b}", file.File.Name, file.File.Length);
             }
             CreateBin();
             PackBins();
@@ -36,7 +37,7 @@ namespace FilesOnDvdLocal {
         private void PackBins() {
             foreach (FileToPack fileToPack in Files) {
                 if (fileToPack.DvdBinName == null) {
-                    Console.WriteLine($"working on {fileToPack.File.Name}");
+                    Log.Information("Packing {a}", fileToPack.File.Name);
                     for (int i = 0; (i <= Bins.Count) && fileToPack.DvdBinName == null; i++) {
                         if (i == Bins.Count - 1) {
                             CreateBin();
@@ -44,7 +45,7 @@ namespace FilesOnDvdLocal {
                         if (Bins[i].FitsFile(fileToPack.File)) {
                             Bins[i].Add(fileToPack.File);
                             fileToPack.DvdBinName = Bins[i].Name;
-                            Console.WriteLine($"Added {fileToPack.File.Name} to {Bins[i].Name}");
+                            Log.Information("Added {a} to {b}", fileToPack.File.Name, Bins[i].Name);
                         }
                     }
                 }
@@ -88,19 +89,17 @@ namespace FilesOnDvdLocal {
             string BinName = GetNewBinName();
             DvdBin dvdBin = new DvdBin(BinName);
             Bins.Add(dvdBin);
-            Console.WriteLine($"Created bin {dvdBin.Name}");
+            Log.Information("Created bin {a}", dvdBin.Name);
         }
 
         private string GetNewBinName() {
             string BinNameWithoutSuffix = $"{Prefix}{GetCurrentDateWithDashes()}";
             string BinName = $"{BinNameWithoutSuffix}{CurrentSuffix}";
-            Console.WriteLine($"new Bin Name: {BinName}");
+            Log.Information("new Bin Name: {a}", BinName);
             while (Bins.Any(dvd => dvd.Name == BinName)) {
-                Console.WriteLine($"Currenet suffix is {CurrentSuffix}");
                 CurrentSuffix = (char) (Convert.ToUInt16(CurrentSuffix) + 1);
                 BinName = $"{BinNameWithoutSuffix}{CurrentSuffix}";
             }
-            Console.WriteLine("Exiting GetNewBinName...");
             return BinName;
         }
 
@@ -125,7 +124,7 @@ namespace FilesOnDvdLocal {
                 Directory.CreateDirectory(newFolder);
             }
             else {
-                // Log error
+                Log.Error("Folder {a} already exists!", newFolder);
             }
         }
 
@@ -137,7 +136,7 @@ namespace FilesOnDvdLocal {
                 }
             }
             else {
-                // Log error
+                Log.Error("Folder {a} does not exist. Skipping.", targetFolder);
             }
         }
 

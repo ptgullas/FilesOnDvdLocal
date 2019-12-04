@@ -15,7 +15,6 @@ namespace DvdPacker {
             binPacker.ProcessFolder();
             string binListing = binPacker.GetBinListing();
             Console.WriteLine(binListing);
-
         }
 
         private static void SetUpLogging() {
