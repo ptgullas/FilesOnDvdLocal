@@ -10,11 +10,13 @@ namespace DvdPacker {
     class Program
     {
         static void Main(string[] args) {
+            SetUpLogging();
             string folderPath = args[0];
             BinPacker binPacker = new BinPacker(folderPath, "P");
             binPacker.ProcessFolder();
             string binListing = binPacker.GetBinListing();
             Console.WriteLine(binListing);
+            binPacker.MoveFilesIntoBins();
         }
 
         private static void SetUpLogging() {
