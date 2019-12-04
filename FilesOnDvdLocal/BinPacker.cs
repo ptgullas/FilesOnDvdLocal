@@ -87,7 +87,7 @@ namespace FilesOnDvdLocal {
 
         private void CreateBin() {
             string BinName = GetNewBinName();
-            DvdBin dvdBin = new DvdBin(BinName);
+            DvdBin dvdBin = new DvdBin(BinName, 4692251770.88);
             Bins.Add(dvdBin);
             Log.Information("Created bin {a}", dvdBin.Name);
         }
@@ -133,6 +133,7 @@ namespace FilesOnDvdLocal {
             if (Directory.Exists(targetFolder)) {
                 foreach (FileInfo file in dvdBin.Files) {
                     file.MoveTo(Path.Combine(targetFolder, file.Name));
+                    Log.Information("Moved {a} to {b}", file.Name, targetFolder);
                 }
             }
             else {
