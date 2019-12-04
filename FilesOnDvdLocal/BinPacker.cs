@@ -76,7 +76,7 @@ namespace FilesOnDvdLocal {
             }
         }
 
-        public void SortFilesByDescendingSize() {
+        private void SortFilesByDescendingSize() {
             if (Files.Count > 0) {
                 Files = Files
                     .OrderByDescending(fi => fi.File.Length)
@@ -84,14 +84,14 @@ namespace FilesOnDvdLocal {
             }
         }
 
-        public void CreateBin() {
+        private void CreateBin() {
             string BinName = GetNewBinName();
             DvdBin dvdBin = new DvdBin(BinName);
             Bins.Add(dvdBin);
             Console.WriteLine($"Created bin {dvdBin.Name}");
         }
 
-        public string GetNewBinName() {
+        private string GetNewBinName() {
             string BinNameWithoutSuffix = $"{Prefix}{GetCurrentDateWithDashes()}";
             string BinName = $"{BinNameWithoutSuffix}{CurrentSuffix}";
             Console.WriteLine($"new Bin Name: {BinName}");
@@ -104,8 +104,41 @@ namespace FilesOnDvdLocal {
             return BinName;
         }
 
-        public string GetCurrentDateWithDashes() {
+        private string GetCurrentDateWithDashes() {
             return $"{DateTime.Now.Year.ToString()}-{DateTime.Now.Month.ToString("d2")}-{DateTime.Now.Day.ToString("d2")}";
+        }
+
+        public void MoveFilesIntoBins() {
+            if (Bins.Count > 0) {
+                foreach (DvdBin dvdBin in Bins) {
+                    if (dvdBin.Files.Count > 0) {
+                        CreateFolder(dvdBin);
+                        MoveFilesIntoBinFolder(dvdBin);
+                    }
+                }
+            }
+        }
+
+        private void CreateFolder(DvdBin dvdBin) {
+            string newFolder = Path.Combine(LocalFolder, dvdBin.Name);
+            if (!Directory.Exists(newFolder)) {
+                Directory.CreateDirectory(newFolder);
+            }
+            else {
+                // Log error
+            }
+        }
+
+        private void MoveFilesIntoBinFolder(DvdBin dvdBin) {
+            string targetFolder = Path.Combine(LocalFolder, dvdBin.Name);
+            if (Directory.Exists(targetFolder)) {
+                foreach (FileInfo file in dvdBin.Files) {
+                    file.MoveTo(Path.Combine(targetFolder, file.Name));
+                }
+            }
+            else {
+                // Log error
+            }
         }
 
     }
