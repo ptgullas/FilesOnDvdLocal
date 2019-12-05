@@ -55,6 +55,8 @@
     <Compile Include="FileToImport.cs" />
     <Compile Include="FileToPack.cs" />
     <Compile Include="DvdBin.cs" />
+    <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
+    <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
