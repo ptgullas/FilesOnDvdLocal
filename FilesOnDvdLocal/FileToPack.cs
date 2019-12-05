@@ -13,5 +13,10 @@ namespace FilesOnDvdLocal {
         public FileToPack() {
             DvdBinName = null;
         }
+
+        public FileToPack(FileInfo file, string dvdBinName) {
+            File = file;
+            DvdBinName = dvdBinName;
+        }
     }
 }
