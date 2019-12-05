@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FilesOnDvdLocal.LocalDbDtos;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,11 @@ using System.Threading.Tasks;
 namespace FilesOnDvdLocal {
     public class FileToImport {
         public FileInfo File { get; set; }
+        public SeriesLocalDto Series {get; set;}
+        public List<PerformerLocalDto> Performers { get; set; }
+        public string Notes { get; set; }
+        public bool Unwatched { get; set; }
+
         public FileToImport(string path) {
             File = new FileInfo(path);
         }
