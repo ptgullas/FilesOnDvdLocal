@@ -21,15 +21,7 @@ namespace FilesOnDvdLocal.Data
         }
 
         public DataSet GetDiscs() {
-            DataSet dataSet = new DataSet();
-            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
-                OleDbCommand selectDiscsCmd = new OleDbCommand("SELECT * FROM tblDiscs", connection);
-                OleDbDataAdapter discsAdapter = new OleDbDataAdapter {
-                    SelectCommand = selectDiscsCmd
-                };
-                discsAdapter.Fill(dataSet, "tblDiscs");
-            }
-            return dataSet;
+            return GetAccessTableAsDataSet("SELECT * FROM tblDiscs", "tblDiscs");
         }
 
         public void UpdateDiscs(DataSet dataSet) {
@@ -43,6 +35,18 @@ namespace FilesOnDvdLocal.Data
 
                 discsAdapter.Update(dataSet, "tblDiscs");
             }
+        }
+
+        public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
+            DataSet dataSet = new DataSet();
+            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
+                OleDbCommand selectDiscsCmd = new OleDbCommand($"{sqlCommand}", connection);
+                OleDbDataAdapter discsAdapter = new OleDbDataAdapter {
+                    SelectCommand = selectDiscsCmd
+                };
+                discsAdapter.Fill(dataSet, tableName);
+            }
+            return dataSet;
         }
 
         public DataSet GetSeriesAndPerformersAndAliases() {
