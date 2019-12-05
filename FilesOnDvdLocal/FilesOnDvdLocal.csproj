@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinPacker.cs" />
+    <Compile Include="DvdFolderToImport.cs" />
+    <Compile Include="FileToImport.cs" />
     <Compile Include="FileToPack.cs" />
     <Compile Include="DvdBin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
