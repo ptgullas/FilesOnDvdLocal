@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,6 +41,26 @@ namespace FilesOnDvdLocal {
                 }
             }
             return hasNamingErrors;
+        }
+
+        public bool IsTooLarge() {
+            bool isTooLarge = false;
+            try {
+                isTooLarge = CreateDvdBin().IsTooLarge();
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error creating DvdBin for checking size");
+            }
+            return isTooLarge;
+        }
+
+        private DvdBin CreateDvdBin() {
+            string DvdName = Path.GetDirectoryName(FolderPath);
+            DvdBin dvdBin = new DvdBin(DvdName);
+            foreach (FileToImport file in Files) {
+                dvdBin.Files.Add(file.File);
+            }
+            return dvdBin;
         }
     }
 }
