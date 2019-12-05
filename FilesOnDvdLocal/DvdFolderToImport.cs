@@ -24,5 +24,17 @@ namespace FilesOnDvdLocal {
                 }
             }
         }
+
+        public bool HasNamingErrors() {
+            bool hasNamingErrors = false;
+            if (Files.Count > 0) {
+                foreach (FileToImport file in Files) {
+                    if (file.NameContainsNonAscii() || file.NameIsTooLong()) {
+                        hasNamingErrors = true;
+                    }
+                }
+            }
+            return hasNamingErrors;
+        }
     }
 }
