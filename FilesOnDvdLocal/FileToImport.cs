@@ -21,5 +21,26 @@ namespace FilesOnDvdLocal {
                 return false;
             }
         }
+
+        public bool NameContainsNonAscii() {
+            bool NonAsciiInName = false;
+            foreach (char c in File.Name) {
+                if (c >= 128) {
+                    NonAsciiInName = true;
+                }
+            }
+            return NonAsciiInName;
+        }
+
+        public List<int> GetPositionsOfNonAsciiInName() {
+            List<int> positions = new List<int>();
+            for (int i = 0; i < File.Name.Length; i++) {
+                char c = File.Name[i];
+                if (c >= 128) {
+                    positions.Add(i);
+                }
+            }
+            return positions;
+        }
     }
 }
