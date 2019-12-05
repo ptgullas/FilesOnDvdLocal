@@ -15,6 +15,11 @@ namespace FilesOnDvdLocal {
             Files = new List<FileToImport>();
         }
 
+        public DvdFolderToImport(string folderPath, List<FileToImport> files) {
+            Files = files;
+            FolderPath = folderPath;
+        }
+
         public void GetFiles() {
             if (Directory.Exists(FolderPath)) {
                 var files = Directory.GetFiles(FolderPath);
