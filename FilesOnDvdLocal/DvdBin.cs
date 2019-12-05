@@ -30,6 +30,10 @@ namespace FilesOnDvdLocal {
             }
         }
 
+        public bool IsTooLarge() {
+            return (GetFreeRoomOnDisc() < 0);
+        }
+
         public double GetFreeRoomOnDisc() {
             return SizeInBytes - GetCurrentSize();
         }
