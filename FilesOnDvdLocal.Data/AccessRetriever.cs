@@ -20,6 +20,31 @@ namespace FilesOnDvdLocal.Data
             return $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={DatabasePath}";
         }
 
+        public DataSet GetDiscs() {
+            DataSet dataSet = new DataSet();
+            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
+                OleDbCommand selectDiscsCmd = new OleDbCommand("SELECT * FROM tblDiscs", connection);
+                OleDbDataAdapter discsAdapter = new OleDbDataAdapter {
+                    SelectCommand = selectDiscsCmd
+                };
+                discsAdapter.Fill(dataSet, "tblDiscs");
+            }
+            return dataSet;
+        }
+
+        public void UpdateDiscs(DataSet dataSet) {
+            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
+                OleDbDataAdapter discsAdapter = new OleDbDataAdapter("SELECT * FROM tblDiscs", connection) {
+                   // InsertCommand = new OleDbCommand("INSERT INTO tblDiscs (DiscName, Wallet, Notes) VALUES (@DiscName, @WalletNum, @Notes)", connection)
+                };
+                OleDbCommandBuilder builder = new OleDbCommandBuilder(discsAdapter);
+                builder.GetInsertCommand();
+                connection.Open();
+
+                discsAdapter.Update(dataSet, "tblDiscs");
+            }
+        }
+
         public DataSet GetSeriesAndPerformersAndAliases() {
             DataSet dataSet = new DataSet();
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
@@ -27,8 +52,6 @@ namespace FilesOnDvdLocal.Data
                 OleDbDataAdapter seriesAdapter = new OleDbDataAdapter {
                     SelectCommand = selectSeriesAndPerformersCmd
                 };
-                //seriesAdapter.TableMappings.Add("Table", "Series");
-                //seriesAdapter.TableMappings.Add("Table1", "Performers");
                 seriesAdapter.Fill(dataSet, "Series");
 
                 OleDbCommand getPerformersCmd = new OleDbCommand("SELECT * FROM tblPerformers", connection);

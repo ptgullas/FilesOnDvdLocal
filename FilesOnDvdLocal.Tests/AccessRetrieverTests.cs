@@ -37,5 +37,19 @@ namespace FilesOnDvdLocal.Tests
 
             Console.WriteLine("debug this line");
         }
+
+        [TestMethod]
+        public void UpdateDiscs_Temp_ActuallyUpdateDiscs() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRetriever myRetriever = new AccessRetriever(dbLocation);
+            DataSet dataSet = myRetriever.GetDiscs();
+            DataRow newDisc = dataSet.Tables[0].NewRow();
+            newDisc["DiscName"] = "TestDisc";
+            newDisc["Wallet"] = 1;
+            newDisc["Notes"] = "I hope this works";
+            dataSet.Tables[0].Rows.Add(newDisc);
+            myRetriever.UpdateDiscs(dataSet);
+            Console.WriteLine("Debug this line");
+        }
     }
 }
