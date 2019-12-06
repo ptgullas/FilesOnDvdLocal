@@ -24,17 +24,8 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT * FROM tblDiscs", "tblDiscs");
         }
 
-        public void UpdateDiscs(DataSet dataSet) {
-            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
-                OleDbDataAdapter discsAdapter = new OleDbDataAdapter("SELECT * FROM tblDiscs", connection) {
-                   // InsertCommand = new OleDbCommand("INSERT INTO tblDiscs (DiscName, Wallet, Notes) VALUES (@DiscName, @WalletNum, @Notes)", connection)
-                };
-                OleDbCommandBuilder builder = new OleDbCommandBuilder(discsAdapter);
-                builder.GetInsertCommand();
-                connection.Open();
-
-                discsAdapter.Update(dataSet, "tblDiscs");
-            }
+        public DataSet GetFileEntries() {
+            return GetAccessTableAsDataSet("SELECT * FROM tblFilenames", "tblFilenames");
         }
 
         public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
@@ -44,10 +35,36 @@ namespace FilesOnDvdLocal.Data
                 OleDbDataAdapter discsAdapter = new OleDbDataAdapter {
                     SelectCommand = selectDiscsCmd
                 };
-                discsAdapter.Fill(dataSet, tableName);
+                try {
+                    discsAdapter.Fill(dataSet, tableName);
+                }
+                catch (Exception e) {
+                    Log.Error(e, "Could not retrieve Access Table");
+                }
             }
             return dataSet;
         }
+
+        public void UpdateDiscs(DataSet dataSet) {
+            UpdateAccessTableFromDataSet(dataSet, "tblDiscs");
+        }
+
+        public void UpdateFileEntries(DataSet dataSet) {
+            UpdateAccessTableFromDataSet(dataSet, "tblFilenames");
+        }
+
+        public void UpdateAccessTableFromDataSet(DataSet dataSet, string tableName) {
+            using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
+                OleDbDataAdapter discsAdapter = new OleDbDataAdapter($"SELECT * FROM {tableName}", connection) {
+                    // InsertCommand = new OleDbCommand("INSERT INTO tblDiscs (DiscName, Wallet, Notes) VALUES (@DiscName, @WalletNum, @Notes)", connection)
+                };
+                OleDbCommandBuilder builder = new OleDbCommandBuilder(discsAdapter);
+                builder.GetInsertCommand();
+                connection.Open();
+                discsAdapter.Update(dataSet, tableName);
+            }
+        }
+
 
         public DataSet GetSeriesAndPerformersAndAliases() {
             DataSet dataSet = new DataSet();
