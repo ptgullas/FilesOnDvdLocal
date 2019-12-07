@@ -19,7 +19,7 @@ namespace FilesOnDvdLocal.Data
             DatabasePath = databasePath;
         }
 
-        public void GetHeadshots() {
+        public void RetrieveHeadshots() {
             string sqlCommand = @"select Headshot.FileData as filedata, Headshot.FileName as filename, Headshot.FileType as filetype, Performer as performer FROM tblPerformers";
 
             var ds = GetAccessTableAsDataSet(sqlCommand, "tblPerformers");
@@ -30,11 +30,13 @@ namespace FilesOnDvdLocal.Data
                 string performerName = row["performer"].ToString();
                 string performerNameUnderscores = performerName.Replace(' ', '_');
                 var newFileName = $"{performerNameUnderscores}{Path.GetExtension(filename)}".ToLower();
+
                 var filedata = (byte[])row["filedata"];
                 int header = (int)filedata[0];
                 byte[] actualFile = new byte[filedata.Length - header];
                 Buffer.BlockCopy(filedata, header, actualFile, 0, actualFile.Length);
                 // do stuff with byte array!
+
                 string headshotsDirectory = @"C:\temp\headshots";
 
                 if (!Directory.Exists(headshotsDirectory)) {
@@ -46,21 +48,23 @@ namespace FilesOnDvdLocal.Data
 
         }
 
-        public void GetScreenshots() {
+        public void RetrieveScreenshots() {
             string sqlCommand = @"select Screenshot.FileData as filedata, Screenshot.FileName as filename, Screenshot.FileType as filetype, ID FROM tblFilenames";
 
             var ds = GetAccessTableAsDataSet(sqlCommand, "tblFilenames");
             DataTable dt = ds.Tables[0];
             foreach (DataRow row in dt.Rows) {
                 var filename = row["filename"].ToString();
-                var Id = row["ID"].ToString();
                 if (string.IsNullOrWhiteSpace(filename)) continue;
+                var Id = row["ID"].ToString();
                 var newFileName = $"{Id}{Path.GetExtension(filename)}";
+
                 var filedata = (byte[])row["filedata"];
                 int header = (int)filedata[0];
                 byte[] actualFile = new byte[filedata.Length - header];
                 Buffer.BlockCopy(filedata, header, actualFile, 0, actualFile.Length);
                 // do stuff with byte array!
+
                 string pathToSave = @"C:\temp\screenshots\" + newFileName;
                 File.WriteAllBytes(pathToSave, actualFile);
             }
