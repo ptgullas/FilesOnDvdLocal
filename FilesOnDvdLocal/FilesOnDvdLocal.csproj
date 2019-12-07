@@ -58,6 +58,7 @@
     <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
