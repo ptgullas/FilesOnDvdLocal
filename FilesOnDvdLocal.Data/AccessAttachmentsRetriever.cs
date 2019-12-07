@@ -70,14 +70,14 @@ namespace FilesOnDvdLocal.Data
             DataSet ds = new DataSet();
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
                 OleDbCommand selectDiscsCmd = new OleDbCommand($"{sqlCommand}", connection);
-                OleDbDataAdapter adapter = new OleDbDataAdapter {
-                    SelectCommand = selectDiscsCmd
-                };
-                try {
-                    adapter.Fill(ds, tableName);
-                }
-                catch (Exception e) {
-                    Log.Error(e, "Could not retrieve Access Table");
+                using (OleDbDataAdapter adapter = new OleDbDataAdapter()) {
+                    adapter.SelectCommand = selectDiscsCmd;
+                    try {
+                        adapter.Fill(ds, tableName);
+                    }
+                    catch (Exception e) {
+                        Log.Error(e, "Could not retrieve Access Table");
+                    }
                 }
             }
             return ds;
