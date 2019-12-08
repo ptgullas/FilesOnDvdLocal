@@ -54,6 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccessRetrieverTests.cs" />
     <Compile Include="StringExtensionsTests.cs" />
+    <Compile Include="DvdFolderToImportTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
