@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,21 +14,27 @@ namespace AttachmentsSaver
         static void Main(string[] args) {
             SetUpLogging();
             string dbLocation = @"c:\temp\Files on Dvd.accdb";
-            // RetrieveScreenshots(dbLocation);
-            RetrieveHeadshots(dbLocation);
+            // GetScreenshots(dbLocation);
+            GetHeadshots(dbLocation);
         }
 
-        private static void RetrieveScreenshots(string dbLocation) {
+        private static void GetScreenshots(string dbLocation) {
             AccessAttachmentsRetriever retriever = new AccessAttachmentsRetriever(dbLocation);
-            retriever.GetScreenshots();
+            retriever.RetrieveScreenshots();
         }
 
-        private static void RetrieveHeadshots(string dbLocation) {
+        private static void GetHeadshots(string dbLocation) {
             AccessAttachmentsRetriever retriever = new AccessAttachmentsRetriever(dbLocation);
-            retriever.GetHeadshots();
+            string headshotsDirectory = @"C:\temp\headshots";
+            CreateFolderIfNeeded(headshotsDirectory);
+            retriever.RetrieveHeadshots(headshotsDirectory);
         }
 
-
+        private static void CreateFolderIfNeeded(string saveFolder) {
+            if (!Directory.Exists(saveFolder)) {
+                Directory.CreateDirectory(saveFolder);
+            }
+        }
         private static void SetUpLogging() {
             try {
                 //string logFolder = Configuration.GetSection("LocalFolders").GetValue<string>("logFolder");
