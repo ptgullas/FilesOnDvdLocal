@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="DvdImportClient" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="1" Margin="4" Content="Folder:" HorizontalAlignment="Right"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="4" Text="{Binding FolderName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="200"/>
+        <Button Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Content="Browse" Margin="5,3" MinWidth="75" />
     </Grid>
 </Window>
