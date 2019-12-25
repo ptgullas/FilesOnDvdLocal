@@ -21,7 +21,6 @@ namespace DvdImportClient.FoldersToImport {
         public FolderToImportView() {
             InitializeComponent();
             DataContext = new FolderToImportViewModel();
-
         }
     }
 }
