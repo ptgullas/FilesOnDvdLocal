@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="DvdImportClient.FoldersToImport.FolderToImportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DvdImportClient.FoldersToImport"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="1" Margin="4" Content="Folder:" HorizontalAlignment="Right" Foreground="#FFF08AF1"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="4" Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom"/>
+        <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Left" Content="Browse" Margin="5,3" MinWidth="75" />
+        <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding FolderName}" MinWidth="40"></TextBlock>
+        <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding Files}"  MinHeight="100">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:Name="FilesTemplate">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding File.Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+    </Grid>
+</UserControl>
