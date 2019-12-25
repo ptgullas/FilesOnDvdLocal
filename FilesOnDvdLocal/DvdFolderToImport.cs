@@ -14,6 +14,7 @@ namespace FilesOnDvdLocal {
         public DvdFolderToImport(string folderPath) {
             FolderPath = folderPath;
             Files = new List<FileToImport>();
+            GetFiles();
         }
 
         public DvdFolderToImport(string folderPath, List<FileToImport> files) {
@@ -22,6 +23,7 @@ namespace FilesOnDvdLocal {
         }
 
         public void GetFiles() {
+            Files.Clear();
             if (Directory.Exists(FolderPath)) {
                 var files = Directory.GetFiles(FolderPath);
                 foreach (string file in files) {
