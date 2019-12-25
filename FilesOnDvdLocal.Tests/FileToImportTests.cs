@@ -11,7 +11,7 @@ namespace FilesOnDvdLocal.Tests {
             bool expected = false;
             FileToImport fileToImport = new FileToImport(filePath);
 
-            bool result = fileToImport.NameIsTooLong();
+            bool result = fileToImport.NameIsTooLong;
             Assert.AreEqual(expected, result);
         }
 
@@ -21,7 +21,7 @@ namespace FilesOnDvdLocal.Tests {
             bool expected = true;
             FileToImport fileToImport = new FileToImport(filePath);
 
-            bool result = fileToImport.NameIsTooLong();
+            bool result = fileToImport.NameIsTooLong;
             Assert.AreEqual(expected, result);
         }
 

@@ -18,14 +18,19 @@ namespace FilesOnDvdLocal {
             File = new FileInfo(path);
         }
 
-        public bool NameIsTooLong() {
+        public bool NameIsTooLong {
+            get { return NameIsTooLongForDvd(); }
+        }
+
+        private bool NameIsTooLongForDvd(int maxLength = 98) {
             int fileNameWithoutExtensionLength = File.Name.Length - File.Extension.Length;
-            if (fileNameWithoutExtensionLength > 98) {
+            if (fileNameWithoutExtensionLength > maxLength) {
                 return true;
             }
             else {
                 return false;
             }
+
         }
 
         public bool NameContainsNonAscii() {
