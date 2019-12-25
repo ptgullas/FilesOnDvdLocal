@@ -33,7 +33,11 @@ namespace FilesOnDvdLocal {
 
         }
 
-        public bool NameContainsNonAscii() {
+        public bool NameContainsNonAscii {
+            get { return NameContainsNonAsciiCharacters(); }
+        }
+
+        private bool NameContainsNonAsciiCharacters() {
             bool NonAsciiInName = false;
             foreach (char c in File.Name) {
                 if (c >= 128) {

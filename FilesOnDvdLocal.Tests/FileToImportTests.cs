@@ -31,7 +31,7 @@ namespace FilesOnDvdLocal.Tests {
             bool expected = false;
             FileToImport fileToImport = new FileToImport(filePath);
 
-            bool result = fileToImport.NameContainsNonAscii();
+            bool result = fileToImport.NameContainsNonAscii;
             Assert.AreEqual(expected, result);
         }
 
@@ -41,7 +41,7 @@ namespace FilesOnDvdLocal.Tests {
             bool expected = true;
             FileToImport fileToImport = new FileToImport(filePath);
 
-            bool result = fileToImport.NameContainsNonAscii();
+            bool result = fileToImport.NameContainsNonAscii;
             Assert.AreEqual(expected, result);
         }
 
