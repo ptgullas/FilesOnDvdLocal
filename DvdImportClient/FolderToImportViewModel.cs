@@ -40,9 +40,7 @@ namespace DvdImportClient {
             FolderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
-
         }
-
 
         private void BrowseToFolder() {
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog dialog = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog {
@@ -56,7 +54,6 @@ namespace DvdImportClient {
             if (result == true) {
                 FolderPath = dialog.SelectedPath;
             }
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

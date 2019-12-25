@@ -11,6 +11,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -23,12 +24,20 @@
         <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="4" Text="{Binding FolderPath}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom"/>
         <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Left" Content="Browse" Command="{Binding BrowseFolderCommand}" Margin="5,3" MinWidth="75" />
         <TextBlock Grid.Column="3" Grid.Row="3" Text="{Binding FolderPath}" MinWidth="40" Foreground="#FFF08AF1" FontWeight="Bold"></TextBlock>
-        <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding Files}"  MinHeight="100">
+        <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Files}" Height="400" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding File.Name}" />
+                        <TextBlock Name="Filename" Text="{Binding File.Name}" />
                     </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=NameIsTooLong}" Value="True">
+                            <DataTrigger.Setters>
+                                <Setter Property="Background" Value="Red" TargetName="Filename" />
+                            </DataTrigger.Setters>
+                            <!--<Setter Property=" Value="Red" />-->
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
