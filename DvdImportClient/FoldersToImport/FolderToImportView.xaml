@@ -28,12 +28,13 @@
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="Filename" Text="{Binding File.Name}" />
+                        <TextBlock Name="Filename" Text="{Binding File.Name}" FontFamily="Arial" />
                     </StackPanel>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=NameIsTooLong}" Value="True">
                             <DataTrigger.Setters>
-                                <Setter Property="Background" Value="Red" TargetName="Filename" />
+                                <Setter Property="Background" Value="#FF9D0707" TargetName="Filename" />
+                                <Setter Property="Foreground" Value="#FFF2CDCD" TargetName="Filename" />
                             </DataTrigger.Setters>
                             <!--<Setter Property=" Value="Red" />-->
                         </DataTrigger>
