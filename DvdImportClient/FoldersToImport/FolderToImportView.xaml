@@ -20,9 +20,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="0" Grid.Row="1" Margin="4" Content="Folder:" HorizontalAlignment="Right" Foreground="#FFF08AF1"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="4" Text="{Binding FolderPath}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom"/>
-        <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Left" Content="Browse" Command="{Binding BrowseFolderCommand}" Margin="5,3" MinWidth="75" />
+        <Label Grid.Column="0" Grid.Row="1" Margin="0,10,4,4" Content="Folder:" HorizontalAlignment="Right" Foreground="#FFF08AF1"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,10,0,4" Text="{Binding FolderPath}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom" IsEnabled="False"/>
+        <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Left" Content="Browse" Command="{Binding BrowseFolderCommand}" Margin="5,10,0,3" MinWidth="75" />
         <TextBlock Grid.Column="3" Grid.Row="3" Text="{Binding FolderPath}" MinWidth="40" Foreground="#FFF08AF1" FontWeight="Bold"></TextBlock>
         <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Files}" Height="400" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
