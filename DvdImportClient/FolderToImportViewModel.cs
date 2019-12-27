@@ -22,12 +22,11 @@ namespace DvdImportClient {
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 OnPropertyChange("FolderPath");
                 OnPropertyChange("Files");
+                OnPropertyChange("FolderName");
             }
         }
 
-        public string FolderName {
-            get { return Path.GetFileName(FolderPath); }
-        }
+        public string FolderName { get { return Path.GetFileName(FolderPath); } }
 
         public ObservableCollection<FileToImport> Files {
             get; set;
@@ -37,7 +36,7 @@ namespace DvdImportClient {
         public FolderToImportViewModel() {
             string pathToGetFromSettingsFile = @"C:\temp\Transfer to HD\keepinganonymous1";
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile);
-            FolderPath = FolderToImport.FolderPath;
+            folderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
         }
