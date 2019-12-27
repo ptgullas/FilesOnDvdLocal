@@ -11,20 +11,34 @@ namespace FilesOnDvdLocal {
         public FileInfo File { get; set; }
         public SeriesLocalDto Series {get; set;}
         public List<PerformerLocalDto> Performers { get; set; }
+
         public string Notes { get; set; }
         public bool Unwatched { get; set; }
 
+        public string Filename { get; set; }
+
+        public List<string> PerformersString { get; set; }
+        public string SeriesString { get; set; }
+
         public FileToImport(string path) {
             File = new FileInfo(path);
+            Filename = File.Name;
+            PerformersString = new List<string>();
+            PerformersString = GetPerformersFromFilename();
+            SeriesString = GetSeriesNameFromFilename();
         }
 
         public bool NameIsTooLong {
             get { return NameIsTooLongForDvd(); }
         }
 
+        public bool NameContainsNonAscii {
+            get { return NameContainsNonAsciiCharacters(); }
+        }
+
         private bool NameIsTooLongForDvd(int maxLength = 98) {
-            int fileNameWithoutExtensionLength = File.Name.Length - File.Extension.Length;
-            if (fileNameWithoutExtensionLength > maxLength) {
+            int fileNameLength = File.Name.Length;
+            if (fileNameLength > maxLength) {
                 return true;
             }
             else {
@@ -33,9 +47,6 @@ namespace FilesOnDvdLocal {
 
         }
 
-        public bool NameContainsNonAscii {
-            get { return NameContainsNonAsciiCharacters(); }
-        }
 
         private bool NameContainsNonAsciiCharacters() {
             bool NonAsciiInName = false;

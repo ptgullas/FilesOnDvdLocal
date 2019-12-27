@@ -26,6 +26,28 @@ namespace FilesOnDvdLocal.Tests {
         }
 
         [TestMethod]
+        public void NameIsTooLong_NameIs98CharsLong_ReturnFalse() {
+            string fileWith98Chars = @"c:\temp\1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234.678";
+            bool expected = false;
+
+            FileToImport fileToImport = new FileToImport(fileWith98Chars);
+
+            bool result = fileToImport.NameIsTooLong;
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void NameIsTooLong_NameIs99CharsLong_ReturnTrue() {
+            string fileWith99Chars = @"c:\temp\12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345.789";
+            bool expected = true;
+
+            FileToImport fileToImport = new FileToImport(fileWith99Chars);
+
+            bool result = fileToImport.NameIsTooLong;
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
         public void NameContainsNonAscii_NameHasOnlyAscii_ReturnFalse() {
             string filePath = @"C:\temp\saturday.night.live.s45e05.kristen.stewart.internal.480p.web.mp4.rmteamthisshouldbeover98characters.mkv";
             bool expected = false;
