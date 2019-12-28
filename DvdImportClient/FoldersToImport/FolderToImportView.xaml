@@ -10,7 +10,7 @@
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel>
                 <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox Text="{Binding Path=File.Name}" Foreground="#FFF08AF1" FontWeight="Bold"  />
+                <TextBox Text="{Binding Path=Filename}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" />
                 <Label Content="Series:" Foreground="Wheat" FontWeight="Bold" />
                 <TextBlock Text="{Binding SeriesString}" Foreground="#FFF08AF1" FontWeight="Bold" />
                 <ListBox ItemsSource="{Binding Path=PerformersString}" Height="106">
