@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
+using System.ComponentModel;
 
 namespace FilesOnDvdLocal {
-    public class FileToImport {
+    public class FileToImport :INotifyPropertyChanged {
         public FileInfo File { get; set; }
         public SeriesLocalDto Series {get; set;}
         public List<PerformerLocalDto> Performers { get; set; }
@@ -36,6 +38,8 @@ namespace FilesOnDvdLocal {
             get { return NameContainsNonAsciiCharacters(); }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private bool NameIsTooLongForDvd(int maxLength = 98) {
             int fileNameLength = File.Name.Length;
             if (fileNameLength > maxLength) {
@@ -44,9 +48,7 @@ namespace FilesOnDvdLocal {
             else {
                 return false;
             }
-
         }
-
 
         private bool NameContainsNonAsciiCharacters() {
             bool NonAsciiInName = false;
@@ -67,6 +69,20 @@ namespace FilesOnDvdLocal {
                 }
             }
             return positions;
+        }
+
+        public void RenameFileFromFilename() {
+            string currentPath = File.FullName;
+            string directory = Path.GetDirectoryName(currentPath);
+            string newPath = Path.Combine(directory, Filename);
+            if (newPath != currentPath) {
+                try {
+                    File.MoveTo(newPath);
+                }
+                catch (Exception e) {
+                    Log.Error(e, "Error renaming file {0} to {1}", currentPath, newPath);
+                }
+            }
         }
 
         public string GetSeriesNameFromFilename() {
