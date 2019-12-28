@@ -95,6 +95,8 @@ namespace FilesOnDvdLocal {
             return seriesName;
         }
 
+        // We're assuming that a list of performers will always be after a hyphen and a 
+        // SecondDelimeter (hyphen or open paren).
         public List<string> GetPerformersFromFilename() {
             List<string> performers = new List<string>();
             string filename = File.Name;
@@ -103,22 +105,12 @@ namespace FilesOnDvdLocal {
                 int indexOfSecondDelimeter = GetIndexOfNextDelimeter(filename, indexOfHyphen + 1);
                 if (indexOfSecondDelimeter >= 0) {
                     string performersSubstring = filename.Substring(indexOfHyphen + 1, indexOfSecondDelimeter - indexOfHyphen - 1).Trim();
-                    List<string> tempPerformers = performersSubstring.Split(',').ToList();
+                    List<string> performersSubstringSplitByComma = performersSubstring.Split(',').ToList();
                     if (performersSubstring.Contains("&")) {
-                        foreach (string tempPerformersSplit in tempPerformers) {
-                            if (!tempPerformersSplit.Contains("&")) {
-                                performers.Add(tempPerformersSplit.Trim());
-                            }
-                            else {
-                                List<string> tempPerformersSplitAmpersand = tempPerformersSplit.Split('&').ToList();
-                                foreach (string performer in tempPerformersSplitAmpersand) {
-                                    performers.Add(performer.Trim());
-                                }
-                            }
-                        }
+                        SplitByAmpersandsAndAddToPerformers(performers, performersSubstringSplitByComma);
                     }
                     else {
-                        foreach (string performer in tempPerformers) {
+                        foreach (string performer in performersSubstringSplitByComma) {
                             performers.Add(performer.Trim());
                         }
                     }
@@ -127,7 +119,19 @@ namespace FilesOnDvdLocal {
             return performers;
         }
 
-
+        private static void SplitByAmpersandsAndAddToPerformers(List<string> performers, List<string> performersSubstringSplitByComma) {
+            foreach (string performerMightContainAmpersand in performersSubstringSplitByComma) {
+                if (!performerMightContainAmpersand.Contains("&")) {
+                    performers.Add(performerMightContainAmpersand.Trim());
+                }
+                else {
+                    List<string> tempPerformersSplitAmpersand = performerMightContainAmpersand.Split('&').ToList();
+                    foreach (string performer in tempPerformersSplitAmpersand) {
+                        performers.Add(performer.Trim());
+                    }
+                }
+            }
+        }
 
         private static int GetIndexOfNextDelimeter(string filename, int start) {
             int indexOfSecondDelimeter = filename.IndexOf("-", start);
