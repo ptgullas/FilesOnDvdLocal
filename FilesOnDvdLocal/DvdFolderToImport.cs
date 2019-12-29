@@ -64,5 +64,36 @@ namespace FilesOnDvdLocal {
             }
             return dvdBin;
         }
+
+        private List<string> GetFilenameList() {
+            List<string> filenameList = new List<string>();
+            if (Files.Count > 0) {
+
+                foreach (FileToImport file in Files.OrderBy(b =>b.File.Name) ) {
+                    filenameList.Add(file.File.Name);
+                }
+            }
+
+            return filenameList;
+        }
+
+        public async Task SaveFilenameListToTextFile(string folderPathToSave) {
+            List<string> filenameList = GetFilenameList();
+            if (Directory.Exists(folderPathToSave)) {
+                string textfileName = Path.GetFileName(FolderPath) + ".txt";
+                string pathToSave = Path.Combine(folderPathToSave, textfileName);
+                try {
+                    using (StreamWriter outputfile = new StreamWriter(pathToSave, false)) {
+                        foreach (string filename in filenameList) {
+                            await outputfile.WriteLineAsync(filename);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    Log.Error(e, "Error saving filename list {0}", pathToSave);
+                }
+
+            }
+        }
     }
 }

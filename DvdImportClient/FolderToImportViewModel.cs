@@ -32,6 +32,7 @@ namespace DvdImportClient {
             get; set;
         }
         public ICommand BrowseFolderCommand { get; private set; }
+        public ICommand SaveFilenameListCommand { get; private set; }
 
         public FolderToImportViewModel() {
             string pathToGetFromSettingsFile = @"C:\temp\Transfer to HD\keepinganonymous1";
@@ -39,6 +40,7 @@ namespace DvdImportClient {
             folderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
+            SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
         }
 
         private void BrowseToFolder() {
@@ -53,6 +55,12 @@ namespace DvdImportClient {
             if (result == true) {
                 FolderPath = dialog.SelectedPath;
             }
+        }
+
+        private async Task SaveFilenameList() {
+            // will need to grab this path from settings later.
+            string folderPathToSave = @"c:\temp";
+            await FolderToImport.SaveFilenameListToTextFile(folderPathToSave);
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

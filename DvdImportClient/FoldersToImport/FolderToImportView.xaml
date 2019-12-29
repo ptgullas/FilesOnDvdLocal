@@ -42,6 +42,7 @@
         <Label Grid.Column="0" Grid.Row="1" Height="20" Margin="0,10,4,4" Content="Folder:" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="#FFF08AF1"/>
         <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Height="20" Margin="0,18,0,4" Text="{Binding FolderPath}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom" IsEnabled="False"/>
         <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Height="20" HorizontalAlignment="Left" Content="Browse" Command="{Binding BrowseFolderCommand}" Margin="5,18,0,3" MinWidth="75" />
+        <Button Grid.Column="4" Grid.Row="1" Content="Save FilenameList" Command="{Binding SaveFilenameListCommand}" />
         <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding FolderName}" Foreground="#FFF08AF1" FontWeight="Bold"></TextBlock>
         <ListBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding Files}" Height="400" ScrollViewer.VerticalScrollBarVisibility="Auto" IsSynchronizedWithCurrentItem="True" >
             <ListBox.ItemTemplate>
