@@ -89,7 +89,7 @@ namespace FilesOnDvdLocal {
             string seriesName = null;
             string filename = File.Name;
             int indexOfHyphen = filename.IndexOf("-");
-            if (indexOfHyphen >= 0) {
+            if (indexOfHyphen >= 2) {
                 seriesName = filename.Substring(0, indexOfHyphen - 1).Trim();
             }
             return seriesName;
