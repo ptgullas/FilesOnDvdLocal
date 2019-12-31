@@ -77,7 +77,8 @@ namespace FilesOnDvdLocal {
             return filenameList;
         }
 
-        public async Task SaveFilenameListToTextFile(string folderPathToSave) {
+        public async Task<bool> SaveFilenameListToTextFile(string folderPathToSave) {
+            bool success = false;
             List<string> filenameList = GetFilenameList();
             if (Directory.Exists(folderPathToSave)) {
                 string textfileName = Path.GetFileName(FolderPath) + ".txt";
@@ -88,12 +89,13 @@ namespace FilesOnDvdLocal {
                             await outputfile.WriteLineAsync(filename);
                         }
                     }
+                    success = true;
                 }
                 catch (Exception e) {
                     Log.Error(e, "Error saving filename list {0}", pathToSave);
                 }
-
             }
+            return success;
         }
     }
 }

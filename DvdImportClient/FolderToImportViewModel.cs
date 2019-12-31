@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DvdImportClient {
@@ -60,7 +61,14 @@ namespace DvdImportClient {
         private async Task SaveFilenameList() {
             // will need to grab this path from settings later.
             string folderPathToSave = @"c:\temp";
-            await FolderToImport.SaveFilenameListToTextFile(folderPathToSave);
+            bool successfulSave = await FolderToImport.SaveFilenameListToTextFile(folderPathToSave);
+            string message = "Could not save filelist!!";
+            if (successfulSave) {
+                string fileName = $"{FolderName}.txt";
+                string pathToSave = Path.Combine(folderPathToSave, fileName);
+                message = $"Successfully saved to {pathToSave}";
+            }
+            MessageBox.Show(message);
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
