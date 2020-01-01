@@ -28,6 +28,10 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT * FROM tblFilenames", "tblFilenames");
         }
 
+        public DataSet GetPerformers() {
+            return GetAccessTableAsDataSet("SELECT * FROM tblPerformers", "tblPerformers");
+        }
+
         public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
             DataSet dataSet = new DataSet();
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
@@ -106,7 +110,6 @@ namespace FilesOnDvdLocal.Data
                 DataTable seriesTable = dataSet.Tables[0];
                 return seriesTable;
             }
-
         }
 
 
