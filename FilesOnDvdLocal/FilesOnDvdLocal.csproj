@@ -50,11 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessMockRepository.cs" />
+    <Compile Include="AccessRepository.cs" />
     <Compile Include="BinPacker.cs" />
     <Compile Include="DvdFolderToImport.cs" />
     <Compile Include="FileToImport.cs" />
     <Compile Include="FileToPack.cs" />
     <Compile Include="DvdBin.cs" />
+    <Compile Include="IDataRepository.cs" />
     <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +76,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FilesOnDvdLocal.Data\FilesOnDvdLocal.Data.csproj">
+      <Project>{2499A6BB-B66F-425C-BE96-ACD4E11A0ED5}</Project>
+      <Name>FilesOnDvdLocal.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
