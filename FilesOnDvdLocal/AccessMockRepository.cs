@@ -8,7 +8,7 @@ using FilesOnDvdLocal.LocalDbDtos;
 namespace FilesOnDvdLocal {
     public class AccessMockRepository : IDataRepository {
         public PerformerLocalDto GetPerformerByName(string performerName) {
-            if (performerName.Count() / 2 == 0) {
+            if (performerName.Last().ToString().ToLower() == "i") {
                 return new PerformerLocalDto() {
                     Id = 9999,
                     Name = performerName
