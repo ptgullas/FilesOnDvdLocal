@@ -13,13 +13,15 @@ using System.Windows.Input;
 namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
+        private IDataRepository dataRepository;
+
         public DvdFolderToImport FolderToImport;
         public string FolderPath {
             get { return folderPath; }
             set {
                 folderPath = value;
                 FolderToImport.FolderPath = folderPath;
-                FolderToImport.PopulateFiles();
+                FolderToImport.PopulateFiles(dataRepository);
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 OnPropertyChange("FolderPath");
                 OnPropertyChange("Files");
@@ -37,7 +39,12 @@ namespace DvdImportClient {
 
         public FolderToImportViewModel() {
             string pathToGetFromSettingsFile = @"C:\temp\Transfer to HD\keepinganonymous1";
-            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile);
+
+            // replace this with the real repository later
+            AccessMockRepository repository = new AccessMockRepository();
+            dataRepository = repository;
+
+            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, repository);
             folderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
