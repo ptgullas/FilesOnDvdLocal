@@ -13,12 +13,27 @@
                 <TextBox Text="{Binding Path=Filename}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" />
                 <Label Content="Series:" Foreground="Wheat" FontWeight="Bold" />
                 <TextBlock Text="{Binding SeriesString}" Foreground="#FFF08AF1" FontWeight="Bold" />
-                <ListBox ItemsSource="{Binding Path=PerformersString}" Height="106">
+                <ListBox ItemsSource="{Binding Path=Performers}" Height="106">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:Name="PerformersTemplate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Name="Performer" Text="{Binding}" FontFamily="Arial" />
+                                <TextBox Name="Performer"  FontFamily="Arial" Foreground="#FF0BC40F" FontWeight="Bold" >
+                                    <TextBox.Text>
+                                        <MultiBinding StringFormat="{}{0} ({1})">
+                                            <Binding Path="Name" />
+                                            <Binding Path="Id" />
+                                        </MultiBinding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=Id}" Value="-1">
+                                    <DataTrigger.Setters>
+                                        <Setter Property="Background" Value="Black" TargetName="Performer" />
+                                        <Setter Property="Foreground" Value="#FFF70000" TargetName="Performer" />
+                                    </DataTrigger.Setters>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
