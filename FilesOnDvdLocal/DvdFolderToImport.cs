@@ -11,10 +11,10 @@ namespace FilesOnDvdLocal {
         public string FolderPath { get; set; }
         public List<FileToImport> Files { get; set; }
 
-        public DvdFolderToImport(string folderPath) {
+        public DvdFolderToImport(string folderPath, IDataRepository dataRepository) {
             FolderPath = folderPath;
             Files = new List<FileToImport>();
-            PopulateFiles();
+            PopulateFiles(dataRepository);
         }
 
         public DvdFolderToImport(string folderPath, List<FileToImport> files) {
@@ -22,12 +22,12 @@ namespace FilesOnDvdLocal {
             FolderPath = folderPath;
         }
 
-        public void PopulateFiles() {
+        public void PopulateFiles(IDataRepository dataRepository) {
             Files.Clear();
             if (Directory.Exists(FolderPath)) {
                 var files = Directory.GetFiles(FolderPath);
                 foreach (string file in files) {
-                    FileToImport fileToImport = new FileToImport(file);
+                    FileToImport fileToImport = new FileToImport(file, dataRepository);
                     Files.Add(fileToImport);
                 }
             }

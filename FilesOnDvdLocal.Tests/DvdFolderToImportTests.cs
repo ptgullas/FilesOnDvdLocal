@@ -7,12 +7,14 @@ namespace FilesOnDvdLocal.Tests {
     public class DvdFolderToImportTests {
         [TestMethod]
         public void HasNamingErrors_ContainsTooLongFileName_ReturnsTrue() {
+            AccessMockRepository mockRepository = new AccessMockRepository();
+
             string filePath1 = @"C:\temp\Arrow - Oliver Queen, Laurel Lance & Harbinger - Little Fear of Lightning Little Fear of Lightning Little Fear of Lightning (2019-12-05).mkv";
-            FileToImport file1 = new FileToImport(filePath1);
+            FileToImport file1 = new FileToImport(filePath1, mockRepository);
             string filePath2 = @"C:\temp\short filename1.mkv";
-            FileToImport file2 = new FileToImport(filePath2);
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
             string filePath3 = @"C:\temp\short filename2.mkv";
-            FileToImport file3 = new FileToImport(filePath3);
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
 
             List<FileToImport> files = new List<FileToImport>();
             files.Add(file1);
@@ -30,10 +32,11 @@ namespace FilesOnDvdLocal.Tests {
 
         [TestMethod]
         public void HasNamingErrors_ContainsGoodFileNames_ReturnsFalse() {
+            AccessMockRepository mockRepository = new AccessMockRepository();
             string filePath2 = @"C:\temp\short filename1.mkv";
-            FileToImport file2 = new FileToImport(filePath2);
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
             string filePath3 = @"C:\temp\short filename2.mkv";
-            FileToImport file3 = new FileToImport(filePath3);
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
 
             List<FileToImport> files = new List<FileToImport>();
             files.Add(file2);
@@ -49,12 +52,13 @@ namespace FilesOnDvdLocal.Tests {
         }
         [TestMethod]
         public void HasNamingErrors_ContainsNonAsciiFileNames_ReturnsTrue() {
+            AccessMockRepository mockRepository = new AccessMockRepository();
             string filePath1 = @"C:\temp\thishas an em—dash.mkv";
-            FileToImport file1 = new FileToImport(filePath1);
+            FileToImport file1 = new FileToImport(filePath1, mockRepository);
             string filePath2 = @"C:\temp\short filename1.mkv";
-            FileToImport file2 = new FileToImport(filePath2);
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
             string filePath3 = @"C:\temp\short filename2.mkv";
-            FileToImport file3 = new FileToImport(filePath3);
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
 
             List<FileToImport> files = new List<FileToImport>();
             files.Add(file1);

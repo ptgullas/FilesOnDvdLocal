@@ -22,12 +22,25 @@ namespace FilesOnDvdLocal {
         public List<string> PerformersString { get; set; }
         public string SeriesString { get; set; }
 
-        public FileToImport(string path) {
+
+
+        public FileToImport(string path, IDataRepository dataRepository) {
             File = new FileInfo(path);
             Filename = File.Name;
             PerformersString = new List<string>();
             PerformersString = GetPerformersFromFilename();
             SeriesString = GetSeriesNameFromFilename();
+            Performers = new List<PerformerLocalDto>();
+            PopulatePerformers(dataRepository);
+        }
+
+        private void PopulatePerformers(IDataRepository dataRepository) {
+            if (PerformersString.Count > 0) {
+                foreach (string perf in PerformersString) {
+                    var performerDto = dataRepository.GetPerformerByName(perf);
+                    Performers.Add(performerDto);
+                }
+            }
         }
 
         public bool NameIsTooLong {
