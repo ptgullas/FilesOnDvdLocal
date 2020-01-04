@@ -25,6 +25,7 @@
                                         </MultiBinding>
                                     </TextBox.Text>
                                 </TextBox>
+                                <TextBox Text="[x]" />
                             </StackPanel>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Path=Id}" Value="-1">
