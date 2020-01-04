@@ -95,8 +95,6 @@ namespace FilesOnDvdLocal.Tests {
 
             int expectedResult = 8;
 
-            dvd.CompileAllPerformersInFolder();
-
             var performerList = dvd.PerformersInFolderAll.OrderBy(p => p.Name);
             int result = performerList.Count();
 

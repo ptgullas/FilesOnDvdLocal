@@ -15,8 +15,10 @@ namespace FilesOnDvdLocal {
 
         public DvdFolderToImport(string folderPath, IDataRepository dataRepository) {
             FolderPath = folderPath;
+            Files = new List<FileToImport>();
             PopulateFiles(dataRepository);
             PerformersInFolderAll = new List<PerformerLocalDto>();
+            CompileAllPerformersInFolder();
         }
 
         // constructor accepts list of files (mainly for testing)
@@ -24,6 +26,7 @@ namespace FilesOnDvdLocal {
             Files = files;
             FolderPath = folderPath;
             PerformersInFolderAll = new List<PerformerLocalDto>();
+            CompileAllPerformersInFolder();
         }
 
         public void PopulateFiles(IDataRepository dataRepository) {
@@ -38,6 +41,7 @@ namespace FilesOnDvdLocal {
         }
 
         public void CompileAllPerformersInFolder() {
+            PerformersInFolderAll.Clear();
             if (Files.Count > 0) {
                 foreach (var file in Files) {
                     if (file.Performers.Count > 0) {
