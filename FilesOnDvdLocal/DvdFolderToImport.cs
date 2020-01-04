@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using FilesOnDvdLocal.LocalDbDtos;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,16 +11,19 @@ namespace FilesOnDvdLocal {
     public class DvdFolderToImport {
         public string FolderPath { get; set; }
         public List<FileToImport> Files { get; set; }
+        public List<PerformerLocalDto> PerformersInFolderAll { get; set; }
 
         public DvdFolderToImport(string folderPath, IDataRepository dataRepository) {
             FolderPath = folderPath;
-            Files = new List<FileToImport>();
             PopulateFiles(dataRepository);
+            PerformersInFolderAll = new List<PerformerLocalDto>();
         }
 
+        // constructor accepts list of files (mainly for testing)
         public DvdFolderToImport(string folderPath, List<FileToImport> files) {
             Files = files;
             FolderPath = folderPath;
+            PerformersInFolderAll = new List<PerformerLocalDto>();
         }
 
         public void PopulateFiles(IDataRepository dataRepository) {
@@ -29,6 +33,21 @@ namespace FilesOnDvdLocal {
                 foreach (string file in files) {
                     FileToImport fileToImport = new FileToImport(file, dataRepository);
                     Files.Add(fileToImport);
+                }
+            }
+        }
+
+        public void CompileAllPerformersInFolder() {
+            if (Files.Count > 0) {
+                foreach (var file in Files) {
+                    if (file.Performers.Count > 0) {
+                        foreach (var performer in file.Performers) {
+                            // change this to Id later?
+                            if (!PerformersInFolderAll.Any(b => b.Name == performer.Name)) {
+                                PerformersInFolderAll.Add(performer);
+                            }
+                        }
+                    }
                 }
             }
         }

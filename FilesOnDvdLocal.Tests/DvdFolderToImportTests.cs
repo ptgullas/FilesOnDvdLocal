@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -50,6 +51,7 @@ namespace FilesOnDvdLocal.Tests {
 
             Assert.AreEqual(expectedResult, result);
         }
+
         [TestMethod]
         public void HasNamingErrors_ContainsNonAsciiFileNames_ReturnsTrue() {
             AccessMockRepository mockRepository = new AccessMockRepository();
@@ -73,5 +75,34 @@ namespace FilesOnDvdLocal.Tests {
 
             Assert.AreEqual(expectedResult, result);
         }
+
+        [TestMethod]
+        public void CompileAllPerformersInFolder_AllUniquePerformers_ReturnsCorrectNumber() {
+            AccessMockRepository mockRepository = new AccessMockRepository();
+            string filePath1 = @"C:\temp\Succession - Logan Roy & Shiv Roy, Roman Roy - Little Fear of Lightning (2019-12-05).mkv";
+            FileToImport file1 = new FileToImport(filePath1, mockRepository);
+            string filePath2 = @"C:\temp\Watchmen - Looking Glass & Dr. Manhattan - A God Walks Into Abar (2019-09-27).mp4";
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
+            string filePath3 = @"C:\temp\Arrow - Oliver Queen, Laurel Lance & Harbinger - Little Fear of Lightning (2019-12-05).mkv";
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
+
+            List<FileToImport> files = new List<FileToImport>();
+            files.Add(file1);
+            files.Add(file2);
+            files.Add(file3);
+
+            DvdFolderToImport dvd = new DvdFolderToImport("C:\temp", files);
+
+            int expectedResult = 8;
+
+            dvd.CompileAllPerformersInFolder();
+
+            var performerList = dvd.PerformersInFolderAll.OrderBy(p => p.Name);
+            int result = performerList.Count();
+
+            Assert.AreEqual(expectedResult, result);
+
+        }
+
     }
 }
