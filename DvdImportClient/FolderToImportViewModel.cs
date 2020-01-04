@@ -1,4 +1,5 @@
 ﻿using FilesOnDvdLocal;
+using FilesOnDvdLocal.LocalDbDtos;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,17 +24,21 @@ namespace DvdImportClient {
                 FolderToImport.FolderPath = folderPath;
                 FolderToImport.PopulateFiles(dataRepository);
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
+                FolderToImport.CompileAllPerformersInFolder();
+                PerformersAll = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
                 OnPropertyChange("FolderPath");
                 OnPropertyChange("Files");
                 OnPropertyChange("FolderName");
+                OnPropertyChange("PerformersAll");
             }
         }
 
         public string FolderName { get { return Path.GetFileName(FolderPath); } }
 
-        public ObservableCollection<FileToImport> Files {
-            get; set;
-        }
+        public ObservableCollection<FileToImport> Files { get; set; }
+
+        public ObservableCollection<PerformerLocalDto> PerformersAll { get; set; }
+
         public ICommand BrowseFolderCommand { get; private set; }
         public ICommand SaveFilenameListCommand { get; private set; }
 
@@ -47,6 +52,7 @@ namespace DvdImportClient {
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, repository);
             folderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
+            PerformersAll = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
         }

@@ -84,6 +84,27 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,10,0,18" ContentTemplate="{StaticResource FileDetailTemplate}" />
+        <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,10,0,188" ContentTemplate="{StaticResource FileDetailTemplate}" Height="200" />
+        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding PerformersAll}" Width="310" Height="100" Margin="5,282,-1,18" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="False"  />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:Name="AllPerformersTemplate">
+                    <TextBox Name="PerformerAll" Text="{Binding Name}" TextWrapping="Wrap" Foreground="#FF0BC40F" FontWeight="Bold" />
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=Id}" Value="-1">
+                            <DataTrigger.Setters>
+                                <!--<Setter Property="Background" Value="Black" TargetName="PerformerAll" />-->
+                                <Setter Property="Foreground" Value="#FFF70000" TargetName="PerformerAll" />
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>
