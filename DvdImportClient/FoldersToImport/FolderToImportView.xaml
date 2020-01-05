@@ -12,7 +12,7 @@
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel>
                 <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox Text="{Binding Path=Filename}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" />
+                <TextBox Text="{Binding Path=Filename}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" Height="60" />
                 <Label Content="Series:" Foreground="Wheat" FontWeight="Bold" />
                 <TextBlock Text="{Binding SeriesString}" Foreground="#FFF08AF1" FontWeight="Bold" />
                 <ListBox Name="PerformersList" ItemsSource="{Binding Path=Performers}" Height="106">
@@ -44,7 +44,7 @@
                 </ListBox>
                 <ComboBox 
                     ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                    DisplayMemberPath="Name"
+                    DisplayMemberPath="Name" Margin="0,40,0,0"
                     />
             </StackPanel>
         </DataTemplate>
@@ -92,7 +92,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,10,0,188" ContentTemplate="{StaticResource FileDetailTemplate}" Height="200" />
+        <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,11,0,163" ContentTemplate="{StaticResource FileDetailTemplate}" />
         <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding PerformersInFolder}" Width="310" Height="100" Margin="5,282,-1,18" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
