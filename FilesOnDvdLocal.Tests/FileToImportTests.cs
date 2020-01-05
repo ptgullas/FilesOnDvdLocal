@@ -173,5 +173,23 @@ namespace FilesOnDvdLocal.Tests {
             Assert.AreEqual(expected3, result[2]);
         }
 
+        [TestMethod]
+        public void GetPerformersFromFilename_NameHasCommasThenAmpersandEndsWithParentheses_ReturnsPerformers() {
+            string filePath = @"C:\temp\Arrow - Oliver Queen, Laurel Lance & Harbinger (2019-12-05).mkv";
+            string expected1 = "Oliver Queen";
+            string expected2 = "Laurel Lance";
+            string expected3 = "Harbinger";
+            AccessMockRepository mockRepository = new AccessMockRepository();
+
+            FileToImport fileToImport = new FileToImport(filePath, mockRepository);
+
+            var result = fileToImport.GetPerformersFromFilename();
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(expected1, result[0]);
+            Assert.AreEqual(expected2, result[1]);
+            Assert.AreEqual(expected3, result[2]);
+        }
+
+
     }
 }
