@@ -14,7 +14,7 @@ using System.Windows.Input;
 namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
-        private IDataRepository dataRepository;
+        private IDataRepository DataRepository;
 
         public FileToImport SelectedFile { get; set; }
 
@@ -24,10 +24,10 @@ namespace DvdImportClient {
             set {
                 folderPath = value;
                 FolderToImport.FolderPath = folderPath;
-                FolderToImport.PopulateFiles(dataRepository);
+                FolderToImport.PopulateFiles(DataRepository);
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
-                PerformersAll = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
+                PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
                 OnPropertyChange("FolderPath");
                 OnPropertyChange("Files");
                 OnPropertyChange("FolderName");
@@ -36,10 +36,9 @@ namespace DvdImportClient {
         }
 
         public string FolderName { get { return Path.GetFileName(FolderPath); } }
-
         public ObservableCollection<FileToImport> Files { get; set; }
-
-        public ObservableCollection<PerformerLocalDto> PerformersAll { get; set; }
+        public ObservableCollection<PerformerLocalDto> PerformersInFolder { get; set; }
+        public ObservableCollection<PerformerLocalDto> PerformersInDatabase { get; set; }
 
         public ICommand BrowseFolderCommand { get; private set; }
         public ICommand SaveFilenameListCommand { get; private set; }
@@ -50,12 +49,13 @@ namespace DvdImportClient {
 
             // replace this with the real repository later
             AccessMockRepository repository = new AccessMockRepository();
-            dataRepository = repository;
+            DataRepository = repository;
 
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, repository);
             folderPath = FolderToImport.FolderPath;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
-            PerformersAll = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
+            PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
+            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(DataRepository.GetPerformers().OrderBy(b => b.Name));
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));

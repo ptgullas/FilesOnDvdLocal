@@ -42,6 +42,10 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <ComboBox 
+                    ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                    DisplayMemberPath="Name"
+                    />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -89,7 +93,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,10,0,188" ContentTemplate="{StaticResource FileDetailTemplate}" Height="200" />
-        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding PerformersAll}" Width="310" Height="100" Margin="5,282,-1,18" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding PerformersInFolder}" Width="310" Height="100" Margin="5,282,-1,18" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" IsItemsHost="False"  />
