@@ -72,16 +72,19 @@ namespace DvdImportClient {
 
                 // we don't want to remove the performer directly from PerformersInFolder
                 // because they might appear on another file in the folder
-                FolderToImport.CompileAllPerformersInFolder();
-                PerformersInFolder.Clear();
-                PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
-
-                OnPropertyChange("PerformersInFolder");
+                RefreshAllPerformersInFolder();
             }
             else {
                 outputMessage = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
             }
             MessageBox.Show(outputMessage);
+        }
+
+        private void RefreshAllPerformersInFolder() {
+            FolderToImport.CompileAllPerformersInFolder();
+            PerformersInFolder.Clear();
+            PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
+            OnPropertyChange("PerformersInFolder");
         }
 
         private void BrowseToFolder() {
