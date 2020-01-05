@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
@@ -52,6 +53,10 @@ namespace FilesOnDvdLocal {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private bool NameIsTooLongForDvd(int maxLength = 98) {
             int fileNameLength = File.Name.Length;
