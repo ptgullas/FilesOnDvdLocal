@@ -16,6 +16,8 @@ namespace DvdImportClient {
         private string folderPath;
         private IDataRepository dataRepository;
 
+        public FileToImport SelectedFile { get; set; }
+
         public DvdFolderToImport FolderToImport;
         public string FolderPath {
             get { return folderPath; }
@@ -41,9 +43,10 @@ namespace DvdImportClient {
 
         public ICommand BrowseFolderCommand { get; private set; }
         public ICommand SaveFilenameListCommand { get; private set; }
+        public ICommand RemovePerformerCommand { get; private set; }
 
         public FolderToImportViewModel() {
-            string pathToGetFromSettingsFile = @"C:\temp\Transfer to HD\keepinganonymous1";
+            string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
 
             // replace this with the real repository later
             AccessMockRepository repository = new AccessMockRepository();
@@ -55,6 +58,22 @@ namespace DvdImportClient {
             PerformersAll = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
+            RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
+        }
+
+        private void RemovePerformer(object perfName) {
+            string perfNameStr = perfName as string;
+            string outputMessage;
+            if (SelectedFile.Performers.Any(b => b.Name == perfNameStr)) {
+                var performerToRemove = SelectedFile.Performers
+                    .FirstOrDefault(b => b.Name == perfNameStr);
+                SelectedFile.Performers.Remove(performerToRemove);
+                outputMessage = $"Removing performer {perfNameStr} from {SelectedFile.Filename}";
+            }
+            else {
+                outputMessage = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
+            }
+            MessageBox.Show(outputMessage);
         }
 
         private void BrowseToFolder() {
