@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,26 +17,32 @@ namespace DvdImportClient {
         private string folderPath;
         private IDataRepository DataRepository;
 
-        public FileToImport SelectedFile { get; set; }
+        private FileToImport selectedFile;
+        public FileToImport SelectedFile { get => selectedFile; set => SetField(ref selectedFile, value); }
 
         public DvdFolderToImport FolderToImport;
         public string FolderPath {
-            get { return folderPath; }
+            get => folderPath;
             set {
-                folderPath = value;
+                SetField(ref folderPath, value); // calls OnPropertyChange
                 FolderToImport.FolderPath = folderPath;
                 FolderToImport.PopulateFiles(DataRepository);
+                Files.Clear();
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
                 PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
-                OnPropertyChange("FolderPath");
-                OnPropertyChange("Files");
-                OnPropertyChange("FolderName");
+
+                FolderName = Path.GetFileName(folderPath);
+
+                OnPropertyChange("Files"); // update the Files list
                 OnPropertyChange("PerformersInFolder");
             }
         }
 
-        public string FolderName { get { return Path.GetFileName(FolderPath); } }
+        // public string FolderName { get { return Path.GetFileName(FolderPath); } }
+        private string folderName;
+        public string FolderName { get => folderName; set => SetField(ref folderName, value); }
+
         public ObservableCollection<FileToImport> Files { get; set; }
         public ObservableCollection<PerformerLocalDto> PerformersInFolder { get; set; }
         public ObservableCollection<PerformerLocalDto> PerformersInDatabase { get; set; }
@@ -43,6 +50,7 @@ namespace DvdImportClient {
         public ICommand BrowseFolderCommand { get; private set; }
         public ICommand SaveFilenameListCommand { get; private set; }
         public ICommand RemovePerformerCommand { get; private set; }
+        public ICommand AddPerformerCommand { get; private set; }
 
         public FolderToImportViewModel() {
             string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
@@ -53,6 +61,7 @@ namespace DvdImportClient {
 
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, repository);
             folderPath = FolderToImport.FolderPath;
+            FolderName = Path.GetFileName(folderPath);
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
             PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(DataRepository.GetPerformers().OrderBy(b => b.Name));
@@ -116,8 +125,14 @@ namespace DvdImportClient {
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        protected void OnPropertyChange(string propertyName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected void OnPropertyChange([CallerMemberName] string propertyName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "") {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChange(propertyName);
+            return true;
         }
     }
 }
