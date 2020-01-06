@@ -25,6 +25,10 @@ namespace FilesOnDvdLocal {
             return Performers;
         }
 
+        public List<SeriesLocalDto> GetAllSeries() {
+            return Series;
+        }
+
         public void AddDisc(DvdFolderToImport dvd) {
             AccessRetriever retriever = new AccessRetriever(DatabasePath);
             try {
