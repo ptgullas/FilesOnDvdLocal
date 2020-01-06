@@ -32,6 +32,10 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "Performers");
         }
 
+        public DataSet GetAllSeries() {
+            return GetAccessTableAsDataSet("SELECT ID, Series FROM tblSeries", "tblSeries");
+        }
+
         public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
             DataSet dataSet = new DataSet();
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
