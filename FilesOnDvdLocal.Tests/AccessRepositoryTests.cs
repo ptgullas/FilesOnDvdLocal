@@ -54,6 +54,41 @@ namespace FilesOnDvdLocal.Tests
             Console.WriteLine("Debug this line");
         }
 
+        [TestMethod]
+        public void GetDiscIdByName_DiscExistsInDb_ReturnsDiscId() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRepository repository = new AccessRepository(dbLocation);
 
+            string dvdName = "M2012-08-24a";
+            int expectedDvdId = 142;
+
+            int result = repository.GetDiscIdByName(dvdName);
+            Assert.AreEqual(expectedDvdId, result);
+        }
+
+        [TestMethod]
+        public void GetDiscIdByName_DiscDoesNotExistInDb_ReturnsNegativeNumber() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRepository repository = new AccessRepository(dbLocation);
+
+            string dvdName = "M1977-13-31z";
+            int expectedDvdId = -1;
+
+            int result = repository.GetDiscIdByName(dvdName);
+            Assert.AreEqual(expectedDvdId, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetDiscIdByName_DbDoesNotExist_ThrowsException() {
+            string dbLocation = @"c:\temp\dvdBadPath.accdb";
+            AccessRepository repository = new AccessRepository(dbLocation);
+
+            string dvdName = "M1977-13-31z";
+            int expectedDvdId = -1;
+
+            int result = repository.GetDiscIdByName(dvdName);
+            Assert.AreEqual(expectedDvdId, result);
+        }
     }
 }
