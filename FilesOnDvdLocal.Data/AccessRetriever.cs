@@ -29,7 +29,7 @@ namespace FilesOnDvdLocal.Data
         }
 
         public DataSet GetPerformers() {
-            return GetAccessTableAsDataSet("SELECT * FROM tblPerformers", "tblPerformers");
+            return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "Performers");
         }
 
         public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
@@ -79,11 +79,13 @@ namespace FilesOnDvdLocal.Data
                 };
                 seriesAdapter.Fill(dataSet, "Series");
 
-                OleDbCommand getPerformersCmd = new OleDbCommand("SELECT * FROM tblPerformers", connection);
+                // if there are Attachments in the table, can't do a SELECT *
+                // OleDbCommand getPerformersCmd = new OleDbCommand("SELECT * FROM tblPerformers", connection);
+                OleDbCommand getPerformersCmd = new OleDbCommand("SELECT ID, Performer FROM tblPerformers", connection);
                 OleDbDataAdapter performersAdapter = new OleDbDataAdapter {
                     SelectCommand = getPerformersCmd
                 };
-                performersAdapter.Fill(dataSet, "Performers");
+                performersAdapter.Fill(dataSet, "tblPerformers");
 
                 OleDbCommand getAliasesCmd = new OleDbCommand("SELECT * FROM tblPerformerAliases", connection);
                 OleDbDataAdapter aliasesAdapter = new OleDbDataAdapter {
