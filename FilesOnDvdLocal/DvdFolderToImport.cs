@@ -13,6 +13,12 @@ namespace FilesOnDvdLocal {
         public List<FileToImport> Files { get; set; }
         public List<PerformerLocalDto> PerformersInFolderAll { get; set; }
 
+        public string DiscName { get; set; }
+        public int WalletType { get; set; } // 3 will be the usual one
+        public string Notes { get; set; }
+        public int DatabaseId { get; set; }
+
+
         public DvdFolderToImport(string folderPath, IDataRepository dataRepository) {
             FolderPath = folderPath;
             Files = new List<FileToImport>();
