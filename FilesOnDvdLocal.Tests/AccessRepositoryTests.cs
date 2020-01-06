@@ -90,5 +90,27 @@ namespace FilesOnDvdLocal.Tests
             int result = repository.GetDiscIdByName(dvdName);
             Assert.AreEqual(expectedDvdId, result);
         }
+
+        [TestMethod]
+        public void GetSeriesByName_SeriesExists_ReturnsSeries() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRepository repository = new AccessRepository(dbLocation);
+            string seriesName = "Tabletop";
+            int expectedSeriesId = 96;
+
+            SeriesLocalDto result = repository.GetSeriesByName(seriesName);
+            Assert.AreEqual(expectedSeriesId, result.Id);
+        }
+
+        [TestMethod]
+        public void GetSeriesByName_SeriesDoesNotExist_ReturnsNegativeOne() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRepository repository = new AccessRepository(dbLocation);
+            string seriesName = "Paul's made-up series";
+            int expectedSeriesId = -1;
+
+            SeriesLocalDto result = repository.GetSeriesByName(seriesName);
+            Assert.AreEqual(expectedSeriesId, result.Id);
+        }
     }
 }

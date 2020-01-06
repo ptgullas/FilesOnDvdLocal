@@ -13,11 +13,12 @@ namespace FilesOnDvdLocal {
 
         private readonly string DatabasePath;
         private List<PerformerLocalDto> Performers;
+        private List<SeriesLocalDto> Series;
 
         public AccessRepository(string databasePath) {
             DatabasePath = databasePath;
-            Performers = new List<PerformerLocalDto>();
-            RetrievePerformers();
+            Performers = RetrievePerformers();
+            Series = RetrieveSeries();
         }
 
         public List<PerformerLocalDto> GetPerformers() {
@@ -69,7 +70,42 @@ namespace FilesOnDvdLocal {
             return perf;
         }
 
-        private void RetrievePerformers() {
+        public SeriesLocalDto GetSeriesByName(string seriesName) {
+            SeriesLocalDto series = Series.FirstOrDefault(s =>
+                s.Name.ToLower() == seriesName.ToLower());
+            if (series == null) {
+                series = new SeriesLocalDto() {
+                    Id = -1,
+                    Name = seriesName
+                };
+            }
+            return series;
+        }
+
+        private List<SeriesLocalDto> RetrieveSeries() {
+            List<SeriesLocalDto> allSeries = new List<SeriesLocalDto>();
+            AccessRetriever retriever = new AccessRetriever(DatabasePath);
+            try {
+                var dataSet = retriever.GetAllSeries();
+                DataTable seriesTable = dataSet.Tables[0];
+                foreach (DataRow row in seriesTable.Rows) {
+                    string idStr = row["ID"].ToString();
+                    bool result = int.TryParse(idStr, out int id);
+                    SeriesLocalDto series = new SeriesLocalDto() {
+                        Id = id,
+                        Name = row["Series"].ToString()
+                    };
+                    allSeries.Add(series);
+                }
+            }
+            catch (Exception e) {
+                Log.Error(e, "Could not retrieve all Series in database");
+            }
+            return allSeries;
+        }
+
+        private List<PerformerLocalDto> RetrievePerformers() {
+            List<PerformerLocalDto> allPerformers = new List<PerformerLocalDto>();
             try {
                 AccessRetriever retriever = new AccessRetriever(DatabasePath);
                 DataSet resultsetFromDb = retriever.GetPerformers();
@@ -81,13 +117,14 @@ namespace FilesOnDvdLocal {
                         Id = id,
                         Name = row["Performer"].ToString()
                     };
-                    Performers.Add(performer);
+                    allPerformers.Add(performer);
                 }
             }
             catch (Exception e) {
                 Log.Error(e, "Could not retrieve performers from database");
                 throw new ArgumentException("Could not retrieve performers from database", e);
             }
+            return allPerformers;
         }
     }
 }
