@@ -41,5 +41,23 @@ namespace FilesOnDvdLocal.Tests
             Assert.AreEqual(expected.Id, result.Id);
 
         }
+
+        [TestMethod]
+        public void JoinPerformerToFile_PerformerAndFileExist_AddsToJoinTable() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            PerformerRepository repository = new PerformerRepository(dbLocation);
+
+            string performerNameToFind = "steve austin";
+
+            var performer = repository.Get(performerNameToFind);
+
+            int filenameIdToJoinWith = 2;
+
+            repository.JoinPerformerToFile(performer.Id, filenameIdToJoinWith);
+
+            Console.WriteLine("Debug this line");
+
+        }
+
     }
 }

@@ -36,6 +36,10 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT ID, Series FROM tblSeries", "tblSeries");
         }
 
+        public DataSet GetPerformersFilenamesJoinTable() {
+            return GetAccessTableAsDataSet("SELECT PerformerID, FilenameID FROM jtblPerformersFilenames", "jtblPerformersFilenames");
+        }
+
         public DataSet GetAccessTableAsDataSet(string sqlCommand, string tableName) {
             DataSet dataSet = new DataSet();
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
@@ -59,6 +63,10 @@ namespace FilesOnDvdLocal.Data
 
         public void UpdateFileEntries(DataSet dataSet) {
             UpdateAccessTableFromDataSet(dataSet, "tblFilenames");
+        }
+
+        public void UpdateJoinTable(DataSet dataSet) {
+            UpdateAccessTableFromDataSet(dataSet, "jtblPerformersFilenames");
         }
 
         public void UpdateAccessTableFromDataSet(DataSet dataSet, string tableName) {
