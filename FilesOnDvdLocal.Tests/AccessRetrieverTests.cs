@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using FilesOnDvdLocal.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,7 +40,7 @@ namespace FilesOnDvdLocal.Tests
         }
 
         [TestMethod]
-        public void UpdateDiscs_Temp_ActuallyUpdateDiscs() {
+        public void UpdateDiscs_HardCodingDiscColumns_ActuallyUpdateDiscs() {
             string dbLocation = @"c:\temp\Files on Dvd.accdb";
             AccessRetriever myRetriever = new AccessRetriever(dbLocation);
             DataSet dataSet = myRetriever.GetDiscs();
