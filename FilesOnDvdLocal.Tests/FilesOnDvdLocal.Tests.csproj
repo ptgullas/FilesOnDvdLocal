@@ -56,6 +56,7 @@
     <Compile Include="StringExtensionsTests.cs" />
     <Compile Include="DvdFolderToImportTests.cs" />
     <Compile Include="AccessRepositoryTests.cs" />
+    <Compile Include="PerformerRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\FilesOnDvdLocal.Data\FilesOnDvdLocal.Data.csproj">
       <Project>{2499a6bb-b66f-425c-be96-acd4e11a0ed5}</Project>
       <Name>FilesOnDvdLocal.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FilesOnDvdLocal.Repositories\FilesOnDvdLocal.Repositories.csproj">
+      <Project>{a2728fd0-baa3-480a-9be7-1cc80555a09d}</Project>
+      <Name>FilesOnDvdLocal.Repositories</Name>
     </ProjectReference>
     <ProjectReference Include="..\FilesOnDvdLocal\FilesOnDvdLocal.csproj">
       <Project>{79a6cd07-c167-4061-8e98-4ea66966996a}</Project>
