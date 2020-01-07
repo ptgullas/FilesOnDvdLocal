@@ -44,10 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISeriesRepository.cs" />
     <Compile Include="PerformerMockRepository.cs" />
     <Compile Include="IPerformerRepository.cs" />
     <Compile Include="PerformerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeriesRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FilesOnDvdLocal.Data\FilesOnDvdLocal.Data.csproj">
