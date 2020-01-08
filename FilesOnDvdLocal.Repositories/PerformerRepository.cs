@@ -15,10 +15,10 @@ namespace FilesOnDvdLocal.Repositories {
 
         public PerformerRepository(string databasePath) {
             DatabasePath = databasePath;
-            Performers = RetrievePerformers();
+            Performers = RetrievePerformersFromDatabase();
 
         }
-        private List<PerformerLocalDto> RetrievePerformers() {
+        private List<PerformerLocalDto> RetrievePerformersFromDatabase() {
             List<PerformerLocalDto> allPerformers = new List<PerformerLocalDto>();
             try {
                 AccessRetriever retriever = new AccessRetriever(DatabasePath);
