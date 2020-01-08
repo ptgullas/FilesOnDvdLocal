@@ -61,5 +61,15 @@ namespace FilesOnDvdLocal.Repositories {
         public PerformerLocalDto Get(int id) {
             throw new NotImplementedException();
         }
+
+        public void JoinPerformerToFile(int performerId, int filenameId) {
+            AccessRetriever retriever = new AccessRetriever(DatabasePath);
+            DataSet dataSet = retriever.GetPerformersFilenamesJoinTable();
+            DataRow newPerfFileJoin = dataSet.Tables[0].NewRow();
+            newPerfFileJoin["PerformerID"] = performerId;
+            newPerfFileJoin["FilenameID"] = filenameId;
+            dataSet.Tables[0].Rows.Add(newPerfFileJoin);
+            retriever.UpdateJoinTable(dataSet);
+        }
     }
 }
