@@ -29,7 +29,7 @@ namespace FilesOnDvdLocal.Data
         }
 
         public DataSet GetPerformers() {
-            return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "Performers");
+            return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "tblPerformers");
         }
 
         public DataSet GetAllSeries() {
@@ -69,9 +69,9 @@ namespace FilesOnDvdLocal.Data
             UpdateAccessTableFromDataSet(dataSet, "jtblPerformersFilenames");
         }
 
-        public void UpdateAccessTableFromDataSet(DataSet dataSet, string tableName) {
+        public void UpdateAccessTableFromDataSet(DataSet dataSet, string tableName, string columns = "*") {
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
-                OleDbDataAdapter discsAdapter = new OleDbDataAdapter($"SELECT * FROM {tableName}", connection) {
+                OleDbDataAdapter discsAdapter = new OleDbDataAdapter($"SELECT {columns} FROM {tableName}", connection) {
                     // InsertCommand = new OleDbCommand("INSERT INTO tblDiscs (DiscName, Wallet, Notes) VALUES (@DiscName, @WalletNum, @Notes)", connection)
                 };
                 OleDbCommandBuilder builder = new OleDbCommandBuilder(discsAdapter);
