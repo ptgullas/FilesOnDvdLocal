@@ -71,5 +71,18 @@ namespace FilesOnDvdLocal.Repositories {
             dataSet.Tables[0].Rows.Add(newPerfFileJoin);
             retriever.UpdateJoinTable(dataSet);
         }
+
+        public void Add(PerformerLocalDto performer) {
+            AccessRetriever retriever = new AccessRetriever(DatabasePath);
+            DataSet dataSet = retriever.GetPerformers();
+            DataTable performersTable = dataSet.Tables[0];
+            DataRow newRow = dataSet.Tables[0].NewRow();
+            newRow["Performer"] = performer.Name;
+            // newRow[2] = 1; // this is supposed to be Performer Type. Can use the column number instead
+            performersTable.Rows.Add(newRow);
+            var changes = dataSet.GetChanges();
+            retriever.UpdateAccessTableFromDataSet(dataSet, "tblPerformers", "ID, Performer");
+
+        }
     }
 }

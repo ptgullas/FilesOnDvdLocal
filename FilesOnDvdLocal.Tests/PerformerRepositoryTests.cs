@@ -48,16 +48,28 @@ namespace FilesOnDvdLocal.Tests
             PerformerRepository repository = new PerformerRepository(dbLocation);
 
             string performerNameToFind = "steve austin";
-
             var performer = repository.Get(performerNameToFind);
-
             int filenameIdToJoinWith = 2;
-
             repository.JoinPerformerToFile(performer.Id, filenameIdToJoinWith);
 
             Console.WriteLine("Debug this line");
 
         }
+        [TestMethod]
+        public void Add_NewPerformer_AddsToPerformersTable() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            PerformerRepository repository = new PerformerRepository(dbLocation);
+
+            PerformerLocalDto performer = new PerformerLocalDto() {
+                Name = "Jumpin' Jack Flash"
+            };
+
+            repository.Add(performer);
+
+            Console.WriteLine("Debug this line");
+
+        }
+
 
     }
 }
