@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Serilog;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using FilesOnDvdLocal.Repositories;
 
 namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
@@ -25,7 +26,7 @@ namespace FilesOnDvdLocal {
 
 
 
-        public FileToImport(string path, IDataRepository dataRepository) {
+        public FileToImport(string path, IPerformerRepository dataRepository) {
             File = new FileInfo(path);
             Filename = File.Name;
             PerformersString = new List<string>();
@@ -35,10 +36,10 @@ namespace FilesOnDvdLocal {
             PopulatePerformersFromRepository(dataRepository);
         }
 
-        private void PopulatePerformersFromRepository(IDataRepository dataRepository) {
+        private void PopulatePerformersFromRepository(IPerformerRepository dataRepository) {
             if (PerformersString.Count > 0) {
                 foreach (string perf in PerformersString) {
-                    var performerDto = dataRepository.GetPerformerByName(perf);
+                    var performerDto = dataRepository.Get(perf);
                     Performers.Add(performerDto);
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using FilesOnDvdLocal;
 using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,9 +17,13 @@ namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
         private IDataRepository DataRepository;
+        private IPerformerRepository PerformerRepository;
 
         private FileToImport selectedFile;
-        public FileToImport SelectedFile { get => selectedFile; set => SetField(ref selectedFile, value); }
+        public FileToImport SelectedFile { 
+            get => selectedFile; 
+            set => SetField(ref selectedFile, value); 
+        }
 
         public DvdFolderToImport FolderToImport;
         public string FolderPath {
@@ -26,7 +31,7 @@ namespace DvdImportClient {
             set {
                 SetField(ref folderPath, value); // calls OnPropertyChange
                 FolderToImport.FolderPath = folderPath;
-                FolderToImport.PopulateFiles(DataRepository);
+                FolderToImport.PopulateFiles(PerformerRepository);
                 Files.Clear();
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
@@ -56,10 +61,13 @@ namespace DvdImportClient {
             string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
 
             // replace this with the real repository later
-            AccessMockRepository repository = new AccessMockRepository();
-            DataRepository = repository;
+            //AccessMockRepository repository = new AccessMockRepository();
+            //DataRepository = repository;
+            PerformerMockRepository perfRepository = new PerformerMockRepository();
+            PerformerRepository = perfRepository;
 
-            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, repository);
+            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, PerformerRepository);
+            //FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, DataRepository);
             folderPath = FolderToImport.FolderPath;
             FolderName = Path.GetFileName(folderPath);
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);

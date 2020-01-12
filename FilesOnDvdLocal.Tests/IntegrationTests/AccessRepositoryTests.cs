@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FilesOnDvdLocal.Tests
@@ -29,7 +30,7 @@ namespace FilesOnDvdLocal.Tests
         // the disc was added
         [TestMethod]
         public void AddDisc_AddActualDisc_ActuallyUpdateDisc() {
-            AccessMockRepository mockRepository = new AccessMockRepository();
+            PerformerMockRepository mockRepository = new PerformerMockRepository();
             string filePath1 = @"C:\temp\Succession - Logan Roy & Shiv Roy, Roman Roy - Little Fear of Lightning (2019-12-05).mkv";
             FileToImport file1 = new FileToImport(filePath1, mockRepository);
             string filePath2 = @"C:\temp\Watchmen - Looking Glass & Dr. Manhattan - A God Walks Into Abar (2019-09-27).mp4";

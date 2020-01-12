@@ -1,4 +1,5 @@
 ﻿using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Repositories;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,10 @@ namespace FilesOnDvdLocal {
         public int DatabaseId { get; set; }
 
 
-        public DvdFolderToImport(string folderPath, IDataRepository dataRepository) {
+        public DvdFolderToImport(string folderPath, IPerformerRepository performerRepository) {
             FolderPath = folderPath;
             Files = new List<FileToImport>();
-            PopulateFiles(dataRepository);
+            PopulateFiles(performerRepository);
             PerformersInFolderAll = new List<PerformerLocalDto>();
             CompileAllPerformersInFolder();
         }
@@ -35,12 +36,12 @@ namespace FilesOnDvdLocal {
             CompileAllPerformersInFolder();
         }
 
-        public void PopulateFiles(IDataRepository dataRepository) {
+        public void PopulateFiles(IPerformerRepository performerRepository) {
             Files.Clear();
             if (Directory.Exists(FolderPath)) {
                 var files = Directory.GetFiles(FolderPath);
                 foreach (string file in files) {
-                    FileToImport fileToImport = new FileToImport(file, dataRepository);
+                    FileToImport fileToImport = new FileToImport(file, performerRepository);
                     Files.Add(fileToImport);
                 }
             }

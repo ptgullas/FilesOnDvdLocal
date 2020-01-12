@@ -111,6 +111,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FilesOnDvdLocal.Repositories\FilesOnDvdLocal.Repositories.csproj">
+      <Project>{A2728FD0-BAA3-480A-9BE7-1CC80555A09D}</Project>
+      <Name>FilesOnDvdLocal.Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FilesOnDvdLocal\FilesOnDvdLocal.csproj">
       <Project>{79A6CD07-C167-4061-8E98-4EA66966996A}</Project>
       <Name>FilesOnDvdLocal</Name>
