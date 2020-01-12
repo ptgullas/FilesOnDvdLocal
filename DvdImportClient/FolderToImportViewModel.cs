@@ -20,11 +20,8 @@ namespace DvdImportClient {
 
         private FileToImport selectedFile;
         public FileToImport SelectedFile { 
-            get => selectedFile;
-            set {
-                SetField(ref selectedFile, value);
-                OnPropertyChange("Files");
-            }
+            get => selectedFile; 
+            set => SetField(ref selectedFile, value); 
         }
 
         public DvdFolderToImport FolderToImport;
@@ -50,11 +47,7 @@ namespace DvdImportClient {
         private string folderName;
         public string FolderName { get => folderName; set => SetField(ref folderName, value); }
 
-        private ObservableCollection<FileToImport> files;
-        public ObservableCollection<FileToImport> Files { 
-            get => files; set => SetField(ref files, value); 
-        }
-
+        public ObservableCollection<FileToImport> Files { get; set; }
         public ObservableCollection<PerformerLocalDto> PerformersInFolder { get; set; }
         public ObservableCollection<PerformerLocalDto> PerformersInDatabase { get; set; }
 
