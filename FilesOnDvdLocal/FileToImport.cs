@@ -19,7 +19,28 @@ namespace FilesOnDvdLocal {
         public string Notes { get; set; }
         public bool Unwatched { get; set; }
 
-        public string Filename { get; set; }
+        private string filename;
+        public string Filename {
+            get => filename;
+            set {
+                if (!string.IsNullOrEmpty(filename)) {
+                    if (value != filename) {
+                        try {
+                            RenameFile(value);
+                            // only set the Filename field if the rename doesn't throw exception
+                            SetField(ref filename, value);
+                        }
+                        catch (Exception e) {
+                            Log.Error(e, "Could not rename file {0} to {1}", filename, value);
+                        }
+                    }
+                }
+                // filename is null/empty; it is being set for the first time, so don't rename it
+                else {
+                    SetField(ref filename, value);
+                }
+            }
+        }
 
         public List<string> PerformersString { get; set; }
         public string SeriesString { get; set; }
@@ -45,6 +66,15 @@ namespace FilesOnDvdLocal {
             }
         }
 
+        private void RenameFile(string value) {
+            string folderName = Path.GetDirectoryName(File.FullName);
+            value += "_moved";
+            string destinationPath = Path.Combine(folderName, value);
+            Log.Information("Renaming {0} to {1}", filename, destinationPath);
+            File.MoveTo(destinationPath);
+        }
+
+
         public bool NameIsTooLong {
             get { return NameIsTooLongForDvd(); }
         }
@@ -53,10 +83,16 @@ namespace FilesOnDvdLocal {
             get { return NameContainsNonAsciiCharacters(); }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected void OnPropertyChange([CallerMemberName] string propertyName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "") {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChange(propertyName);
+            return true;
         }
 
         private bool NameIsTooLongForDvd(int maxLength = 98) {
