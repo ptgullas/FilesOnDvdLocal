@@ -16,7 +16,6 @@ using System.Windows.Input;
 namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
-        private IDataRepository DataRepository;
         private IPerformerRepository PerformerRepository;
 
         private FileToImport selectedFile;
@@ -61,18 +60,15 @@ namespace DvdImportClient {
             string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
 
             // replace this with the real repository later
-            //AccessMockRepository repository = new AccessMockRepository();
-            //DataRepository = repository;
             PerformerMockRepository perfRepository = new PerformerMockRepository();
             PerformerRepository = perfRepository;
 
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, PerformerRepository);
-            //FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, DataRepository);
             folderPath = FolderToImport.FolderPath;
             FolderName = Path.GetFileName(folderPath);
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
-            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(DataRepository.GetPerformers().OrderBy(b => b.Name));
+            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(PerformerRepository.Get().OrderBy(b => b.Name));
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
