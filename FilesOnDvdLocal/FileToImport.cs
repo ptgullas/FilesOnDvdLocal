@@ -32,10 +32,10 @@ namespace FilesOnDvdLocal {
             PerformersString = GetPerformersFromFilename();
             SeriesString = GetSeriesNameFromFilename();
             Performers = new List<PerformerLocalDto>();
-            PopulatePerformers(dataRepository);
+            PopulatePerformersFromRepository(dataRepository);
         }
 
-        private void PopulatePerformers(IDataRepository dataRepository) {
+        private void PopulatePerformersFromRepository(IDataRepository dataRepository) {
             if (PerformersString.Count > 0) {
                 foreach (string perf in PerformersString) {
                     var performerDto = dataRepository.GetPerformerByName(perf);
