@@ -72,7 +72,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="Filename" Text="{Binding File.Name}" FontFamily="Arial" />
+                        <TextBlock Name="Filename" Text="{Binding Filename}" FontFamily="Arial" />
                     </StackPanel>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=NameIsTooLong}" Value="True">
