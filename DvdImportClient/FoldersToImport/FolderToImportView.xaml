@@ -12,7 +12,8 @@
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel>
                 <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox Text="{Binding Path=Filename}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" Height="60" />
+                <TextBox Name="DetailFilename" Text="{Binding Path=Filename}" IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" Height="60" />
+                <CheckBox Name="CheckboxEnableFilename" IsChecked="False" Content="Enable Filename Box" Foreground="White"></CheckBox>
                 <Label Content="Series:" Foreground="Wheat" FontWeight="Bold" />
                 <TextBlock Text="{Binding SeriesString}" Foreground="#FFF08AF1" FontWeight="Bold" />
                 <ListBox Name="PerformersList" ItemsSource="{Binding Path=Performers}" Height="106">
