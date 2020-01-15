@@ -29,7 +29,7 @@
                                     </TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock>
-                                    <Hyperlink Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=Name}" TextDecorations="None" Foreground="Black">[x]</Hyperlink>
+                                    <Hyperlink Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=Name}" TextDecorations="None" Foreground="Black" FontWeight="Bold">[x]</Hyperlink>
                                 </TextBlock>
                             </StackPanel>
                             <DataTemplate.Triggers>
@@ -44,9 +44,13 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <ComboBox 
+                    Name="ComboBoxNamesFromDatabase"
                     ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                     DisplayMemberPath="Name" Margin="0,40,0,0"
                     />
+                <Button Command="{Binding Path=DataContext.AddPerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                        CommandParameter="{Binding ElementName=ComboBoxNamesFromDatabase, Path=SelectedItem}" 
+                        Content="Add Performer"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>

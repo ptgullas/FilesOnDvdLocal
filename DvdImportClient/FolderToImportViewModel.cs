@@ -72,6 +72,21 @@ namespace DvdImportClient {
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
+            AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
+        }
+
+        private void AddPerformer(object perf) {
+            PerformerLocalDto performerToAdd = perf as PerformerLocalDto;
+            string outputMessage;
+            if (!SelectedFile.Performers.Any(p => p.Id == performerToAdd.Id)) {
+                SelectedFile.Performers.Add(performerToAdd);
+                outputMessage = $"Added {performerToAdd.Name} to {SelectedFile.Filename}";
+                RefreshAllPerformersInFolder();
+            }
+            else {
+                outputMessage = $"{performerToAdd.Name} is already in {SelectedFile.Filename}";
+            }
+            MessageBox.Show(outputMessage);
         }
 
         private void RemovePerformer(object perfName) {
