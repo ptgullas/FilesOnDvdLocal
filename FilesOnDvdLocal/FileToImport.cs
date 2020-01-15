@@ -14,7 +14,12 @@ namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
         public FileInfo File { get; set; }
         public SeriesLocalDto Series {get; set;}
-        public List<PerformerLocalDto> Performers { get; set; }
+
+        private List<PerformerLocalDto> performers;
+        public List<PerformerLocalDto> Performers { 
+            get => performers; 
+            set => SetField(ref performers, value); 
+        }
 
         public string Notes { get; set; }
         public bool Unwatched { get; set; }

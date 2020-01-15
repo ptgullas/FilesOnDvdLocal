@@ -22,14 +22,12 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Name="Performer"  FontFamily="Arial" Foreground="#FF0BC40F" FontWeight="Bold" >
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} ({1})">
+                                        <MultiBinding StringFormat="{}{0} ({1}) ">
                                             <Binding Path="Name" />
                                             <Binding Path="Id" />
                                         </MultiBinding>
                                     </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock>
-                                    <Hyperlink Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=Name}" TextDecorations="None" Foreground="Black" FontWeight="Bold">[x]</Hyperlink>
+                                    <Hyperlink Name="HyperlinkRemovePerformer" Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=Name}" TextDecorations="None" Foreground="#FFF08AF1" FontWeight="Bold">[x]</Hyperlink>
                                 </TextBlock>
                             </StackPanel>
                             <DataTemplate.Triggers>
@@ -37,6 +35,8 @@
                                     <DataTrigger.Setters>
                                         <Setter Property="Background" Value="Black" TargetName="Performer" />
                                         <Setter Property="Foreground" Value="#FFF70000" TargetName="Performer" />
+                                        <Setter Property="Background" Value="Black" TargetName="HyperlinkRemovePerformer" />
+                                        <Setter Property="Foreground" Value="#FFF08AF1" TargetName="HyperlinkRemovePerformer" />
                                     </DataTrigger.Setters>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
