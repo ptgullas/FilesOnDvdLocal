@@ -1,124 +1,226 @@
 ﻿<UserControl x:Class="DvdImportClient.FoldersToImport.FolderToImportView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DvdImportClient.FoldersToImport"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Name="RootUserControl"
-             >
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Name="RootUserControl">
     <UserControl.Resources>
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel>
                 <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox Name="DetailFilename" Text="{Binding Path=Filename}" IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}" Foreground="#FFF08AF1" FontWeight="Bold" Width="300" TextWrapping="Wrap" Height="60" />
-                <CheckBox Name="CheckboxEnableFilename" IsChecked="False" Content="Enable Filename Box" Foreground="White"></CheckBox>
-                <Label Content="Series:" Foreground="Wheat" FontWeight="Bold" />
-                <TextBlock Text="{Binding SeriesString}" Foreground="#FFF08AF1" FontWeight="Bold" />
-                <ListBox Name="PerformersList" ItemsSource="{Binding Path=Performers}" Height="106">
+                <TextBox Name="DetailFilename"
+                         Text="{Binding Path=Filename}"
+                         IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}"
+                         Foreground="#FFF08AF1"
+                         FontWeight="Bold"
+                         Width="300"
+                         TextWrapping="Wrap"
+                         Height="60" />
+                <CheckBox Name="CheckboxEnableFilename"
+                          IsChecked="False"
+                          Content="Enable Filename Box"
+                          Foreground="White"></CheckBox>
+                <Label Content="Series:"
+                       Foreground="Wheat"
+                       FontWeight="Bold" />
+                <TextBlock Text="{Binding SeriesString}"
+                           Foreground="#FFF08AF1"
+                           FontWeight="Bold" />
+                <ListBox Name="PerformersList"
+                         ItemsSource="{Binding Path=Performers}"
+                         Height="106">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:Name="PerformersTemplate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Name="Performer"  FontFamily="Arial" Foreground="#FF0BC40F" FontWeight="Bold" >
+                                <TextBlock Name="Performer"
+                                           FontFamily="Arial"
+                                           Foreground="#FF0BC40F"
+                                           FontWeight="Bold">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} ({1}) ">
                                             <Binding Path="Name" />
                                             <Binding Path="Id" />
                                         </MultiBinding>
                                     </TextBlock.Text>
-                                    <Hyperlink Name="HyperlinkRemovePerformer" Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=Name}" TextDecorations="None" Foreground="#FFF08AF1" FontWeight="Bold">[x]</Hyperlink>
+                                    <Hyperlink Name="HyperlinkRemovePerformer"
+                                               Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                               CommandParameter="{Binding Path=Name}"
+                                               TextDecorations="None"
+                                               Foreground="#FFF08AF1"
+                                               FontWeight="Bold">[x]</Hyperlink>
                                 </TextBlock>
                             </StackPanel>
                             <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding Path=Id}" Value="-1">
+                                <DataTrigger Binding="{Binding Path=Id}"
+                                             Value="-1">
                                     <DataTrigger.Setters>
-                                        <Setter Property="Background" Value="Black" TargetName="Performer" />
-                                        <Setter Property="Foreground" Value="#FFF70000" TargetName="Performer" />
-                                        <Setter Property="Background" Value="Black" TargetName="HyperlinkRemovePerformer" />
-                                        <Setter Property="Foreground" Value="#FFF08AF1" TargetName="HyperlinkRemovePerformer" />
+                                        <Setter Property="Background"
+                                                Value="Black"
+                                                TargetName="Performer" />
+                                        <Setter Property="Foreground"
+                                                Value="#FFF70000"
+                                                TargetName="Performer" />
+                                        <Setter Property="Background"
+                                                Value="Black"
+                                                TargetName="HyperlinkRemovePerformer" />
+                                        <Setter Property="Foreground"
+                                                Value="#FFF08AF1"
+                                                TargetName="HyperlinkRemovePerformer" />
                                     </DataTrigger.Setters>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <ComboBox 
-                    Name="ComboBoxNamesFromDatabase"
-                    ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                    DisplayMemberPath="Name" Margin="0,40,0,0"
-                    />
-                <Button Command="{Binding Path=DataContext.AddPerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                        CommandParameter="{Binding ElementName=ComboBoxNamesFromDatabase, Path=SelectedItem}" 
-                        Content="Add Performer"/>
+                <ComboBox Name="ComboBoxNamesFromDatabase"
+                          ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          DisplayMemberPath="Name"
+                          Margin="0,40,0,0" />
+                <Button Command="{Binding Path=DataContext.AddPerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        CommandParameter="{Binding ElementName=ComboBoxNamesFromDatabase, Path=SelectedItem}"
+                        Content="Add Performer" />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     <Grid Margin="0,0,-114,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Browse to Folder..." Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"  ></MenuItem>
+                    <MenuItem Header="_Browse to Folder..."
+                              Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <Label Grid.Column="0" Grid.Row="1" Height="20" Margin="0,10,4,4" Content="Folder:" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="#FFF08AF1"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Height="20" Margin="0,18,0,4" Text="{Binding FolderPath}" HorizontalAlignment="Left" MinWidth="400" VerticalContentAlignment="Bottom" IsEnabled="False"/>
-        <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Height="20" HorizontalAlignment="Left" Content="Browse" Command="{Binding BrowseFolderCommand}" Name="ButtonBrowse" Margin="5,18,0,3" MinWidth="75" />
-        <Button Grid.Column="4" Grid.Row="1" Content="Save FilenameList" Command="{Binding SaveFilenameListCommand}" />
-        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding FolderName}" Foreground="#FFF08AF1" FontWeight="Bold"></TextBlock>
-        <ListBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding Files}" Height="400" ScrollViewer.VerticalScrollBarVisibility="Auto" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedFile}" >
+        <Label Grid.Column="0"
+               Grid.Row="1"
+               Height="30"
+               Margin="0,10,4,4"
+               Content="Folder:"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Foreground="#FFF08AF1" />
+        <TextBox Grid.Column="1"
+                 Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 Height="20"
+                 Margin="0,18,0,4"
+                 Text="{Binding FolderPath}"
+                 HorizontalAlignment="Left"
+                 MinWidth="400"
+                 VerticalContentAlignment="Bottom"
+                 IsEnabled="False" />
+        <Button Grid.Column="3"
+                Grid.Row="1"
+                Grid.ColumnSpan="1"
+                Height="20"
+                HorizontalAlignment="Left"
+                Content="Browse"
+                Command="{Binding BrowseFolderCommand}"
+                Name="ButtonBrowse"
+                Margin="5,18,0,3"
+                MinWidth="75" />
+        <Button Grid.Column="4"
+                Grid.Row="1"
+                Content="Save FilenameList"
+                Command="{Binding SaveFilenameListCommand}" />
+        <TextBlock Grid.Column="1"
+                   Grid.Row="2"
+                   Text="{Binding FolderName}"
+                   Foreground="#FFF08AF1"
+                   FontWeight="Bold"></TextBlock>
+        <ListBox Grid.Column="1"
+                 Grid.Row="3"
+                 Grid.ColumnSpan="3"
+                 ItemsSource="{Binding Files}"
+                 Height="400"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 IsSynchronizedWithCurrentItem="True"
+                 SelectedItem="{Binding SelectedFile}">
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="Filename" Text="{Binding Filename}" FontFamily="Arial" />
+                        <TextBlock Name="Filename"
+                                   Text="{Binding Filename}"
+                                   FontFamily="Arial" />
                     </StackPanel>
                     <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=NameIsTooLong}" Value="True">
+                        <DataTrigger Binding="{Binding Path=NameIsTooLong}"
+                                     Value="True">
                             <DataTrigger.Setters>
-                                <Setter Property="Background" Value="#FF9D0707" TargetName="Filename" />
-                                <Setter Property="Foreground" Value="#FFF2CDCD" TargetName="Filename" />
+                                <Setter Property="Background"
+                                        Value="#FF9D0707"
+                                        TargetName="Filename" />
+                                <Setter Property="Foreground"
+                                        Value="#FFF2CDCD"
+                                        TargetName="Filename" />
                             </DataTrigger.Setters>
                             <!--<Setter Property=" Value="Red" />-->
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=NameContainsNonAscii}" Value="True">
+                        <DataTrigger Binding="{Binding Path=NameContainsNonAscii}"
+                                     Value="True">
                             <DataTrigger.Setters>
-                                <Setter Property="Background" Value="#FF0989F6" TargetName="Filename" />
-                                <Setter Property="Foreground" Value="#FFB8E8B1" TargetName="Filename" />
+                                <Setter Property="Background"
+                                        Value="#FF0989F6"
+                                        TargetName="Filename" />
+                                <Setter Property="Foreground"
+                                        Value="#FFB8E8B1"
+                                        TargetName="Filename" />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ContentControl Grid.Column="4" Grid.Row="3" Content="{Binding Files}" Margin="4,11,0,163" ContentTemplate="{StaticResource FileDetailTemplate}" />
-        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding PerformersInFolder}" Width="310" Height="100" Margin="5,282,-1,18" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ContentControl Grid.Column="4"
+                        Grid.Row="3"
+                        Content="{Binding Files}"
+                        Margin="4,11,0,163"
+                        ContentTemplate="{StaticResource FileDetailTemplate}" />
+        <ListBox Grid.Column="4"
+                 Grid.Row="3"
+                 ItemsSource="{Binding PerformersInFolder}"
+                 Width="310"
+                 Height="100"
+                 Margin="5,282,-1,18"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" IsItemsHost="False"  />
+                    <WrapPanel Orientation="Horizontal"
+                               IsItemsHost="False" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="AllPerformersTemplate">
-                    <TextBox Name="PerformerAll" Text="{Binding Name}" TextWrapping="Wrap" Foreground="#FF0BC40F" FontWeight="Bold" />
+                    <TextBox Name="PerformerAll"
+                             Text="{Binding Name}"
+                             TextWrapping="Wrap"
+                             Foreground="#FF0BC40F"
+                             FontWeight="Bold" />
                     <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Id}" Value="-1">
+                        <DataTrigger Binding="{Binding Path=Id}"
+                                     Value="-1">
                             <DataTrigger.Setters>
                                 <!--<Setter Property="Background" Value="Black" TargetName="PerformerAll" />-->
-                                <Setter Property="Foreground" Value="#FFF70000" TargetName="PerformerAll" />
+                                <Setter Property="Foreground"
+                                        Value="#FFF70000"
+                                        TargetName="PerformerAll" />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
