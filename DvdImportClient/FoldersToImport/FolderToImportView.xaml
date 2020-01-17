@@ -12,15 +12,16 @@
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel>
                 <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox Name="DetailFilename"
+                <TextBox x:Name="DetailFilename"
                          Text="{Binding Path=Filename}"
                          IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}"
                          Foreground="#FFF08AF1"
                          FontWeight="Bold"
                          Width="300"
+                         Height="60" 
                          TextWrapping="Wrap"
-                         Height="60" />
-                <CheckBox Name="CheckboxEnableFilename"
+                         />
+                <CheckBox x:Name="CheckboxEnableFilename"
                           IsChecked="False"
                           Content="Enable Filename Box"
                           Foreground="White"></CheckBox>
@@ -30,13 +31,13 @@
                 <TextBlock Text="{Binding SeriesString}"
                            Foreground="#FFF08AF1"
                            FontWeight="Bold" />
-                <ListBox Name="PerformersList"
+                <ListBox x:Name="PerformersList"
                          ItemsSource="{Binding Path=Performers}"
                          Height="106">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:Name="PerformersTemplate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Name="Performer"
+                                <TextBlock x:Name="Performer"
                                            FontFamily="Arial"
                                            Foreground="#FF0BC40F"
                                            FontWeight="Bold">
@@ -46,7 +47,7 @@
                                             <Binding Path="Id" />
                                         </MultiBinding>
                                     </TextBlock.Text>
-                                    <Hyperlink Name="HyperlinkRemovePerformer"
+                                    <Hyperlink x:Name="HyperlinkRemovePerformer"
                                                Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                CommandParameter="{Binding Path=Name}"
                                                TextDecorations="None"
@@ -76,7 +77,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <ComboBox Name="ComboBoxNamesFromDatabase"
+                <ComboBox x:Name="ComboBoxNamesFromDatabase"
                           ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}"
                           DisplayMemberPath="Name"
                           Margin="0,40,0,0" />
@@ -108,55 +109,59 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <Label Grid.Column="0"
+        <Label Content="Folder:"
+               Grid.Column="0"
                Grid.Row="1"
                Height="30"
                Margin="0,10,4,4"
-               Content="Folder:"
                VerticalAlignment="Center"
                HorizontalAlignment="Right"
                Foreground="#FFF08AF1" />
-        <TextBox Grid.Column="1"
+        <TextBox Text="{Binding FolderPath}"
+                 IsEnabled="False"
+                 Grid.Column="1"
                  Grid.Row="1"
                  Grid.ColumnSpan="2"
                  Height="20"
-                 Margin="0,18,0,4"
-                 Text="{Binding FolderPath}"
-                 HorizontalAlignment="Left"
                  MinWidth="400"
+                 Margin="0,18,0,4"
+                 HorizontalAlignment="Left"
                  VerticalContentAlignment="Bottom"
-                 IsEnabled="False" />
-        <Button Grid.Column="3"
+                 />
+        <Button x:Name="ButtonBrowse" 
+                Command="{Binding BrowseFolderCommand}"
+                Content="Browse"
+                Grid.Column="3"
                 Grid.Row="1"
                 Grid.ColumnSpan="1"
+                MinWidth="75" 
                 Height="20"
                 HorizontalAlignment="Left"
-                Content="Browse"
-                Command="{Binding BrowseFolderCommand}"
-                Name="ButtonBrowse"
                 Margin="5,18,0,3"
-                MinWidth="75" />
-        <Button Grid.Column="4"
-                Grid.Row="1"
+                />
+        <Button Command="{Binding SaveFilenameListCommand}"
                 Content="Save FilenameList"
-                Command="{Binding SaveFilenameListCommand}" />
-        <TextBlock Grid.Column="1"
+                Grid.Column="4"
+                Grid.Row="1"
+                />
+        <TextBlock Text="{Binding FolderName}"
+                   Grid.Column="1"
                    Grid.Row="2"
-                   Text="{Binding FolderName}"
                    Foreground="#FFF08AF1"
                    FontWeight="Bold"></TextBlock>
-        <ListBox Grid.Column="1"
+        <ListBox ItemsSource="{Binding Files}"
+                 SelectedItem="{Binding SelectedFile}"
+                 IsSynchronizedWithCurrentItem="True"
+                 Grid.Column="1"
                  Grid.Row="3"
                  Grid.ColumnSpan="3"
-                 ItemsSource="{Binding Files}"
                  Height="400"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 IsSynchronizedWithCurrentItem="True"
-                 SelectedItem="{Binding SelectedFile}">
+                 >
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="Filename"
+                        <TextBlock x:Name="Filename"
                                    Text="{Binding Filename}"
                                    FontFamily="Arial" />
                     </StackPanel>
@@ -188,14 +193,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ContentControl Grid.Column="4"
+        <ContentControl Content="{Binding Files}"
+                        ContentTemplate="{StaticResource FileDetailTemplate}" 
+                        Grid.Column="4"
                         Grid.Row="3"
-                        Content="{Binding Files}"
                         Margin="4,11,0,163"
-                        ContentTemplate="{StaticResource FileDetailTemplate}" />
-        <ListBox Grid.Column="4"
+                        />
+        <ListBox ItemsSource="{Binding PerformersInFolder}"
+                 Grid.Column="4"
                  Grid.Row="3"
-                 ItemsSource="{Binding PerformersInFolder}"
                  Width="310"
                  Height="100"
                  Margin="5,282,-1,18"
@@ -208,7 +214,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="AllPerformersTemplate">
-                    <TextBox Name="PerformerAll"
+                    <TextBox x:Name="PerformerAll"
                              Text="{Binding Name}"
                              TextWrapping="Wrap"
                              Foreground="#FF0BC40F"
@@ -218,13 +224,13 @@
                                      Value="-1">
                             <DataTrigger.Setters>
                                 <!--<Setter Property="Background" Value="Black" TargetName="PerformerAll" />-->
-                                <Setter Property="Foreground"
+                                <Setter TargetName="PerformerAll"
+                                        Property="Foreground"
                                         Value="#FFF70000"
-                                        TargetName="PerformerAll" />
+                                        />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
-
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
