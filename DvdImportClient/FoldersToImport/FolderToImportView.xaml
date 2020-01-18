@@ -104,8 +104,11 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Browse to Folder..."
-                              Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"></MenuItem>
+                    <MenuItem Header="_Browse.."
+                              Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                    </MenuItem>
+                    <MenuItem Header="Save Filename List"
+                              Command="{Binding SaveFilenameListCommand}" />
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -156,8 +159,7 @@
                  Grid.Row="3"
                  Grid.ColumnSpan="3"
                  Height="400"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 >
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
@@ -197,8 +199,7 @@
                         ContentTemplate="{StaticResource FileDetailTemplate}" 
                         Grid.Column="4"
                         Grid.Row="3"
-                        Margin="4,11,0,163"
-                        />
+                        Margin="4,11,0,163" />
         <ListBox ItemsSource="{Binding PerformersInFolder}"
                  Grid.Column="4"
                  Grid.Row="3"
