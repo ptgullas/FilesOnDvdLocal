@@ -77,7 +77,12 @@ namespace FilesOnDvdLocal {
             value += "_moved";
             string destinationPath = Path.Combine(folderName, value);
             Log.Information("Renaming {0} to {1}", filename, destinationPath);
-            File.MoveTo(destinationPath);
+            try {
+                File.MoveTo(destinationPath);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Error renaming file to {0}", destinationPath);
+            }
         }
 
 
