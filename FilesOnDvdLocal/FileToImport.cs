@@ -94,6 +94,10 @@ namespace FilesOnDvdLocal {
             get { return NameContainsNonAsciiCharacters(); }
         }
 
+        public bool NameContainsDoubleSpaces {
+            get => Filename.Contains("  ");
+        }
+
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         protected void OnPropertyChange([CallerMemberName] string propertyName = "")

@@ -19,6 +19,12 @@ namespace FilesOnDvdLocal {
         public string Notes { get; set; }
         public int DatabaseId { get; set; }
 
+        public bool IsReadyToImport { 
+            get {
+                return (!IsTooLarge() | !HasNamingErrors());
+            }
+        }
+
 
         public DvdFolderToImport(string folderPath, IPerformerRepository performerRepository) {
             FolderPath = folderPath;

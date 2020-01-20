@@ -73,6 +73,38 @@ namespace FilesOnDvdLocal.Tests {
         }
 
         [TestMethod]
+        public void NameContainsDoubleSpaces_NameHasThreeSpaces_ReturnTrue() {
+            string filePath = @"C:\temp\Joker (2019) - Scene 4.   Joaquin Phoenix & Zazie Beetzmkv";
+            bool expected = true;
+            PerformerMockRepository mockPerformerRepository = new PerformerMockRepository();
+            FileToImport fileToImport = new FileToImport(filePath, mockPerformerRepository);
+
+            bool result = fileToImport.NameContainsDoubleSpaces;
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void NameContainsDoubleSpaces_NameHasTwoSpaces_ReturnTrue() {
+            string filePath = @"C:\temp\Joker (2019) - Scene 4.  Joaquin Phoenix & Zazie Beetzmkv";
+            bool expected = true;
+            PerformerMockRepository mockPerformerRepository = new PerformerMockRepository();
+            FileToImport fileToImport = new FileToImport(filePath, mockPerformerRepository);
+
+            bool result = fileToImport.NameContainsDoubleSpaces;
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void NameContainsDoubleSpaces_NameDoesNotHaveDoubleSpaces_ReturnFalse() {
+            string filePath = @"C:\temp\Joker (2019) - Scene 4. Joaquin Phoenix & Zazie Beetzmkv";
+            bool expected = false;
+            PerformerMockRepository mockPerformerRepository = new PerformerMockRepository();
+            FileToImport fileToImport = new FileToImport(filePath, mockPerformerRepository);
+
+            bool result = fileToImport.NameContainsDoubleSpaces;
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
         public void GetPositionsOfNonAsciiInName_NameHasEmDashAtEnd_ReturnLastPosition() {
             string filePath = @"C:\temp\ThisHasAnEmDashsee—.mkv";
             int expectedPosition = 18;
