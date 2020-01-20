@@ -177,6 +177,8 @@
                                 <Setter Property="Foreground"
                                         Value="#FFF2CDCD"
                                         TargetName="Filename" />
+                                <Setter Property="ToolTip"
+                                        Value="Name is too long to fit on DVD" />
                             </DataTrigger.Setters>
                             <!--<Setter Property=" Value="Red" />-->
                         </DataTrigger>
@@ -189,6 +191,8 @@
                                 <Setter Property="Foreground"
                                         Value="#FFB8E8B1"
                                         TargetName="Filename" />
+                                <Setter Property="ToolTip"
+                                        Value="Contains Non-ASCII character(s)" />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
