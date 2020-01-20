@@ -57,6 +57,7 @@
     <Compile Include="StringExtensionsTests.cs" />
     <Compile Include="DvdFolderToImportTests.cs" />
     <Compile Include="IntegrationTests\PerformerRepositoryTests.cs" />
+    <Compile Include="FilenameParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

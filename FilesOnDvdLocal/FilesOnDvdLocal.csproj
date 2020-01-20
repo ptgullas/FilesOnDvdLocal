@@ -54,6 +54,7 @@
     <Compile Include="AccessRepository.cs" />
     <Compile Include="BinPacker.cs" />
     <Compile Include="DvdFolderToImport.cs" />
+    <Compile Include="FilenameParser.cs" />
     <Compile Include="FileToImport.cs" />
     <Compile Include="FileToPack.cs" />
     <Compile Include="DvdBin.cs" />
