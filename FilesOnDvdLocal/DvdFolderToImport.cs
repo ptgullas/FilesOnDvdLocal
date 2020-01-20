@@ -21,7 +21,10 @@ namespace FilesOnDvdLocal {
 
         public bool IsReadyToImport { 
             get {
-                return (!IsTooLarge() | !HasNamingErrors());
+                if (IsTooLarge() | HasNamingErrors()) {
+                    return false;
+                }
+                else { return true; }
             }
         }
 

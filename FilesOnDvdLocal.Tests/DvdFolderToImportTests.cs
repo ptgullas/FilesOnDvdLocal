@@ -78,6 +78,54 @@ namespace FilesOnDvdLocal.Tests {
         }
 
         [TestMethod]
+        public void HasNamingErrors_ContainsDoubleSpaces_ReturnsTrue() {
+            PerformerMockRepository mockRepository = new PerformerMockRepository();
+            string filePath1 = @"C:\temp\this has  double spaces.mkv";
+            FileToImport file1 = new FileToImport(filePath1, mockRepository);
+            string filePath2 = @"C:\temp\short filename1.mkv";
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
+            string filePath3 = @"C:\temp\short filename2.mkv";
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
+
+            List<FileToImport> files = new List<FileToImport>();
+            files.Add(file1);
+            files.Add(file2);
+            files.Add(file3);
+
+            DvdFolderToImport dvd = new DvdFolderToImport("C:\temp", files);
+
+            bool expectedResult = true;
+
+            bool result = dvd.HasNamingErrors();
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public void IsReadyToImport_ContainsDoubleSpaces_ReturnsFalse() {
+            PerformerMockRepository mockRepository = new PerformerMockRepository();
+            string filePath1 = @"C:\temp\this has  double spaces.mkv";
+            FileToImport file1 = new FileToImport(filePath1, mockRepository);
+            string filePath2 = @"C:\temp\short filename1.mkv";
+            FileToImport file2 = new FileToImport(filePath2, mockRepository);
+            string filePath3 = @"C:\temp\short filename2.mkv";
+            FileToImport file3 = new FileToImport(filePath3, mockRepository);
+
+            List<FileToImport> files = new List<FileToImport>();
+            files.Add(file1);
+            files.Add(file2);
+            files.Add(file3);
+
+            DvdFolderToImport dvd = new DvdFolderToImport("C:\temp", files);
+
+            bool expectedResult = false;
+
+            bool result = dvd.IsReadyToImport;
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
         public void CompileAllPerformersInFolder_AllUniquePerformers_ReturnsCorrectNumber() {
             PerformerMockRepository mockRepository = new PerformerMockRepository();
             string filePath1 = @"C:\temp\Succession - Logan Roy & Shiv Roy, Roman Roy - Little Fear of Lightning (2019-12-05).mkv";

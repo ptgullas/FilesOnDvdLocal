@@ -70,7 +70,7 @@ namespace DvdImportClient {
             PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
             PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(PerformerRepository.Get().OrderBy(b => b.Name));
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
-            SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList());
+            SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
             AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
         }
