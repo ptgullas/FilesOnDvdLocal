@@ -9,6 +9,7 @@ using Serilog;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FilesOnDvdLocal.Repositories;
+using System.Text.RegularExpressions;
 
 namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
@@ -56,8 +57,8 @@ namespace FilesOnDvdLocal {
             File = new FileInfo(path);
             Filename = File.Name;
             PerformersString = new List<string>();
-            PerformersString = GetPerformersFromFilename();
-            SeriesString = GetSeriesNameFromFilename();
+            PerformersString = FilenameParser.GetPerformers(Filename);
+            SeriesString = FilenameParser.GetSeriesName(Filename);
             Performers = new List<PerformerLocalDto>();
             PopulatePerformersFromRepository(dataRepository);
         }
@@ -142,69 +143,6 @@ namespace FilesOnDvdLocal {
                 catch (Exception e) {
                     Log.Error(e, "Error renaming file {0} to {1}", currentPath, newPath);
                 }
-            }
-        }
-
-        public string GetSeriesNameFromFilename() {
-            string seriesName = null;
-            string filename = File.Name;
-            int indexOfHyphen = filename.IndexOf("-");
-            if (indexOfHyphen >= 2) {
-                seriesName = filename.Substring(0, indexOfHyphen - 1).Trim();
-            }
-            return seriesName;
-        }
-
-        // We're assuming that a list of performers will always be after a hyphen and a 
-        // SecondDelimeter (hyphen or open paren).
-        public List<string> GetPerformersFromFilename() {
-            List<string> performers = new List<string>();
-            string filename = File.Name;
-            int indexOfHyphen = filename.IndexOf("-");
-            if (indexOfHyphen >= 0) {
-                int indexOfSecondDelimeter = GetIndexOfNextDelimeter(filename, indexOfHyphen + 1);
-                if (indexOfSecondDelimeter >= 0) {
-                    string performersSubstring = filename.Substring(indexOfHyphen + 1, indexOfSecondDelimeter - indexOfHyphen - 1).Trim();
-                    List<string> performersSubstringSplitByComma = performersSubstring.Split(',').ToList();
-                    if (performersSubstring.Contains("&")) {
-                        SplitByAmpersandsAndAddToPerformers(performers, performersSubstringSplitByComma);
-                    }
-                    else {
-                        foreach (string performer in performersSubstringSplitByComma) {
-                            performers.Add(performer.Trim());
-                        }
-                    }
-                }
-            }
-            return performers;
-        }
-
-        private static void SplitByAmpersandsAndAddToPerformers(List<string> performers, List<string> performersSubstringSplitByComma) {
-            foreach (string performerMightContainAmpersand in performersSubstringSplitByComma) {
-                if (!performerMightContainAmpersand.Contains("&")) {
-                    performers.Add(performerMightContainAmpersand.Trim());
-                }
-                else {
-                    List<string> tempPerformersSplitAmpersand = performerMightContainAmpersand.Split('&').ToList();
-                    foreach (string performer in tempPerformersSplitAmpersand) {
-                        performers.Add(performer.Trim());
-                    }
-                }
-            }
-        }
-
-        private static int GetIndexOfNextDelimeter(string filename, int start) {
-            int indexOfHyphen = filename.IndexOf("-", start);
-            int indexOfOpenParen = filename.IndexOf("(", start);
-
-            if (indexOfHyphen < 0) {
-                return indexOfOpenParen;
-            }
-            else if ((indexOfHyphen >= 0) && (indexOfOpenParen >= 0)) {
-                return Math.Min(indexOfHyphen, indexOfOpenParen);
-            }
-            else {
-                return indexOfHyphen;
             }
         }
     }
