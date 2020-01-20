@@ -20,8 +20,8 @@ namespace DvdImportClient {
 
         private FileToImport selectedFile;
         public FileToImport SelectedFile { 
-            get => selectedFile; 
-            set => SetField(ref selectedFile, value); 
+            get => selectedFile;
+            set => SetField(ref selectedFile, value);
         }
 
         public DvdFolderToImport FolderToImport;
