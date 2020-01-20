@@ -178,7 +178,7 @@
                                         Value="#FFF2CDCD"
                                         TargetName="Filename" />
                                 <Setter Property="ToolTip"
-                                        Value="Name is too long to fit on DVD" />
+                                        Value="Name is too long to fit on DVD!" />
                             </DataTrigger.Setters>
                             <!--<Setter Property=" Value="Red" />-->
                         </DataTrigger>
@@ -192,7 +192,20 @@
                                         Value="#FFB8E8B1"
                                         TargetName="Filename" />
                                 <Setter Property="ToolTip"
-                                        Value="Contains Non-ASCII character(s)" />
+                                        Value="Contains Non-ASCII character(s)!" />
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=NameContainsDoubleSpaces}"
+                                     Value="True">
+                            <DataTrigger.Setters>
+                                <Setter Property="Background"
+                                        Value="#FF600464"
+                                        TargetName="Filename" />
+                                <Setter Property="Foreground"
+                                        Value="#FF09F632"
+                                        TargetName="Filename" />
+                                <Setter Property="ToolTip"
+                                        Value="Contains double spaces!" />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
