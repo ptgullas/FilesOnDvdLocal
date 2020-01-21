@@ -110,6 +110,9 @@
                     <MenuItem Header="Save Filename List"
                               Command="{Binding SaveFilenameListCommand}" />
                 </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Options..." />
+                </MenuItem>
             </Menu>
         </DockPanel>
         <Label Content="Folder:"
