@@ -57,8 +57,8 @@ namespace FilesOnDvdLocal.Data
             return dataSet;
         }
 
-        public void UpdateDiscs(DataSet dataSet) {
-            UpdateAccessTableFromDataSet(dataSet, "tblDiscs");
+        public int UpdateDiscs(DataSet dataSet) {
+            return UpdateAccessTableFromDataSet(dataSet, "tblDiscs");
         }
 
         public void UpdateFileEntries(DataSet dataSet) {

@@ -35,14 +35,15 @@ namespace FilesOnDvdLocal.Repositories
             }
         }
 
-        public void Add(DvdFolderToImport disc) {
+        public int Add(DvdFolderToImport disc) {
             DiscLocalDto discDto = new DiscLocalDto(disc);
-            Add(discDto);
+            return Add(discDto);
         }
 
-        public void Add(DiscLocalDto discDto) {
+        public int Add(DiscLocalDto discDto) {
             AccessRetriever retriever = new AccessRetriever(databasePath);
             DataSet dataSet;
+            int id;
             try {
                 dataSet = retriever.GetDiscs();
             }
@@ -63,9 +64,9 @@ namespace FilesOnDvdLocal.Repositories
                 // newRow[2] = 1; // this is supposed to be Performer Type. Can use the column number instead
                 discsTable.Rows.Add(newRow);
                 var changes = dataSet.GetChanges();
-                retriever.UpdateAccessTableFromDataSet(dataSet, "tblDiscs");
+                id = retriever.UpdateDiscs(dataSet);
             }
-
+            return id;
         }
     }
 }
