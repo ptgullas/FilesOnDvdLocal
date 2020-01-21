@@ -62,6 +62,7 @@
     <Compile Include="FileToPack.cs" />
     <Compile Include="DvdBin.cs" />
     <Compile Include="IDataRepository.cs" />
+    <Compile Include="Importer.cs" />
     <Compile Include="LocalDbDtos\DiscLocalDto.cs" />
     <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
