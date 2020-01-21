@@ -69,7 +69,8 @@ namespace FilesOnDvdLocal.Data
             UpdateAccessTableFromDataSet(dataSet, "jtblPerformersFilenames");
         }
 
-        public void UpdateAccessTableFromDataSet(DataSet dataSet, string tableName, string columns = "*") {
+        public int UpdateAccessTableFromDataSet(DataSet dataSet, string tableName, string columns = "*") {
+            int newId;
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
                 OleDbDataAdapter discsAdapter = new OleDbDataAdapter($"SELECT {columns} FROM {tableName}", connection) {
                     // InsertCommand = new OleDbCommand("INSERT INTO tblDiscs (DiscName, Wallet, Notes) VALUES (@DiscName, @WalletNum, @Notes)", connection)
@@ -78,7 +79,12 @@ namespace FilesOnDvdLocal.Data
                 builder.GetInsertCommand();
                 connection.Open();
                 discsAdapter.Update(dataSet, tableName);
+                // get the new Autonumber:
+                OleDbCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT @@IDENTITY";
+                newId = (int) cmd.ExecuteScalar();
             }
+            return newId;
         }
 
 
