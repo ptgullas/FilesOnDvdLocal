@@ -16,7 +16,8 @@ using System.Windows.Input;
 namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
-        private IPerformerRepository PerformerRepository;
+        private IPerformerRepository performerRepository;
+        private Importer importer;
 
         private FileToImport selectedFile;
         public FileToImport SelectedFile { 
@@ -30,7 +31,7 @@ namespace DvdImportClient {
             set {
                 SetField(ref folderPath, value); // calls OnPropertyChange
                 FolderToImport.FolderPath = folderPath;
-                FolderToImport.PopulateFiles(PerformerRepository);
+                FolderToImport.PopulateFiles(performerRepository);
                 Files.Clear();
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
@@ -55,24 +56,30 @@ namespace DvdImportClient {
         public ICommand SaveFilenameListCommand { get; private set; }
         public ICommand RemovePerformerCommand { get; private set; }
         public ICommand AddPerformerCommand { get; private set; }
+        public ICommand ImportCommand { get; private set; }
 
         public FolderToImportViewModel() {
             string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
 
             // replace this with the real repository later
             PerformerMockRepository perfRepository = new PerformerMockRepository();
-            PerformerRepository = perfRepository;
+            performerRepository = perfRepository;
+            string pathToDiscRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\discMockRepo.json";
+            DiscMockRepository discRepository = new DiscMockRepository(pathToDiscRepositoryJson);
+            discRepository.RetrieveDiscs();
+            importer = new Importer(discRepository, perfRepository);
 
-            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, PerformerRepository);
+            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository);
             folderPath = FolderToImport.FolderPath;
-            FolderName = Path.GetFileName(folderPath);
+            FolderName = FolderToImport.DiscName;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
-            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(PerformerRepository.Get().OrderBy(b => b.Name));
+            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(performerRepository.Get().OrderBy(b => b.Name));
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
             AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
+            ImportCommand = new RelayCommand(param => Import(), d => FolderToImport.IsReadyToImport);
         }
 
         private void AddPerformer(object perf) {
@@ -127,6 +134,10 @@ namespace DvdImportClient {
             if (result == true) {
                 FolderPath = dialog.SelectedPath;
             }
+        }
+
+        private void Import() {
+            importer.Import(FolderToImport);
         }
 
         private async Task SaveFilenameList() {

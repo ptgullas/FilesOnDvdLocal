@@ -31,6 +31,7 @@ namespace FilesOnDvdLocal {
 
         public DvdFolderToImport(string folderPath, IPerformerRepository performerRepository) {
             FolderPath = folderPath;
+            DiscName = Path.GetFileName(FolderPath);
             Files = new List<FileToImport>();
             PopulateFiles(performerRepository);
             PerformersInFolderAll = new List<PerformerLocalDto>();

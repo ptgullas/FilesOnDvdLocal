@@ -109,6 +109,9 @@
                     </MenuItem>
                     <MenuItem Header="Save Filename List"
                               Command="{Binding SaveFilenameListCommand}" />
+                    <Separator />
+                    <MenuItem Header="Import"
+                              Command="{Binding ImportCommand}" />
                 </MenuItem>
                 <MenuItem Header="_Tools">
                     <MenuItem Header="Options..." />
