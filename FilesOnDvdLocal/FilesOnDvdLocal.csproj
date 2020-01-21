@@ -68,6 +68,7 @@
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DiscMockRepository.cs" />
+    <Compile Include="Repositories\DiscRepository.cs" />
     <Compile Include="Repositories\IDiscRepository.cs" />
     <Compile Include="Repositories\IPerformerRepository.cs" />
     <Compile Include="Repositories\PerformerMockRepository.cs" />
