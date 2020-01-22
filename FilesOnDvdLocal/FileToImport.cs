@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
         public FileInfo File { get; set; }
+        public int? DatabaseId { get; set; }
         public SeriesLocalDto Series {get; set;}
 
         private List<PerformerLocalDto> performers;
@@ -56,6 +57,7 @@ namespace FilesOnDvdLocal {
         public FileToImport(string path, IPerformerRepository dataRepository) {
             File = new FileInfo(path);
             Filename = File.Name;
+            DatabaseId = null;
             PerformersString = new List<string>();
             PerformersString = FilenameParser.GetPerformers(Filename);
             SeriesString = FilenameParser.GetSeriesName(Filename);
