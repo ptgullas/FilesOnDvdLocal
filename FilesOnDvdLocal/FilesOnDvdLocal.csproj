@@ -71,8 +71,10 @@
     <Compile Include="Repositories\DiscRepository.cs" />
     <Compile Include="Repositories\IDiscRepository.cs" />
     <Compile Include="Repositories\IPerformerRepository.cs" />
+    <Compile Include="Repositories\ISeriesRepository.cs" />
     <Compile Include="Repositories\PerformerMockRepository.cs" />
     <Compile Include="Repositories\PerformerRepository.cs" />
+    <Compile Include="Repositories\SeriesRepository.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

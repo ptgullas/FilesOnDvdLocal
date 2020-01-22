@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FilesOnDvdLocal.Data;
+using FilesOnDvdLocal.LocalDbDtos;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FilesOnDvdLocal.Data;
-using FilesOnDvdLocal.LocalDbDtos;
-using Serilog;
 
 namespace FilesOnDvdLocal.Repositories {
     public class SeriesRepository : ISeriesRepository {
@@ -56,4 +56,5 @@ namespace FilesOnDvdLocal.Repositories {
             return series;
         }
     }
+
 }

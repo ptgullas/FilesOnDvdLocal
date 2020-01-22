@@ -10,4 +10,5 @@ namespace FilesOnDvdLocal.Repositories {
         List<SeriesLocalDto> Get();
         SeriesLocalDto Get(string name);
     }
+
 }

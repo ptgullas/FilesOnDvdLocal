@@ -69,6 +69,8 @@ namespace FilesOnDvdLocal.Data
             UpdateAccessTableFromDataSet(dataSet, "jtblPerformersFilenames");
         }
 
+        // if there are multiple rows added, might have to add a boolean returnNewId = false argument to this,
+        // so that it doesn't return an id if we don't want it to. Test it some more (UpdateJoinTable)
         public int UpdateAccessTableFromDataSet(DataSet dataSet, string tableName, string columns = "*") {
             int newId;
             using (OleDbConnection connection = new OleDbConnection(GetConnectionString())) {
