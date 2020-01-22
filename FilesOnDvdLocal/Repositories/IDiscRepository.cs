@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace FilesOnDvdLocal.Repositories {
     public interface IDiscRepository {
-        void Add(DvdFolderToImport disc);
+        int Add(DvdFolderToImport disc);
     }
 }

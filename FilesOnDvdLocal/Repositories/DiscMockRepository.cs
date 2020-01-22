@@ -18,10 +18,11 @@ namespace FilesOnDvdLocal.Repositories {
             Discs = new List<DiscLocalDto>();
             PathToJson = pathToJson;
         }
-        public void Add(DvdFolderToImport disc) {
-            AddDiscToList(disc);
+        public int Add(DvdFolderToImport disc) {
+            int newId = AddDiscToList(disc);
             string jsonDiscs = SerializeDiscs();
             SaveToFile(jsonDiscs, PathToJson);
+            return newId;
         }
 
         // for testing
@@ -45,7 +46,7 @@ namespace FilesOnDvdLocal.Repositories {
 
         }
 
-        private void AddDiscToList(DvdFolderToImport disc) {
+        private int AddDiscToList(DvdFolderToImport disc) {
             DiscLocalDto discDto = new DiscLocalDto(disc);
             if (!Discs.Any(d => d.DiscName == discDto.DiscName)) {
                 int highestId = Discs.Max(d => d.Id);
@@ -55,6 +56,7 @@ namespace FilesOnDvdLocal.Repositories {
             else {
                 throw new ArgumentOutOfRangeException(disc.DiscName, "Disc name already exists in Database");
             }
+            return discDto.Id;
         }
 
         private string SerializeDiscs() {
