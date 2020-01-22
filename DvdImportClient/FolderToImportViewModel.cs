@@ -59,7 +59,6 @@ namespace DvdImportClient {
         public ICommand ImportCommand { get; private set; }
 
         public FolderToImportViewModel() {
-            string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
 
             // replace this with the real repository later
             PerformerMockRepository perfRepository = new PerformerMockRepository();
@@ -69,12 +68,14 @@ namespace DvdImportClient {
             discRepository.RetrieveDiscs();
             importer = new Importer(discRepository, perfRepository);
 
+            string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository);
             folderPath = FolderToImport.FolderPath;
             FolderName = FolderToImport.DiscName;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
             PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
             PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(performerRepository.Get().OrderBy(b => b.Name));
+
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
