@@ -17,7 +17,7 @@ namespace FilesOnDvdLocal {
         public string DiscName { get; set; }
         public int WalletType { get; set; } // 3 will be the usual one
         public string Notes { get; set; }
-        public int DatabaseId { get; set; }
+        public int? DatabaseId { get; set; }
 
         public bool IsReadyToImport { 
             get {
@@ -30,6 +30,7 @@ namespace FilesOnDvdLocal {
 
 
         public DvdFolderToImport(string folderPath, IPerformerRepository performerRepository) {
+            DatabaseId = null;
             FolderPath = folderPath;
             DiscName = Path.GetFileName(FolderPath);
             Files = new List<FileToImport>();
