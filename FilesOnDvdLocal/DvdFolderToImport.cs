@@ -138,5 +138,17 @@ namespace FilesOnDvdLocal {
             }
             return success;
         }
+
+        public OperationResult SetFilesDiscId() {
+            if (DatabaseId != null) {
+                foreach (FileToImport file in Files) {
+                    file.DiscId = DatabaseId;
+                }
+                return new OperationResult() { Success = true, Message = null };
+            }
+            else {
+                return new OperationResult() { Success = false, Message = "DatabaseId not set" };
+            }
+        }
     }
 }
