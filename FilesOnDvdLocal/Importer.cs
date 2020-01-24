@@ -17,6 +17,7 @@ namespace FilesOnDvdLocal {
 
         public void Import(DvdFolderToImport dvdFolder) {
             dvdFolder.DatabaseId = discRepository.Add(dvdFolder);
+            dvdFolder.SetFilesDiscId();
             // add each file to tblFilenames
             // associate performers with filenames (PerformerRepository.JoinPerformerToFile)
         }
