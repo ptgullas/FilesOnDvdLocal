@@ -41,7 +41,7 @@ namespace FilesOnDvdLocal.Repositories {
                 Discs = JsonConvert.DeserializeObject<List<DiscLocalDto>>(jsonContents);
             }
             else {
-                throw new FileNotFoundException("Can't find TVDBInfo file", PathToJson);
+                throw new FileNotFoundException("Can't find json file", PathToJson);
             }
 
         }

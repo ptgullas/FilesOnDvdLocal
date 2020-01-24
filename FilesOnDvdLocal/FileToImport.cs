@@ -15,6 +15,7 @@ namespace FilesOnDvdLocal {
     public class FileToImport :INotifyPropertyChanged {
         public FileInfo File { get; set; }
         public int? DatabaseId { get; set; }
+        public int? Genre { get; set; }
         public SeriesLocalDto Series {get; set;}
 
         private List<PerformerLocalDto> performers;

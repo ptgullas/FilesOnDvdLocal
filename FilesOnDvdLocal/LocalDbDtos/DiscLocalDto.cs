@@ -12,7 +12,6 @@ namespace FilesOnDvdLocal.LocalDbDtos {
         public string Notes { get; set; }
 
         public DiscLocalDto() {
-
         }
 
         public DiscLocalDto(DvdFolderToImport dvdFolder) {
