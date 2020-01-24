@@ -17,6 +17,7 @@ namespace FilesOnDvdLocal {
         public int? DatabaseId { get; set; }
         public int? Genre { get; set; }
         public SeriesLocalDto Series {get; set;}
+        public int? DiscId { get; set; }
 
         private List<PerformerLocalDto> performers;
         public List<PerformerLocalDto> Performers { 
@@ -59,6 +60,7 @@ namespace FilesOnDvdLocal {
             File = new FileInfo(path);
             Filename = File.Name;
             DatabaseId = null;
+            DiscId = null;
             PerformersString = new List<string>();
             PerformersString = FilenameParser.GetPerformers(Filename);
             SeriesString = FilenameParser.GetSeriesName(Filename);
