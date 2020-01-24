@@ -20,7 +20,7 @@ namespace FilesOnDvdLocal.LocalDbDtos {
             Id = file.DatabaseId;
             Filename = file.Filename;
             Genre = file.Genre;
-            Disc = null; // Disc will only be populated after the Disc has been imported into the DB
+            Disc = file.DiscId;
             Series = file.Series.Id;
         }
     }
