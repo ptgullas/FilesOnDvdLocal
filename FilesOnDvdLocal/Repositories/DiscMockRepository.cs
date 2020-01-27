@@ -11,12 +11,12 @@ using Serilog;
 namespace FilesOnDvdLocal.Repositories {
     public class DiscMockRepository : IDiscRepository {
 
-        private List<DiscLocalDto> Discs;
-        private readonly string PathToJson;
+        private List<DiscLocalDto> discs;
+        private readonly string pathToJson;
 
         public DiscMockRepository(string pathToJson) {
-            Discs = new List<DiscLocalDto>();
-            PathToJson = pathToJson;
+            discs = new List<DiscLocalDto>();
+            this.pathToJson = pathToJson;
         }
         public int Add(DvdFolderToImport disc) {
             DiscLocalDto discDto = new DiscLocalDto(disc);
@@ -27,31 +27,30 @@ namespace FilesOnDvdLocal.Repositories {
         public int Add(DiscLocalDto disc) {
             int newId = AddDiscToList(disc);
             string jsonDiscs = SerializeDiscs();
-            SaveToFile(jsonDiscs, PathToJson);
+            SaveToFile(jsonDiscs, pathToJson);
             return newId;
         }
         // for testing
         public void Save() {
             string jsonDiscs = SerializeDiscs();
-            SaveToFile(jsonDiscs, PathToJson);
+            SaveToFile(jsonDiscs, pathToJson);
         }
 
         public void RetrieveDiscs() {
-            if (File.Exists(PathToJson)) {
-                string jsonContents = File.ReadAllText(PathToJson);
-                Discs = JsonConvert.DeserializeObject<List<DiscLocalDto>>(jsonContents);
+            if (File.Exists(pathToJson)) {
+                string jsonContents = File.ReadAllText(pathToJson);
+                discs = JsonConvert.DeserializeObject<List<DiscLocalDto>>(jsonContents);
             }
             else {
-                throw new FileNotFoundException("Can't find json file", PathToJson);
+                throw new FileNotFoundException("Can't find json file", pathToJson);
             }
-
         }
 
         private int AddDiscToList(DiscLocalDto discDto) {
-            if (!Discs.Any(d => d.DiscName == discDto.DiscName)) {
-                int highestId = Discs.Max(d => d.Id);
+            if (!discs.Any(d => d.DiscName == discDto.DiscName)) {
+                int highestId = discs.Max(d => d.Id);
                 discDto.Id = highestId + 1;
-                Discs.Add(discDto);
+                discs.Add(discDto);
             }
             else {
                 throw new ArgumentOutOfRangeException(discDto.DiscName, "Disc name already exists in Database");
@@ -60,7 +59,7 @@ namespace FilesOnDvdLocal.Repositories {
         }
 
         private string SerializeDiscs() {
-            return JsonConvert.SerializeObject(Discs, Formatting.Indented);
+            return JsonConvert.SerializeObject(discs, Formatting.Indented);
         }
 
         private void SaveToFile(string jsonContents, string filePath) {
