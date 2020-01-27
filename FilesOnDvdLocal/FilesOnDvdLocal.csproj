@@ -65,6 +65,7 @@
     <Compile Include="Importer.cs" />
     <Compile Include="LocalDbDtos\DiscLocalDto.cs" />
     <Compile Include="LocalDbDtos\FileLocalDto.cs" />
+    <Compile Include="LocalDbDtos\PerformerFilenameJoinDto.cs" />
     <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
     <Compile Include="OperationResult.cs" />
