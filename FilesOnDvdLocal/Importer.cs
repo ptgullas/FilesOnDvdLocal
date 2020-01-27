@@ -1,4 +1,5 @@
-﻿using FilesOnDvdLocal.Repositories;
+﻿using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +10,30 @@ namespace FilesOnDvdLocal {
     public class Importer {
         private IDiscRepository discRepository;
         private IPerformerRepository performerRepository;
+        private IFileRepository fileRepository;
 
-        public Importer(IDiscRepository discRepository, IPerformerRepository performerRepository) {
+        public Importer(IDiscRepository discRepository, 
+            IPerformerRepository performerRepository,
+            IFileRepository fileRepository
+            ) {
             this.discRepository = discRepository;
             this.performerRepository = performerRepository;
+            this.fileRepository = fileRepository;
         }
 
         public void Import(DvdFolderToImport dvdFolder) {
             dvdFolder.DatabaseId = discRepository.Add(dvdFolder);
             dvdFolder.SetFilesDiscId();
-            // add each file to tblFilenames
+            AddFilesToDatabase(dvdFolder);
             // associate performers with filenames (PerformerRepository.JoinPerformerToFile)
         }
 
-
+        private void AddFilesToDatabase(DvdFolderToImport dvdFolder) {
+            if (!dvdFolder.IsReadyToImport) { // throw a NotReadyToImportException or something 
+            }
+            foreach (FileToImport file in dvdFolder.Files) {
+                fileRepository.Add(file);
+            }
+        }
     }
 }
