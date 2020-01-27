@@ -57,16 +57,6 @@ namespace FilesOnDvdLocal.Repositories {
             }
         }
 
-        public void RetrieveFiles() {
-            if (File.Exists(pathToJson)) {
-                string jsonContents = File.ReadAllText(pathToJson);
-                files = JsonConvert.DeserializeObject<List<FileLocalDto>>(jsonContents);
-            }
-            else {
-                throw new FileNotFoundException("Can't find json file", pathToJson);
-            }
-        }
-
 
         public List<FileLocalDto> GetByDisc(int discId) {
             throw new NotImplementedException();
