@@ -78,6 +78,7 @@
     <Compile Include="Repositories\ISeriesRepository.cs" />
     <Compile Include="Repositories\PerformerMockRepository.cs" />
     <Compile Include="Repositories\PerformerRepository.cs" />
+    <Compile Include="Repositories\SeriesMockRepository.cs" />
     <Compile Include="Repositories\SeriesRepository.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
