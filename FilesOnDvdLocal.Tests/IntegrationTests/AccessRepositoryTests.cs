@@ -5,7 +5,7 @@ using FilesOnDvdLocal.LocalDbDtos;
 using FilesOnDvdLocal.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FilesOnDvdLocal.Tests
+namespace FilesOnDvdLocal.Tests.IntegrationTests
 {
     [TestClass]
     public class AccessRepositoryTests

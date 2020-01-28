@@ -5,7 +5,7 @@ using FilesOnDvdLocal.LocalDbDtos;
 using FilesOnDvdLocal.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FilesOnDvdLocal.Tests
+namespace FilesOnDvdLocal.Tests.IntegrationTests
 {
     [TestClass]
     public class PerformerRepositoryTests
@@ -55,6 +55,27 @@ namespace FilesOnDvdLocal.Tests
             Console.WriteLine("Debug this line");
 
         }
+
+        [TestMethod]
+        public void JoinPerformerToFile_MultiplePerformersAndFiles_AddsToJoinTable() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            PerformerRepository repository = new PerformerRepository(dbLocation);
+
+            List<PerformerFilenameJoinDto> joins = new List<PerformerFilenameJoinDto>() {
+                new PerformerFilenameJoinDto() { PerformerId = 1281, FilenameId = 4115 },
+                new PerformerFilenameJoinDto() { PerformerId = 1281, FilenameId = 4116 },
+                new PerformerFilenameJoinDto() { PerformerId = 1281, FilenameId = 4117 },
+                new PerformerFilenameJoinDto() { PerformerId = 1281, FilenameId = 4118 },
+                new PerformerFilenameJoinDto() { PerformerId = 1281, FilenameId = 4119 },
+            };
+
+            repository.JoinPerformerToFile(joins);
+
+            Console.WriteLine("Debug this line");
+
+        }
+
+
         [TestMethod]
         public void Add_NewPerformer_AddsToPerformersTable() {
             string dbLocation = @"c:\temp\Files on Dvd.accdb";

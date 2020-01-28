@@ -4,7 +4,7 @@ using System.Data;
 using FilesOnDvdLocal.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FilesOnDvdLocal.Tests
+namespace FilesOnDvdLocal.Tests.IntegrationTests
 {
     [TestClass]
     public class AccessRetrieverTests

@@ -43,7 +43,7 @@ namespace FilesOnDvdLocal.Repositories
         public int Add(DiscLocalDto discDto) {
             AccessRetriever retriever = new AccessRetriever(databasePath);
             DataSet dataSet;
-            int id;
+            int? id = 0;
             try {
                 dataSet = retriever.GetDiscs();
             }
@@ -65,8 +65,9 @@ namespace FilesOnDvdLocal.Repositories
                 discsTable.Rows.Add(newRow);
                 var changes = dataSet.GetChanges();
                 id = retriever.UpdateDiscs(dataSet);
+                if (id is null) { throw new InvalidOperationException("New DiscId is null. Check Access DB to see if it was entered."); }
             }
-            return id;
+            return (int) id;
         }
     }
 }
