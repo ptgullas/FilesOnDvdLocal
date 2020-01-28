@@ -11,12 +11,23 @@ using System.Threading.Tasks;
 namespace FilesOnDvdLocal.Repositories {
     public class FileMockRepository : IFileRepository {
 
-        private List<FileLocalDto> files;
+        private List<FileLocalDto> fileDtos;
         private readonly string pathToJson;
 
         public FileMockRepository(string pathToJson) {
             this.pathToJson = pathToJson;
-            files = new List<FileLocalDto>();
+            fileDtos = new List<FileLocalDto>();
+            RetrieveFiles();
+        }
+
+        public void RetrieveFiles() {
+            if (File.Exists(pathToJson)) {
+                string jsonContents = File.ReadAllText(pathToJson);
+                fileDtos = JsonConvert.DeserializeObject<List<FileLocalDto>>(jsonContents);
+            }
+            else {
+                throw new FileNotFoundException("Can't find json file", pathToJson);
+            }
         }
 
         public int Add(FileToImport file) {
@@ -25,26 +36,29 @@ namespace FilesOnDvdLocal.Repositories {
         }
 
         public int Add(FileLocalDto fileDto) {
-            int newId = AddFileToList(fileDto); 
-            string jsonFiles = SerializeFilenames();
-            SaveToFile(jsonFiles, pathToJson);
+            int newId = AddFileToList(fileDto);
+            SerializeFilenamesAndSave();
             return newId;
         }
 
+        private void SerializeFilenamesAndSave() {
+            string jsonFiles = SerializeFilenames();
+            SaveToFile(jsonFiles, pathToJson);
+        }
 
         public int AddFileToList(FileLocalDto fileDto) {
             int highestId = 0;
-            if (files.Any()) {
-                highestId = (int) files.Max(f => f.Id);
+            if (fileDtos.Any()) {
+                highestId = (int) fileDtos.Max(f => f.Id);
                 highestId++;
             }
             fileDto.Id = highestId;
-            files.Add(fileDto);
+            fileDtos.Add(fileDto);
             return highestId;
         }
 
         private string SerializeFilenames() {
-            return JsonConvert.SerializeObject(files, Formatting.Indented);
+            return JsonConvert.SerializeObject(fileDtos, Formatting.Indented);
 
         }
 
@@ -62,5 +76,13 @@ namespace FilesOnDvdLocal.Repositories {
             throw new NotImplementedException();
         }
 
+        public void Add(List<FileToImport> files) {
+            if (files?.Count == 0) { throw new ArgumentOutOfRangeException(nameof(files), "No files to import!"); }
+            foreach (FileToImport file in files) {
+                FileLocalDto fileDto = new FileLocalDto(file);
+                AddFileToList(fileDto);
+            }
+            SerializeFilenamesAndSave();
+        }
     }
 }
