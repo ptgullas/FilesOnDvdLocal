@@ -28,6 +28,10 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT * FROM tblFilenames", "tblFilenames");
         }
 
+        public DataSet GetFileEntriesByDiscId(int discId) {
+            return GetAccessTableAsDataSet($"SELECT * FROM tblFilenames WHERE DISC={discId}", "tblFilenames");
+        }
+
         public DataSet GetPerformers() {
             return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "tblPerformers");
         }

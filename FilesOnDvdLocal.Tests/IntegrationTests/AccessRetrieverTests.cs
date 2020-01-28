@@ -10,6 +10,20 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
     public class AccessRetrieverTests
     {
         [TestMethod]
+        public void GetFileEntriesByDisc_DiscExists_GetsCorrectFileEntries() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            AccessRetriever myRetriever = new AccessRetriever(dbLocation);
+            int discId = 220;
+            DataSet dataSet = myRetriever.GetFileEntriesByDiscId(discId);
+            DataTable dt = dataSet.Tables[0];
+
+            int expectedCount = 4;
+            Assert.AreEqual(expectedCount, dt.Rows.Count);
+
+            Console.WriteLine("Debug this line and examine the dt object");
+        }
+
+        [TestMethod]
         public void GetSeries_Temp_ActuallyGetsSeries() {
             string dbLocation = @"c:\temp\Files on Dvd.accdb";
             AccessRetriever myRetriever = new AccessRetriever(dbLocation);
