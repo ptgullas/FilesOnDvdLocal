@@ -73,7 +73,7 @@ namespace FilesOnDvdLocal.Repositories {
 
 
         public List<FileLocalDto> GetByDisc(int discId) {
-            throw new NotImplementedException();
+            return fileDtos.Where(f => f.Disc == discId).ToList();
         }
 
         public void Add(List<FileToImport> files) {
