@@ -22,7 +22,21 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
             repository.Add(fileDtos);
 
             Console.WriteLine("Debug this line");
-        
+        }
+
+        [TestMethod]
+        public void GetByDisc_DiscExists_ReturnsCorrectList() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            FileRepository repository = new FileRepository(dbLocation);
+            int discId = 220;
+            var discs = repository.GetByDisc(discId);
+            int expectedCount = 4;
+
+            Assert.AreEqual(expectedCount, discs.Count);
+
+            Console.WriteLine("Debug this line & examine discs");
+
+
         }
     }
 }

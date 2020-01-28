@@ -58,10 +58,15 @@ namespace FilesOnDvdLocal.Repositories
             retriever.UpdateFileEntries(dataSet);
         }
 
-        private DataSet RetrieveFileEntriesFromDatabase(AccessRetriever retriever) {
+        private DataSet RetrieveFileEntriesFromDatabase(AccessRetriever retriever, int? discId = null) {
             DataSet dataSet;
             try {
-                dataSet = retriever.GetFileEntries();
+                if (discId == null) {
+                    dataSet = retriever.GetFileEntries();
+                }
+                else {
+                    dataSet = retriever.GetFileEntriesByDiscId((int) discId);
+                }
             }
             catch (Exception e) {
                 Log.Error(e, "Could not retrieve filenames from Access DB");
@@ -72,7 +77,24 @@ namespace FilesOnDvdLocal.Repositories
         }
 
         public List<FileLocalDto> GetByDisc(int discId) {
-            throw new NotImplementedException();
+            AccessRetriever retriever = new AccessRetriever(databasePath);
+            DataSet dataSet = RetrieveFileEntriesFromDatabase(retriever, discId);
+            DataTable fileTable = dataSet.Tables[0];
+
+            List<FileLocalDto> filesInDisc = new List<FileLocalDto>();
+            foreach (DataRow row in fileTable.Rows) {
+                string idStr = row["ID"].ToString();
+                bool result = int.TryParse(idStr, out int id);
+
+                FileLocalDto fileDto = new FileLocalDto() {
+                    // all we care about retrieving here are the Id and Filename, 
+                    // so the Ids can be copied into the FileToImport objects
+                    Id = id,
+                    Filename = row["Filename"].ToString()
+                };
+                filesInDisc.Add(fileDto);
+            }
+            return filesInDisc;
         }
     }
 }
