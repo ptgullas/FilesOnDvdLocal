@@ -73,6 +73,7 @@
     <Compile Include="Repositories\DiscMockRepository.cs" />
     <Compile Include="Repositories\DiscRepository.cs" />
     <Compile Include="Repositories\FileMockRepository.cs" />
+    <Compile Include="Repositories\FileRepository.cs" />
     <Compile Include="Repositories\IDiscRepository.cs" />
     <Compile Include="Repositories\IFileRepository.cs" />
     <Compile Include="Repositories\IPerformerRepository.cs" />

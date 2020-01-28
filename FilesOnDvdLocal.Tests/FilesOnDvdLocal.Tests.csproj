@@ -53,6 +53,7 @@
     <Compile Include="IntegrationTests\AccessRepositoryTests.cs" />
     <Compile Include="FileToImportTests.cs" />
     <Compile Include="IntegrationTests\DiscRepositoryTests.cs" />
+    <Compile Include="IntegrationTests\FileRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IntegrationTests\AccessRetrieverTests.cs" />
     <Compile Include="StringExtensionsTests.cs" />
