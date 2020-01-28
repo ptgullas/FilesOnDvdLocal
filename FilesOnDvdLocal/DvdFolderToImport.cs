@@ -29,12 +29,13 @@ namespace FilesOnDvdLocal {
         }
 
 
-        public DvdFolderToImport(string folderPath, IPerformerRepository performerRepository) {
+        public DvdFolderToImport(string folderPath, 
+            IPerformerRepository performerRepository, ISeriesRepository seriesRepository) {
             DatabaseId = null;
             FolderPath = folderPath;
             DiscName = Path.GetFileName(FolderPath);
             Files = new List<FileToImport>();
-            PopulateFiles(performerRepository);
+            PopulateFiles(performerRepository, seriesRepository);
             PerformersInFolderAll = new List<PerformerLocalDto>();
             CompileAllPerformersInFolder();
         }
@@ -47,12 +48,12 @@ namespace FilesOnDvdLocal {
             CompileAllPerformersInFolder();
         }
 
-        public void PopulateFiles(IPerformerRepository performerRepository) {
+        public void PopulateFiles(IPerformerRepository performerRepository, ISeriesRepository seriesRepository) {
             Files.Clear();
             if (Directory.Exists(FolderPath)) {
                 var files = Directory.GetFiles(FolderPath);
                 foreach (string file in files) {
-                    FileToImport fileToImport = new FileToImport(file, performerRepository);
+                    FileToImport fileToImport = new FileToImport(file, performerRepository, seriesRepository);
                     Files.Add(fileToImport);
                 }
             }

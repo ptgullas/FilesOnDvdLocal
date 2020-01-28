@@ -17,6 +17,7 @@ namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
         private string folderPath;
         private IPerformerRepository performerRepository;
+        private ISeriesRepository seriesRepository;
         private Importer importer;
 
         private FileToImport selectedFile;
@@ -31,7 +32,7 @@ namespace DvdImportClient {
             set {
                 SetField(ref folderPath, value); // calls OnPropertyChange
                 FolderToImport.FolderPath = folderPath;
-                FolderToImport.PopulateFiles(performerRepository);
+                FolderToImport.PopulateFiles(performerRepository, seriesRepository);
                 Files.Clear();
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
@@ -72,8 +73,12 @@ namespace DvdImportClient {
             discRepository.RetrieveDiscs();
             importer = new Importer(discRepository, perfRepository, fileRepository);
 
+            string pathToSeriesRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\seriesMockRepo.json";
+            SeriesMockRepository seriesRepo = new SeriesMockRepository(pathToSeriesRepositoryJson);
+            seriesRepository = seriesRepo;
+
             string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
-            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository);
+            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository, seriesRepository);
             folderPath = FolderToImport.FolderPath;
             FolderName = FolderToImport.DiscName;
             Files = new ObservableCollection<FileToImport>(FolderToImport.Files);

@@ -56,16 +56,20 @@ namespace FilesOnDvdLocal {
 
 
 
-        public FileToImport(string path, IPerformerRepository dataRepository) {
+        public FileToImport(string path, IPerformerRepository perfRepository, 
+            ISeriesRepository seriesRepository = null) {
             File = new FileInfo(path);
             Filename = File.Name;
             DatabaseId = null;
             DiscId = null;
+            SeriesString = FilenameParser.GetSeriesName(Filename);
+            Series = new SeriesLocalDto();
+            PopulateSeriesFromRepository(seriesRepository);
+
             PerformersString = new List<string>();
             PerformersString = FilenameParser.GetPerformers(Filename);
-            SeriesString = FilenameParser.GetSeriesName(Filename);
             Performers = new List<PerformerLocalDto>();
-            PopulatePerformersFromRepository(dataRepository);
+            PopulatePerformersFromRepository(perfRepository);
         }
 
         private void PopulatePerformersFromRepository(IPerformerRepository dataRepository) {
@@ -74,6 +78,12 @@ namespace FilesOnDvdLocal {
                     var performerDto = dataRepository.Get(perf);
                     Performers.Add(performerDto);
                 }
+            }
+        }
+
+        private void PopulateSeriesFromRepository(ISeriesRepository seriesRepository) {
+            if (SeriesString != null) {
+                Series = seriesRepository.Get(SeriesString);
             }
         }
 
