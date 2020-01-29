@@ -60,5 +60,9 @@ namespace FilesOnDvdLocal.Repositories
         public PerformerLocalDto Get(int id) {
             throw new NotImplementedException();
         }
+
+        public void JoinPerformerToFile(List<PerformerFilenameJoinDto> joins) {
+            throw new NotImplementedException();
+        }
     }
 }

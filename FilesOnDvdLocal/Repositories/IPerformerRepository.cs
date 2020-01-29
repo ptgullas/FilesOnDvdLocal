@@ -10,5 +10,6 @@ namespace FilesOnDvdLocal.Repositories {
         List<PerformerLocalDto> Get();
         PerformerLocalDto Get(string name);
         PerformerLocalDto Get(int id);
+        void JoinPerformerToFile(List<PerformerFilenameJoinDto> joins);
     }
 }
