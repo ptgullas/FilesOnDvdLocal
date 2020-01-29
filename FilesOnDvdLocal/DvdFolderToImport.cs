@@ -151,5 +151,15 @@ namespace FilesOnDvdLocal {
                 return new OperationResult() { Success = false, Message = "DatabaseId not set" };
             }
         }
+
+        public void SetFilesIdsFromDatabase(List<FileLocalDto> fileDtosInDisc) {
+            if (fileDtosInDisc.Count != Files.Count) {
+                Log.Error("Count of files imported to Database doesn't match count of files in DVDFolderToImport");
+            }
+            foreach (FileToImport file in Files) {
+                file.DatabaseId = fileDtosInDisc
+                    .FirstOrDefault(f => f.Filename == file.Filename).Id;
+            }
+        }
     }
 }

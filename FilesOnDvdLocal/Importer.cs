@@ -25,15 +25,15 @@ namespace FilesOnDvdLocal {
             dvdFolder.DatabaseId = discRepository.Add(dvdFolder);
             dvdFolder.SetFilesDiscId();
             AddFilesToDatabase(dvdFolder);
+            var fileDtosFromDatabase = fileRepository.GetByDisc((int) dvdFolder.DatabaseId);
+            dvdFolder.SetFilesIdsFromDatabase(fileDtosFromDatabase);
             // associate performers with filenames (PerformerRepository.JoinPerformerToFile)
         }
 
         private void AddFilesToDatabase(DvdFolderToImport dvdFolder) {
             if (!dvdFolder.IsReadyToImport) { // throw a NotReadyToImportException or something 
             }
-            foreach (FileToImport file in dvdFolder.Files) {
-                fileRepository.Add(file);
-            }
+            fileRepository.Add(dvdFolder.Files);
         }
     }
 }
