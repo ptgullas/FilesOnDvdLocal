@@ -27,7 +27,8 @@ namespace FilesOnDvdLocal {
             AddFilesToDatabase(dvdFolder);
             var fileDtosFromDatabase = fileRepository.GetByDisc((int) dvdFolder.DatabaseId);
             dvdFolder.SetFilesIdsFromDatabase(fileDtosFromDatabase);
-            // associate performers with filenames (PerformerRepository.JoinPerformerToFile)
+            var joinDtos = dvdFolder.GetPerformerFilenameJoinDtos();
+            performerRepository.JoinPerformerToFile(joinDtos);
         }
 
         private void AddFilesToDatabase(DvdFolderToImport dvdFolder) {
