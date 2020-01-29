@@ -51,7 +51,7 @@ namespace FilesOnDvdLocal.Repositories {
             // should null check be here or in caller?
             if (perf == null) {
                 perf = new PerformerLocalDto() {
-                    Id = 0,
+                    Id = -1,
                     Name = name
                 };
             }
