@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DvdImportClient.FoldersToImport"
              mc:Ignorable="d"
-             d:DesignHeight="450"
+             d:DesignHeight="500"
              d:DesignWidth="800"
              Name="RootUserControl">
     <UserControl.Resources>
@@ -18,9 +18,8 @@
                          Foreground="#FFF08AF1"
                          FontWeight="Bold"
                          Width="300"
-                         Height="60" 
-                         TextWrapping="Wrap"
-                         />
+                         Height="60"
+                         TextWrapping="Wrap" />
                 <CheckBox x:Name="CheckboxEnableFilename"
                           IsChecked="False"
                           Content="Enable Filename Box"
@@ -100,24 +99,25 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Menu Grid.Column="0"
-                  Grid.ColumnSpan="5"
-                  Grid.Row="0">
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Browse.."
-                              Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                    </MenuItem>
-                    <MenuItem Header="Save Filename List"
-                              Command="{Binding SaveFilenameListCommand}" />
-                    <Separator />
-                    <MenuItem Header="Import"
-                              Command="{Binding ImportCommand}" />
+              Grid.ColumnSpan="5"
+              Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Browse.."
+                          Command="{Binding Path=DataContext.BrowseFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 </MenuItem>
-                <MenuItem Header="_Tools">
-                    <MenuItem Header="Options..." />
-                </MenuItem>
-            </Menu>
+                <MenuItem Header="Save Filename List"
+                          Command="{Binding SaveFilenameListCommand}" />
+                <Separator />
+                <MenuItem Header="Import"
+                          Command="{Binding ImportCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="Options..." />
+            </MenuItem>
+        </Menu>
         <Label Content="Folder:"
                Grid.Column="0"
                Grid.Row="1"
@@ -135,37 +135,37 @@
                  MinWidth="400"
                  Margin="0,18,0,4"
                  HorizontalAlignment="Left"
-                 VerticalContentAlignment="Bottom"
-                 />
-        <Button x:Name="ButtonBrowse" 
+                 VerticalContentAlignment="Bottom" />
+        <Button x:Name="ButtonBrowse"
                 Command="{Binding BrowseFolderCommand}"
                 Content="Browse"
                 Grid.Column="3"
                 Grid.Row="1"
                 Grid.ColumnSpan="1"
-                MinWidth="75" 
+                MinWidth="75"
                 Height="20"
                 HorizontalAlignment="Left"
-                Margin="5,18,0,3"
-                />
+                Margin="5,18,0,3" />
         <Button Command="{Binding SaveFilenameListCommand}"
                 Content="Save FilenameList"
                 Grid.Column="4"
-                Grid.Row="1"
-                />
+                Grid.Row="1" />
         <TextBlock Text="{Binding FolderName}"
                    Grid.Column="1"
+                   Grid.ColumnSpan="3"
                    Grid.Row="2"
                    Foreground="#FFF08AF1"
-                   FontWeight="Bold"></TextBlock>
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"></TextBlock>
         <ListBox ItemsSource="{Binding Files}"
                  SelectedItem="{Binding SelectedFile}"
                  IsSynchronizedWithCurrentItem="True"
-                 Grid.Column="1"
                  Grid.Row="3"
-                 Grid.ColumnSpan="3"
+                 Grid.ColumnSpan="4"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Height="400"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                 VerticalAlignment="Bottom"
+                 Margin="3,0,1,80.333">
             <ListBox.ItemTemplate>
                 <DataTemplate x:Name="FilesTemplate">
                     <StackPanel Orientation="Horizontal">
@@ -219,7 +219,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <ContentControl Content="{Binding Files}"
-                        ContentTemplate="{StaticResource FileDetailTemplate}" 
+                        ContentTemplate="{StaticResource FileDetailTemplate}"
                         Grid.Column="4"
                         Grid.Row="3"
                         Margin="4,11,0,163" />
@@ -250,8 +250,7 @@
                                 <!--<Setter Property="Background" Value="Black" TargetName="PerformerAll" />-->
                                 <Setter TargetName="PerformerAll"
                                         Property="Foreground"
-                                        Value="#FFF70000"
-                                        />
+                                        Value="#FFF70000" />
                             </DataTrigger.Setters>
                         </DataTrigger>
                     </DataTemplate.Triggers>
