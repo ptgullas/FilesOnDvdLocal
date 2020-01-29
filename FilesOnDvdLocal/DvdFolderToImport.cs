@@ -127,6 +127,7 @@ namespace FilesOnDvdLocal {
                 string pathToSave = Path.Combine(folderPathToSave, textfileName);
                 try {
                     using (StreamWriter outputfile = new StreamWriter(pathToSave, false)) {
+                        await outputfile.WriteLineAsync(Path.GetFileName(FolderPath));
                         foreach (string filename in filenameList) {
                             await outputfile.WriteLineAsync(filename);
                         }
