@@ -161,5 +161,19 @@ namespace FilesOnDvdLocal {
                     .FirstOrDefault(f => f.Filename == file.Filename).Id;
             }
         }
+
+        public List<PerformerFilenameJoinDto> GetPerformerFilenameJoinDtos() {
+            List<PerformerFilenameJoinDto> joinDtos = new List<PerformerFilenameJoinDto>();
+            foreach (FileToImport file in Files) {
+                foreach (PerformerLocalDto performer in file.Performers) {
+                    PerformerFilenameJoinDto joinDto = new PerformerFilenameJoinDto() {
+                        PerformerId = performer.Id,
+                        FilenameId = (int) file.DatabaseId
+                    };
+                    joinDtos.Add(joinDto);
+                }
+            }
+            return joinDtos;
+        }
     }
 }
