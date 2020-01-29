@@ -84,7 +84,7 @@ namespace FilesOnDvdLocal.Repositories
             List<FileLocalDto> filesInDisc = new List<FileLocalDto>();
             foreach (DataRow row in fileTable.Rows) {
                 string idStr = row["ID"].ToString();
-                bool result = int.TryParse(idStr, out int id);
+                _ = int.TryParse(idStr, out int id);
 
                 FileLocalDto fileDto = new FileLocalDto() {
                     // all we care about retrieving here are the Id and Filename, 
