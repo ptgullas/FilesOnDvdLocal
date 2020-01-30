@@ -87,6 +87,7 @@ namespace DvdImportClient {
             PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(performerRepository.Get().OrderBy(b => b.Name));
 
             SeriesInDatabase = new ObservableCollection<SeriesLocalDto>(seriesRepository.Get().OrderBy(s => s.Name));
+            SeriesInDatabase.Insert(0, new SeriesLocalDto());
 
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
