@@ -27,9 +27,13 @@
                 <Label Content="Series:"
                        Foreground="Wheat"
                        FontWeight="Bold" />
-                <TextBlock Text="{Binding Series.Name}"
+                <ComboBox x:Name="ComboBoxSeriesFromDatabase"
+                          ItemsSource="{Binding Path=DataContext.SeriesInDatabase,RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding Path=Series}" />
+                <!--<TextBlock Text="{Binding Series.Name}"
                            Foreground="#FFF08AF1"
-                           FontWeight="Bold" />
+                           FontWeight="Bold" />-->
                 <ListBox x:Name="PerformersList"
                          ItemsSource="{Binding Path=Performers}"
                          Height="106">
