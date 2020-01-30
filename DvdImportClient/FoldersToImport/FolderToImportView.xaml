@@ -153,13 +153,19 @@
                 Grid.Column="4"
                 Grid.Row="1"
                 Height="20" />
+        <Label Content="DVD Name:" 
+               Grid.Column="0"
+               Grid.Row="2"
+               Foreground="Wheat"
+               FontWeight="Bold"
+               />
         <TextBlock Text="{Binding FolderName}"
                    Grid.Column="1"
-                   Grid.ColumnSpan="3"
                    Grid.Row="2"
                    Foreground="#FFF08AF1"
                    FontWeight="Bold"
-                   HorizontalAlignment="Center" />
+                   HorizontalAlignment="Left" 
+                   VerticalAlignment="Center"/>
         <ListBox ItemsSource="{Binding Files}"
                  SelectedItem="{Binding SelectedFile}"
                  IsSynchronizedWithCurrentItem="True"
