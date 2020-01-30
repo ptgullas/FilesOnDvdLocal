@@ -7,7 +7,7 @@
         xmlns:Folders="clr-namespace:DvdImportClient.FoldersToImport"
         mc:Ignorable="d"
         Title="DvdImportClient"
-        Height="555"
+        Height="600"
         Width="939"
         Background="#FF510155">
     <Grid>
