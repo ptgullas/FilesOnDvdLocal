@@ -40,12 +40,6 @@ namespace FilesOnDvdLocal.Repositories {
             SerializeFilenamesAndSave();
             return newId;
         }
-
-        private void SerializeFilenamesAndSave() {
-            string jsonFiles = SerializeFilenames();
-            SaveToFile(jsonFiles, pathToJson);
-        }
-
         public int AddFileToList(FileLocalDto fileDto) {
             int highestId = 0;
             if (fileDtos.Any()) {
@@ -57,9 +51,22 @@ namespace FilesOnDvdLocal.Repositories {
             return highestId;
         }
 
+        private void SerializeFilenamesAndSave() {
+            string jsonFiles = SerializeFilenames();
+            SaveToFile(jsonFiles, pathToJson);
+        }
+
+        public void Add(List<FileToImport> files) {
+            if (files?.Count == 0) { throw new ArgumentOutOfRangeException(nameof(files), "No files to import!"); }
+            foreach (FileToImport file in files) {
+                FileLocalDto fileDto = new FileLocalDto(file);
+                AddFileToList(fileDto);
+            }
+            SerializeFilenamesAndSave();
+        }
+
         private string SerializeFilenames() {
             return JsonConvert.SerializeObject(fileDtos, Formatting.Indented);
-
         }
 
         private void SaveToFile(string jsonContents, string filePath) {
@@ -76,13 +83,5 @@ namespace FilesOnDvdLocal.Repositories {
             return fileDtos.Where(f => f.Disc == discId).ToList();
         }
 
-        public void Add(List<FileToImport> files) {
-            if (files?.Count == 0) { throw new ArgumentOutOfRangeException(nameof(files), "No files to import!"); }
-            foreach (FileToImport file in files) {
-                FileLocalDto fileDto = new FileLocalDto(file);
-                AddFileToList(fileDto);
-            }
-            SerializeFilenamesAndSave();
-        }
     }
 }
