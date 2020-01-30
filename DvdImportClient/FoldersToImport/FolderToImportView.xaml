@@ -30,7 +30,8 @@
                 <ComboBox x:Name="ComboBoxSeriesFromDatabase"
                           ItemsSource="{Binding Path=DataContext.SeriesInDatabase,RelativeSource={RelativeSource AncestorType=UserControl}}"
                           DisplayMemberPath="Name"
-                          SelectedItem="{Binding Path=Series}" />
+                          SelectedItem="{Binding Path=Series}" 
+                          />
                 <!--<TextBlock Text="{Binding Series.Name}"
                            Foreground="#FFF08AF1"
                            FontWeight="Bold" />-->
@@ -126,7 +127,9 @@
                Grid.Row="1"
                VerticalAlignment="Bottom"
                HorizontalAlignment="Right"
-               Foreground="#FFF08AF1" />
+               Foreground="Wheat" 
+               FontWeight="Bold"
+               />
         <TextBox Text="{Binding FolderPath}"
                  IsEnabled="False"
                  Grid.Column="1"
