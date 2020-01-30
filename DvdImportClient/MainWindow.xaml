@@ -7,8 +7,8 @@
         xmlns:Folders="clr-namespace:DvdImportClient.FoldersToImport"
         mc:Ignorable="d"
         Title="DvdImportClient"
-        Height="600"
-        Width="939"
+        Height="580"
+        Width="959"
         Background="#FF510155">
     <Grid>
         <Folders:FolderToImportView HorizontalAlignment="Left"
