@@ -16,7 +16,7 @@ namespace FilesOnDvdLocal {
         public FileInfo File { get; set; }
         public int? DatabaseId { get; set; }
         public int? Genre { get; set; }
-        public SeriesLocalDto Series {get; set;}
+        public SeriesLocalDto Series { get; set; }
         public int? DiscId { get; set; }
 
         private List<PerformerLocalDto> performers;
