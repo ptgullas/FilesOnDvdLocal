@@ -67,18 +67,16 @@ namespace DvdImportClient {
         public FolderToImportViewModel() {
             SetUpConfiguration();
             var localFoldersOptions = GetLocalPathOptions();
+            bool useMockRepositories = Configuration.GetValue<bool>("UseMockRepositories");
+            RepositoryFactory repositoryFactory = new RepositoryFactory(localFoldersOptions, useMockRepositories);
 
-            // replace this with the real repository later
-            string pathToFileRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\fileMockRepo.json";
-            FileMockRepository fileRepository = new FileMockRepository(pathToFileRepositoryJson);
-
-            PerformerMockRepository perfRepository = new PerformerMockRepository();
-            performerRepository = perfRepository;
+            var fileRepository = repositoryFactory.GetFileRepository();
+            performerRepository = repositoryFactory.GetPerformerRepository();
 
             string pathToDiscRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\discMockRepo.json";
             DiscMockRepository discRepository = new DiscMockRepository(pathToDiscRepositoryJson);
             discRepository.RetrieveDiscs();
-            importer = new Importer(discRepository, perfRepository, fileRepository);
+            importer = new Importer(discRepository, performerRepository, fileRepository);
 
             string pathToSeriesRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\seriesMockRepo.json";
             SeriesMockRepository seriesRepo = new SeriesMockRepository(pathToSeriesRepositoryJson);

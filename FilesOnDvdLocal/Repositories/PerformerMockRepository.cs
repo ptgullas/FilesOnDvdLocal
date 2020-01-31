@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FilesOnDvdLocal.LocalDbDtos;
+using Newtonsoft.Json;
 
 namespace FilesOnDvdLocal.Repositories
 {
     public class PerformerMockRepository : IPerformerRepository {
 
         private List<PerformerLocalDto> performers;
+        private readonly string pathToJson;
+
+
+        public PerformerMockRepository(string pathToJson) {
+            this.pathToJson = pathToJson;
+            RetrievePerformers();
+        }
 
         public PerformerMockRepository() {
             performers = GetMockPerformers();
@@ -37,6 +46,17 @@ namespace FilesOnDvdLocal.Repositories
             };
             return mockPerformers;
         }
+
+        private void RetrievePerformers() {
+            if (File.Exists(pathToJson)) {
+                string jsonContents = File.ReadAllText(pathToJson);
+                performers = JsonConvert.DeserializeObject<List<PerformerLocalDto>>(jsonContents);
+            }
+            else {
+                throw new FileNotFoundException("Can't find json file", pathToJson);
+            }
+        }
+
 
 
         public List<PerformerLocalDto> Get() {
