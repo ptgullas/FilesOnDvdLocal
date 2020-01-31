@@ -1,5 +1,6 @@
 ﻿using FilesOnDvdLocal;
 using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Options;
 using FilesOnDvdLocal.Repositories;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -65,6 +66,7 @@ namespace DvdImportClient {
 
         public FolderToImportViewModel() {
             SetUpConfiguration();
+            var localFoldersOptions = GetLocalFolderOptions();
 
             // replace this with the real repository later
             string pathToFileRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\fileMockRepo.json";
@@ -82,7 +84,7 @@ namespace DvdImportClient {
             SeriesMockRepository seriesRepo = new SeriesMockRepository(pathToSeriesRepositoryJson);
             seriesRepository = seriesRepo;
 
-            string pathToGetFromSettingsFile = @"C:\temp\SampleFilesToImport";
+            string pathToGetFromSettingsFile = localFoldersOptions.DvdToImportStartFolder;
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository, seriesRepository);
             folderPath = FolderToImport.FolderPath;
             FolderName = FolderToImport.DiscName;
@@ -108,7 +110,14 @@ namespace DvdImportClient {
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true);
             // IConfigurationRoot configuration = builder.Build();
             Configuration = builder.Build();
+        }
 
+
+        private static LocalFoldersOptions GetLocalFolderOptions() {
+            LocalFoldersOptions localFoldersOptions = new LocalFoldersOptions();
+            IConfigurationSection localFoldersConfig = Configuration.GetSection("LocalFolders");
+            ConfigurationBinder.Bind(localFoldersConfig, localFoldersOptions);
+            return localFoldersOptions;
         }
 
         private void AddPerformer(object perf) {
