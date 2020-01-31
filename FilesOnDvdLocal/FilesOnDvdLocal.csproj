@@ -83,6 +83,7 @@
     <Compile Include="Repositories\PerformerRepository.cs" />
     <Compile Include="Repositories\SeriesMockRepository.cs" />
     <Compile Include="Repositories\SeriesRepository.cs" />
+    <Compile Include="RepositoryFactory.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
