@@ -51,14 +51,38 @@ namespace FilesOnDvdLocal {
             else { return CreatePerformerRepository(); }
         }
         private PerformerMockRepository CreatePerformerMockRepository() {
-            string pathToJson = localPathOptions.PerformerMockRepositoryPath;
-            ThrowExceptionIfFileNotFound(pathToJson);
-            return new PerformerMockRepository(pathToJson);
+            return new PerformerMockRepository(localPathOptions);
         }
 
         private PerformerRepository CreatePerformerRepository() {
             string dbPath = GetDbPath();
             return new PerformerRepository(dbPath);
+        }
+
+        public IDiscRepository GetDiscRepository() {
+            if (useMockRepositories) { return CreateDiscMockRepository(); }
+            else { return CreateDiscRepository(); }
+        }
+
+        private DiscMockRepository CreateDiscMockRepository() {
+            return new DiscMockRepository(localPathOptions.DiscMockRepositoryPath);
+        }
+
+        private DiscRepository CreateDiscRepository() {
+            return new DiscRepository(localPathOptions.DatabasePath);
+        }
+
+        public ISeriesRepository GetSeriesRepository() {
+            if (useMockRepositories) { return CreateSeriesMockRepository(); }
+            else { return CreateSeriesRepository(); }
+        }
+
+        private SeriesMockRepository CreateSeriesMockRepository() {
+            return new SeriesMockRepository(localPathOptions.SeriesMockRepositoryPath);
+        }
+
+        private SeriesRepository CreateSeriesRepository() {
+            return new SeriesRepository(localPathOptions.DatabasePath);
         }
     }
 }
