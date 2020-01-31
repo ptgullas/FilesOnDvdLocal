@@ -1,6 +1,7 @@
 ﻿using FilesOnDvdLocal;
 using FilesOnDvdLocal.LocalDbDtos;
 using FilesOnDvdLocal.Repositories;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +16,8 @@ using System.Windows.Input;
 
 namespace DvdImportClient {
     public class FolderToImportViewModel : INotifyPropertyChanged {
+        public static IConfigurationRoot Configuration;
+
         private string folderPath;
         private IPerformerRepository performerRepository;
         private ISeriesRepository seriesRepository;
@@ -61,6 +64,7 @@ namespace DvdImportClient {
         public ICommand ImportCommand { get; private set; }
 
         public FolderToImportViewModel() {
+            SetUpConfiguration();
 
             // replace this with the real repository later
             string pathToFileRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\fileMockRepo.json";
@@ -94,6 +98,17 @@ namespace DvdImportClient {
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
             AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
             ImportCommand = new RelayCommand(param => Import(), d => FolderToImport.IsReadyToImport);
+        }
+
+
+        private static void SetUpConfiguration() {
+            string projectRoot = AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.LastIndexOf(@"\bin"));
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(projectRoot)
+                .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true);
+            // IConfigurationRoot configuration = builder.Build();
+            Configuration = builder.Build();
+
         }
 
         private void AddPerformer(object perf) {
