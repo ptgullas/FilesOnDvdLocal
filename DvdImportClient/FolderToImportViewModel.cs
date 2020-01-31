@@ -115,7 +115,7 @@ namespace DvdImportClient {
 
         private static LocalPathOptions GetLocalPathOptions() {
             LocalPathOptions localPathOptions = new LocalPathOptions();
-            IConfigurationSection localFoldersConfig = Configuration.GetSection("LocalFolders");
+            IConfigurationSection localFoldersConfig = Configuration.GetSection("LocalPaths");
             ConfigurationBinder.Bind(localFoldersConfig, localPathOptions);
             return localPathOptions;
         }
