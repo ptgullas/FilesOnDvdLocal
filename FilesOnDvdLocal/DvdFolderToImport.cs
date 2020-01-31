@@ -15,7 +15,7 @@ namespace FilesOnDvdLocal {
         public List<PerformerLocalDto> PerformersInFolderAll { get; set; }
 
         public string DiscName { get; set; }
-        public int WalletType { get; set; } // 3 will be the usual one
+        public int WalletType { get; set; } // 1 will be the usual one
         public string Notes { get; set; }
         public int? DatabaseId { get; set; }
 
@@ -42,6 +42,10 @@ namespace FilesOnDvdLocal {
             // let the user pick this via the UI later
             GenreLocalDto genreDto = new GenreLocalDto() { Id = 3, Genre = "Stuff" };
             SetFilesGenre(genreDto);
+
+            // let the user pick this via the UI later
+            WalletLocalDto walletDto = new WalletLocalDto() { Id = 1, WalletName = "Stuff" };
+            WalletType = walletDto.Id;
         }
 
         // constructor accepts list of files (mainly for testing)

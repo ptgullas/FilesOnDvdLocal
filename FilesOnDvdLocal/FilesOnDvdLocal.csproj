@@ -69,6 +69,7 @@
     <Compile Include="LocalDbDtos\PerformerFilenameJoinDto.cs" />
     <Compile Include="LocalDbDtos\PerformerLocalDto.cs" />
     <Compile Include="LocalDbDtos\SeriesLocalDto.cs" />
+    <Compile Include="LocalDbDtos\WalletLocalDto.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="Options\LocalPathOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
