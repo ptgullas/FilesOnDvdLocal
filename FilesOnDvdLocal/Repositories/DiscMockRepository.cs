@@ -17,6 +17,7 @@ namespace FilesOnDvdLocal.Repositories {
         public DiscMockRepository(string pathToJson) {
             discs = new List<DiscLocalDto>();
             this.pathToJson = pathToJson;
+            RetrieveDiscs();
         }
         public int Add(DvdFolderToImport disc) {
             DiscLocalDto discDto = new DiscLocalDto(disc);
