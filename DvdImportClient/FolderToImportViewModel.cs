@@ -169,7 +169,13 @@ namespace DvdImportClient {
         }
 
         private void Import() {
-            importer.Import(FolderToImport);
+            var result = importer.Import(FolderToImport);
+            if (result.Success) {
+                MessageBox.Show($"Successfully imported {FolderToImport.DiscName}!");
+            }
+            else {
+                MessageBox.Show(result.Message);
+            }
         }
 
         private async Task SaveFilenameList() {

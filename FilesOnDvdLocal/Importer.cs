@@ -1,5 +1,6 @@
 ﻿using FilesOnDvdLocal.LocalDbDtos;
 using FilesOnDvdLocal.Repositories;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +22,24 @@ namespace FilesOnDvdLocal {
             this.fileRepository = fileRepository;
         }
 
-        public void Import(DvdFolderToImport dvdFolder) {
-            dvdFolder.DatabaseId = discRepository.Add(dvdFolder);
-            dvdFolder.SetFilesDiscId();
-            AddFilesToDatabase(dvdFolder);
-            var fileDtosFromDatabase = fileRepository.GetByDisc((int) dvdFolder.DatabaseId);
-            dvdFolder.SetFilesIdsFromDatabase(fileDtosFromDatabase);
-            var joinDtos = dvdFolder.GetPerformerFilenameJoinDtos();
-            performerRepository.JoinPerformerToFile(joinDtos);
+        public OperationResult Import(DvdFolderToImport dvdFolder) {
+            try {
+                dvdFolder.DatabaseId = discRepository.Add(dvdFolder);
+                dvdFolder.SetFilesDiscId();
+                AddFilesToDatabase(dvdFolder);
+                var fileDtosFromDatabase = fileRepository.GetByDisc((int)dvdFolder.DatabaseId);
+                dvdFolder.SetFilesIdsFromDatabase(fileDtosFromDatabase);
+                var joinDtos = dvdFolder.GetPerformerFilenameJoinDtos();
+                performerRepository.JoinPerformerToFile(joinDtos);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Import failed!");
+                return new OperationResult() {
+                    Success = false,
+                    Message = $"Error importing {dvdFolder.DiscName}"
+                };
+            }
+            return new OperationResult() { Success = true, Message = null };
         }
 
         private void AddFilesToDatabase(DvdFolderToImport dvdFolder) {
