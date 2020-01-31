@@ -9,6 +9,7 @@ namespace FilesOnDvdLocal.Options {
         public string DvdToImportStartFolder { get; set; }
         public string MockRepositoryFolder { get; set; }
         public string FileMockRepositoryPath { get; set; }
+        public string PerformerMockRepositoryPath { get; set; }
         public string DiscMockRepositoryPath { get; set; }
         public string SeriesMockRepositoryPath { get; set; }
         public string FileListingFolder { get; set; }
