@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FilesOnDvdLocal.LocalDbDtos;
+using FilesOnDvdLocal.Options;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace FilesOnDvdLocal.Repositories
 {
@@ -13,10 +15,12 @@ namespace FilesOnDvdLocal.Repositories
 
         private List<PerformerLocalDto> performers;
         private readonly string pathToJson;
+        private readonly string pathToJoinsJson;
 
 
-        public PerformerMockRepository(string pathToJson) {
-            this.pathToJson = pathToJson;
+        public PerformerMockRepository(LocalPathOptions localPathOptions) {
+            pathToJson = localPathOptions.PerformerMockRepositoryPath;
+            pathToJoinsJson = localPathOptions.JoinsMockRepositoryPath;
             RetrievePerformers();
         }
 
@@ -57,7 +61,17 @@ namespace FilesOnDvdLocal.Repositories
             }
         }
 
-
+        private List<PerformerFilenameJoinDto> RetrieveJoins() {
+            List<PerformerFilenameJoinDto> joins;
+            if (File.Exists(pathToJoinsJson)) {
+                string jsonContents = File.ReadAllText(pathToJoinsJson);
+                joins = JsonConvert.DeserializeObject<List<PerformerFilenameJoinDto>>(jsonContents);
+            }
+            else {
+                throw new FileNotFoundException("Can't find json file", pathToJoinsJson);
+            }
+            return joins;
+        }
 
         public List<PerformerLocalDto> Get() {
             return performers.OrderBy(p => p.Name).ToList();
@@ -81,8 +95,27 @@ namespace FilesOnDvdLocal.Repositories
             throw new NotImplementedException();
         }
 
-        public void JoinPerformerToFile(List<PerformerFilenameJoinDto> joins) {
-            throw new NotImplementedException();
+        public void JoinPerformerToFile(List<PerformerFilenameJoinDto> joinsToAdd) {
+            var joinsFromFile = RetrieveJoins();
+            foreach (var join in joinsToAdd) {
+                joinsFromFile.Add(join);
+            }
+            string jsonJoins = SerializeJoins(joinsFromFile);
+            SaveToFile(jsonJoins, pathToJoinsJson);
         }
+
+        private string SerializeJoins(List<PerformerFilenameJoinDto> joins) {
+            return JsonConvert.SerializeObject(joins, Formatting.Indented);
+        }
+
+        private void SaveToFile(string jsonContents, string filePath) {
+            try {
+                File.WriteAllText(filePath, jsonContents);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Could not save Joins json to file {0}", filePath);
+            }
+        }
+
     }
 }
