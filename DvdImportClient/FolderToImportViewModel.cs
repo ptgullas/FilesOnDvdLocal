@@ -76,7 +76,7 @@ namespace DvdImportClient {
             IDiscRepository discRepository = repositoryFactory.GetDiscRepository();
             importer = new Importer(discRepository, performerRepository, fileRepository);
 
-            ISeriesRepository seriesRepo = repositoryFactory.GetSeriesRepository();
+            seriesRepository = repositoryFactory.GetSeriesRepository();
 
             string pathToGetFromSettingsFile = localFoldersOptions.DvdToImportStartFolder;
             FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository, seriesRepository);
