@@ -38,6 +38,10 @@ namespace FilesOnDvdLocal {
             PopulateFiles(performerRepository, seriesRepository);
             PerformersInFolderAll = new List<PerformerLocalDto>();
             CompileAllPerformersInFolder();
+
+            // let the user pick this via the UI later
+            GenreLocalDto genreDto = new GenreLocalDto() { Id = 3, Genre = "Stuff" };
+            SetFilesGenre(genreDto);
         }
 
         // constructor accepts list of files (mainly for testing)
@@ -139,6 +143,14 @@ namespace FilesOnDvdLocal {
                 }
             }
             return success;
+        }
+
+        public void SetFilesGenre(GenreLocalDto genreDto) {
+            if (Files.Count > 0) {
+                foreach (FileToImport file in Files) {
+                    file.Genre = genreDto.Id;
+                }
+            }
         }
 
         public OperationResult SetFilesDiscId() {
