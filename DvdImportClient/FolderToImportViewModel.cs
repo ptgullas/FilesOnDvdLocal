@@ -66,7 +66,7 @@ namespace DvdImportClient {
 
         public FolderToImportViewModel() {
             SetUpConfiguration();
-            var localFoldersOptions = GetLocalFolderOptions();
+            var localFoldersOptions = GetLocalPathOptions();
 
             // replace this with the real repository later
             string pathToFileRepositoryJson = @"C:\MyApps\FilesOnDvdLocal\fileMockRepo.json";
@@ -113,11 +113,11 @@ namespace DvdImportClient {
         }
 
 
-        private static LocalFoldersOptions GetLocalFolderOptions() {
-            LocalFoldersOptions localFoldersOptions = new LocalFoldersOptions();
+        private static LocalPathOptions GetLocalPathOptions() {
+            LocalPathOptions localPathOptions = new LocalPathOptions();
             IConfigurationSection localFoldersConfig = Configuration.GetSection("LocalFolders");
-            ConfigurationBinder.Bind(localFoldersConfig, localFoldersOptions);
-            return localFoldersOptions;
+            ConfigurationBinder.Bind(localFoldersConfig, localPathOptions);
+            return localPathOptions;
         }
 
         private void AddPerformer(object perf) {
@@ -179,16 +179,25 @@ namespace DvdImportClient {
         }
 
         private async Task SaveFilenameList() {
-            // will need to grab this path from settings later.
-            string folderPathToSave = @"c:\temp";
-            bool successfulSave = await FolderToImport.SaveFilenameListToTextFile(folderPathToSave);
+            string fileListingFolder = GetOrCreateFileListingFolder();
+
+            bool successfulSave = await FolderToImport.SaveFilenameListToTextFile(fileListingFolder);
             string message = "Could not save filelist!!";
             if (successfulSave) {
                 string fileName = $"{FolderName}.txt";
-                string pathToSave = Path.Combine(folderPathToSave, fileName);
-                message = $"Successfully saved to {pathToSave}";
+                string pathToSave = Path.Combine(fileListingFolder, fileName);
+                message = $"Saved file listing to {pathToSave}";
             }
             MessageBox.Show(message);
+        }
+
+        private static string GetOrCreateFileListingFolder() {
+            var localPathOptions = GetLocalPathOptions();
+            string fileListingFolder = localPathOptions.FileListingFolder;
+            if (!Directory.Exists(fileListingFolder)) {
+                Directory.CreateDirectory(fileListingFolder);
+            }
+            return fileListingFolder;
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
