@@ -64,6 +64,7 @@ namespace DvdImportClient {
         public ObservableCollection<PerformerLocalDto> PerformersInFolder { get; set; }
         public ObservableCollection<PerformerLocalDto> PerformersInDatabase { get; set; }
         public ObservableCollection<SeriesLocalDto> SeriesInDatabase { get; set; }
+        public ObservableCollection<OperationResult> ResultMessages { get; set; }
 
         public ICommand BrowseFolderCommand { get; private set; }
         public ICommand SaveFilenameListCommand { get; private set; }
@@ -96,6 +97,8 @@ namespace DvdImportClient {
             SeriesInDatabase = new ObservableCollection<SeriesLocalDto>(seriesRepository.Get().OrderBy(s => s.Name));
             SeriesInDatabase.Insert(0, new SeriesLocalDto());
 
+            ResultMessages = new ObservableCollection<OperationResult>();
+
             BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
             SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
             RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
@@ -123,16 +126,19 @@ namespace DvdImportClient {
 
         private void AddPerformer(object perf) {
             PerformerLocalDto performerToAdd = perf as PerformerLocalDto;
-            string outputMessage;
+            OperationResult operationResult = new OperationResult();
             if (!SelectedFile.Performers.Any(p => p.Id == performerToAdd.Id)) {
                 SelectedFile.Performers.Add(performerToAdd);
-                outputMessage = $"Added {performerToAdd.Name} to {SelectedFile.Filename}";
+
+                operationResult.Success = true;
+                operationResult.Message = $"Added {performerToAdd.Name} to {SelectedFile.Filename}";
                 RefreshAllPerformersInFolder();
             }
             else {
-                outputMessage = $"{performerToAdd.Name} is already in {SelectedFile.Filename}";
+                operationResult.Success = false;
+                operationResult.Message = $"{performerToAdd.Name} is already in {SelectedFile.Filename}";
             }
-            MessageBox.Show(outputMessage);
+            ResultMessages.Add(operationResult);
         }
 
         private void RemovePerformer(object perfName) {
