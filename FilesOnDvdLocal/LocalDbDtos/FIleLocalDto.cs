@@ -21,7 +21,7 @@ namespace FilesOnDvdLocal.LocalDbDtos {
             Filename = file.Filename;
             Genre = file.Genre;
             Disc = file.DiscId;
-            Series = file.Series.Id;
+            Series = file.Series?.Id;
         }
     }
 }
