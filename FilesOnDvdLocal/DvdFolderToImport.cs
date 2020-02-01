@@ -183,11 +183,13 @@ namespace FilesOnDvdLocal {
             List<PerformerFilenameJoinDto> joinDtos = new List<PerformerFilenameJoinDto>();
             foreach (FileToImport file in Files) {
                 foreach (PerformerLocalDto performer in file.Performers) {
-                    PerformerFilenameJoinDto joinDto = new PerformerFilenameJoinDto() {
-                        PerformerId = performer.Id,
-                        FilenameId = (int) file.DatabaseId
-                    };
-                    joinDtos.Add(joinDto);
+                    if (performer.Id != -1) {
+                        PerformerFilenameJoinDto joinDto = new PerformerFilenameJoinDto() {
+                            PerformerId = performer.Id,
+                            FilenameId = (int) file.DatabaseId
+                        };
+                        joinDtos.Add(joinDto);
+                    }
                 }
             }
             return joinDtos;
