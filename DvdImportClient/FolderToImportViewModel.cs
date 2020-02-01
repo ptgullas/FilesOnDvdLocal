@@ -36,13 +36,20 @@ namespace DvdImportClient {
             set {
                 SetField(ref folderPath, value); // calls OnPropertyChange
                 FolderToImport.FolderPath = folderPath;
+                FolderName = Path.GetFileName(folderPath);
+                FolderToImport.DiscName = FolderName;
+
                 FolderToImport.PopulateFiles(performerRepository, seriesRepository);
+
+                GenreLocalDto genreDto = new GenreLocalDto() { Id = 3, Genre = "Stuff" };
+                FolderToImport.SetFilesGenre(genreDto);
+
+
                 Files.Clear();
                 Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
                 FolderToImport.CompileAllPerformersInFolder();
                 PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
 
-                FolderName = Path.GetFileName(folderPath);
 
                 OnPropertyChange("Files"); // update the Files list
                 OnPropertyChange("PerformersInFolder");
