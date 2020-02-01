@@ -35,7 +35,7 @@ namespace FilesOnDvdLocal.Repositories {
         }
 
         public SeriesLocalDto Get(string name) {
-            return series.FirstOrDefault(s => s.Name == name);
+            return series.FirstOrDefault(s => s.Name.ToLower() == name.ToLower());
         }
     }
 }
