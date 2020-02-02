@@ -33,6 +33,7 @@ namespace FilesOnDvdLocal.Repositories {
                     };
                     allPerformers.Add(performer);
                 }
+                Log.Information("Read {0} performers from database.", allPerformers.Count);
             }
             catch (Exception e) {
                 Log.Error(e, "Could not retrieve performers from database");
