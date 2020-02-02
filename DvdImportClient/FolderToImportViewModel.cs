@@ -139,7 +139,7 @@ namespace DvdImportClient {
                 operationResult.Success = false;
                 operationResult.Message = $"{performerToAdd.Name} is already in {SelectedFile.Filename}";
             }
-            ResultMessages.Insert(0, operationResult);
+            DisplayMessage(operationResult);
         }
 
         private void RemovePerformer(object perfName) {
@@ -160,7 +160,7 @@ namespace DvdImportClient {
                 outputResult.Success = false;
                 outputResult.Message = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
             }
-            ResultMessages.Insert(0, outputResult);
+            DisplayMessage(outputResult);
         }
 
         private void RefreshAllPerformersInFolder() {
@@ -189,7 +189,7 @@ namespace DvdImportClient {
             if (result.Success) {
                 result.Message = $"Successfully imported {FolderToImport.DiscName}!";
             }
-            ResultMessages.Insert(0, result);
+            DisplayMessage(result);
         }
 
         private async Task SaveFilenameList() {
@@ -206,7 +206,7 @@ namespace DvdImportClient {
                 operationResult.Success = true;
                 operationResult.Message = $"Saved file listing to {pathToSave}";
             }
-            ResultMessages.Insert(0, operationResult);
+            DisplayMessage(operationResult);
         }
 
         private static string GetOrCreateFileListingFolder() {
@@ -216,6 +216,10 @@ namespace DvdImportClient {
                 Directory.CreateDirectory(fileListingFolder);
             }
             return fileListingFolder;
+        }
+
+        private void DisplayMessage(OperationResult opResult) {
+            ResultMessages.Insert(0, opResult);
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
