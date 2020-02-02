@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -138,7 +139,7 @@ namespace DvdImportClient {
                 operationResult.Success = false;
                 operationResult.Message = $"{performerToAdd.Name} is already in {SelectedFile.Filename}";
             }
-            ResultMessages.Add(operationResult);
+            ResultMessages.Insert(0, operationResult);
         }
 
         private void RemovePerformer(object perfName) {
@@ -159,7 +160,7 @@ namespace DvdImportClient {
                 outputResult.Success = false;
                 outputResult.Message = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
             }
-            ResultMessages.Add(outputResult);
+            ResultMessages.Insert(0, outputResult);
         }
 
         private void RefreshAllPerformersInFolder() {
@@ -188,7 +189,7 @@ namespace DvdImportClient {
             if (result.Success) {
                 result.Message = $"Successfully imported {FolderToImport.DiscName}!";
             }
-            ResultMessages.Add(result);
+            ResultMessages.Insert(0, result);
         }
 
         private async Task SaveFilenameList() {
@@ -205,7 +206,7 @@ namespace DvdImportClient {
                 operationResult.Success = true;
                 operationResult.Message = $"Saved file listing to {pathToSave}";
             }
-            ResultMessages.Add(operationResult);
+            ResultMessages.Insert(0, operationResult);
         }
 
         private static string GetOrCreateFileListingFolder() {
