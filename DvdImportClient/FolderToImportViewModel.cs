@@ -143,21 +143,23 @@ namespace DvdImportClient {
 
         private void RemovePerformer(object perfName) {
             string perfNameStr = perfName as string;
-            string outputMessage;
+            OperationResult outputResult = new OperationResult();
             if (SelectedFile.Performers.Any(b => b.Name == perfNameStr)) {
                 var performerToRemove = SelectedFile.Performers
                     .FirstOrDefault(b => b.Name == perfNameStr);
                 SelectedFile.Performers.Remove(performerToRemove);
-                outputMessage = $"Removing performer {perfNameStr} from {SelectedFile.Filename}";
+                outputResult.Success = true;
+                outputResult.Message = $"Removing performer {perfNameStr} from {SelectedFile.Filename}";
 
                 // we don't want to remove the performer directly from PerformersInFolder
                 // because they might appear on another file in the folder
                 RefreshAllPerformersInFolder();
             }
             else {
-                outputMessage = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
+                outputResult.Success = false;
+                outputResult.Message = $"Could not find performer {perfNameStr} in {SelectedFile.Filename}";
             }
-            MessageBox.Show(outputMessage);
+            ResultMessages.Add(outputResult);
         }
 
         private void RefreshAllPerformersInFolder() {
@@ -184,24 +186,26 @@ namespace DvdImportClient {
         private void Import() {
             var result = importer.Import(FolderToImport);
             if (result.Success) {
-                MessageBox.Show($"Successfully imported {FolderToImport.DiscName}!");
+                result.Message = $"Successfully imported {FolderToImport.DiscName}!";
             }
-            else {
-                MessageBox.Show(result.Message);
-            }
+            ResultMessages.Add(result);
         }
 
         private async Task SaveFilenameList() {
             string fileListingFolder = GetOrCreateFileListingFolder();
 
             bool successfulSave = await FolderToImport.SaveFilenameListToTextFile(fileListingFolder);
-            string message = "Could not save filelist!!";
+            OperationResult operationResult = new OperationResult() {
+                Success = false,
+                Message = "Could not save filelist!!"
+            };
             if (successfulSave) {
                 string fileName = $"{FolderName}.txt";
                 string pathToSave = Path.Combine(fileListingFolder, fileName);
-                message = $"Saved file listing to {pathToSave}";
+                operationResult.Success = true;
+                operationResult.Message = $"Saved file listing to {pathToSave}";
             }
-            MessageBox.Show(message);
+            ResultMessages.Add(operationResult);
         }
 
         private static string GetOrCreateFileListingFolder() {
