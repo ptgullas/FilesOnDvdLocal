@@ -282,6 +282,19 @@
                                    Text="{Binding Message}"
                                    FontFamily="Arial" />
                     </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=Success}"
+                                     Value="False">
+                            <DataTrigger.Setters>
+                                <Setter TargetName="Filename"
+                                        Property="Background" 
+                                        Value="Red" />
+                                <Setter TargetName="Filename"
+                                        Property="Foreground"
+                                        Value="White" />
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
