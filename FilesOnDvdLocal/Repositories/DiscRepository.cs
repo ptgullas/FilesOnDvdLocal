@@ -54,6 +54,7 @@ namespace FilesOnDvdLocal.Repositories
             DataTable discsTable = dataSet.Tables[0];
             PopulateDiscsFromDatabase(discsTable);
             if (discs.Any(d => d.DiscName == discDto.DiscName)) {
+                Log.Error("Disc {0} already exists in database", discDto.DiscName);
                 throw new ArgumentOutOfRangeException(discDto.DiscName, "Disc name already exists in database!");
             }
             else {
@@ -66,6 +67,7 @@ namespace FilesOnDvdLocal.Repositories
                 var changes = dataSet.GetChanges();
                 id = retriever.UpdateDiscs(dataSet);
                 if (id is null) { throw new InvalidOperationException("New DiscId is null. Check Access DB to see if it was entered."); }
+                else { Log.Information("Added Disc {0} to database with ID {1}", discDto.DiscName, id); }
             }
             return (int) id;
         }
