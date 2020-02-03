@@ -37,7 +37,6 @@ namespace FilesOnDvdLocal.Repositories {
             }
             catch (Exception e) {
                 Log.Error(e, "Could not retrieve performers from database");
-                throw new ArgumentException("Could not retrieve performers from database", e);
             }
             return allPerformers;
         }
