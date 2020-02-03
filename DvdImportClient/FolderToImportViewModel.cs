@@ -114,7 +114,7 @@ namespace DvdImportClient {
 
 
         private static void SetUpConfiguration() {
-            string projectRoot = AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.LastIndexOf(@"\bin"));
+            string projectRoot = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(projectRoot)
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true);
