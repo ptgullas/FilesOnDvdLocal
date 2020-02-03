@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,8 +15,6 @@ namespace DvdImportClient {
     public partial class App : Application {
         void OnApplicationStartup(object sender, StartupEventArgs se) {
             SetUpLogging();
-
-
         }
 
         private static void SetUpLogging() {
@@ -24,6 +23,10 @@ namespace DvdImportClient {
                 //string logFile = Configuration.GetSection("LocalFolders").GetValue<string>("logFileName");
                 //string logPath = Path.Combine(logFolder, logFile);
                 string logPath = @"c:\Logs\FilesOnDvdLocal\FilesOnDvdLocalLog.txt";
+                string logDirectory = Path.GetDirectoryName(logPath);
+                if (!Directory.Exists(logDirectory)) {
+                    Directory.CreateDirectory(logDirectory);
+                }
 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()
