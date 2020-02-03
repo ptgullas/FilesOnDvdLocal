@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace DvdImportClient {
     /// <summary>
@@ -39,5 +40,8 @@ namespace DvdImportClient {
             }
         }
 
+        void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
+            MessageBox.Show(e.Exception.ToString());
+        }
     }
 }
