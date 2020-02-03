@@ -3,6 +3,7 @@ using FilesOnDvdLocal.LocalDbDtos;
 using FilesOnDvdLocal.Options;
 using FilesOnDvdLocal.Repositories;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -77,34 +78,38 @@ namespace DvdImportClient {
             SetUpConfiguration();
             var localFoldersOptions = GetLocalPathOptions();
             bool useMockRepositories = Configuration.GetValue<bool>("UseMockRepositories");
-            RepositoryFactory repositoryFactory = new RepositoryFactory(localFoldersOptions, useMockRepositories);
-
-            IFileRepository fileRepository = repositoryFactory.GetFileRepository();
-            performerRepository = repositoryFactory.GetPerformerRepository();
-
-            IDiscRepository discRepository = repositoryFactory.GetDiscRepository();
-            importer = new Importer(discRepository, performerRepository, fileRepository);
-
-            seriesRepository = repositoryFactory.GetSeriesRepository();
-
-            string pathToGetFromSettingsFile = localFoldersOptions.DvdToImportStartFolder;
-            FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository, seriesRepository);
-            folderPath = FolderToImport.FolderPath;
-            FolderName = FolderToImport.DiscName;
-            Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
-            PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
-            PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(performerRepository.Get().OrderBy(b => b.Name));
-
-            SeriesInDatabase = new ObservableCollection<SeriesLocalDto>(seriesRepository.Get().OrderBy(s => s.Name));
-            SeriesInDatabase.Insert(0, new SeriesLocalDto());
 
             ResultMessages = new ObservableCollection<OperationResult>();
 
-            BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
-            SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
-            RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
-            AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
-            ImportCommand = new RelayCommand(param => Import(), d => FolderToImport.IsReadyToImport);
+            if (CheckIfNecessaryLocalFilesExist(localFoldersOptions, useMockRepositories)) {
+
+                RepositoryFactory repositoryFactory = new RepositoryFactory(localFoldersOptions, useMockRepositories);
+
+                IFileRepository fileRepository = repositoryFactory.GetFileRepository();
+                performerRepository = repositoryFactory.GetPerformerRepository();
+
+                IDiscRepository discRepository = repositoryFactory.GetDiscRepository();
+                importer = new Importer(discRepository, performerRepository, fileRepository);
+
+                seriesRepository = repositoryFactory.GetSeriesRepository();
+
+                string pathToGetFromSettingsFile = localFoldersOptions.DvdToImportStartFolder;
+                FolderToImport = new DvdFolderToImport(pathToGetFromSettingsFile, performerRepository, seriesRepository);
+                folderPath = FolderToImport.FolderPath;
+                FolderName = FolderToImport.DiscName;
+                Files = new ObservableCollection<FileToImport>(FolderToImport.Files);
+                PerformersInFolder = new ObservableCollection<PerformerLocalDto>(FolderToImport.PerformersInFolderAll);
+                PerformersInDatabase = new ObservableCollection<PerformerLocalDto>(performerRepository.Get().OrderBy(b => b.Name));
+
+                SeriesInDatabase = new ObservableCollection<SeriesLocalDto>(seriesRepository.Get().OrderBy(s => s.Name));
+                SeriesInDatabase.Insert(0, new SeriesLocalDto());
+
+                BrowseFolderCommand = new RelayCommand(param => BrowseToFolder());
+                SaveFilenameListCommand = new RelayCommand(async param => await SaveFilenameList(),d => FolderToImport.IsReadyToImport);
+                RemovePerformerCommand = new RelayCommand(param => RemovePerformer(param));
+                AddPerformerCommand = new RelayCommand(param => AddPerformer(param));
+                ImportCommand = new RelayCommand(param => Import(), d => FolderToImport.IsReadyToImport);
+            }
         }
 
 
@@ -123,6 +128,35 @@ namespace DvdImportClient {
             IConfigurationSection localFoldersConfig = Configuration.GetSection("LocalPaths");
             ConfigurationBinder.Bind(localFoldersConfig, localPathOptions);
             return localPathOptions;
+        }
+
+        private bool CheckIfNecessaryLocalFilesExist(LocalPathOptions localPathOptions, bool useMocks) {
+            bool necessaryFilesExist;
+            if (!useMocks) {
+                necessaryFilesExist = CheckIfFileExistsAndDisplayMessage(localPathOptions.DatabasePath, nameof(localPathOptions.DatabasePath));
+            }
+            else {
+                bool discMockRepoExists = CheckIfFileExistsAndDisplayMessage(localPathOptions.DiscMockRepositoryPath, nameof(localPathOptions.DiscMockRepositoryPath));
+                bool fileMockRepoExists = CheckIfFileExistsAndDisplayMessage(localPathOptions.FileMockRepositoryPath, nameof(localPathOptions.FileMockRepositoryPath));
+                bool seriesMockRepoExists = CheckIfFileExistsAndDisplayMessage(localPathOptions.SeriesMockRepositoryPath, nameof(localPathOptions.SeriesMockRepositoryPath));
+                bool perfMockRepoExists = CheckIfFileExistsAndDisplayMessage(localPathOptions.PerformerMockRepositoryPath, nameof(localPathOptions.PerformerMockRepositoryPath));
+                bool joinsMockRepoExists = CheckIfFileExistsAndDisplayMessage(localPathOptions.JoinsMockRepositoryPath, nameof(localPathOptions.JoinsMockRepositoryPath));
+                necessaryFilesExist = discMockRepoExists && fileMockRepoExists 
+                    && seriesMockRepoExists && perfMockRepoExists && joinsMockRepoExists;
+            }
+            return necessaryFilesExist;
+        }
+
+        private bool CheckIfFileExistsAndDisplayMessage(string path, string nameOfVar) {
+            OperationResult result = new OperationResult() { Success = true, Message = $"{nameOfVar} {path} exists!."};
+            if (!File.Exists(path)) {
+                string message = $"{nameOfVar} {path} not found.";
+                result.Success = false;
+                result.Message = message;
+                Log.Error(message);
+            }
+            DisplayMessage(result);
+            return result.Success;
         }
 
         private void AddPerformer(object perf) {
