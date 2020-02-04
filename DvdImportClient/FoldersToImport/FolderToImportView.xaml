@@ -5,89 +5,98 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DvdImportClient.FoldersToImport"
              mc:Ignorable="d"
-             d:DesignWidth="880"
+             d:DesignWidth="1200"
              d:DesignHeight="548"
              Name="RootUserControl"
              >
     <UserControl.Resources>
         <DataTemplate x:Key="FileDetailTemplate">
-            <StackPanel>
-                <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
-                <TextBox x:Name="DetailFilename"
-                         Text="{Binding Path=Filename}"
-                         IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}"
-                         Foreground="#FFF08AF1"
-                         FontWeight="Bold"
-                         Width="300"
-                         Height="60"
-                         TextWrapping="Wrap" />
-                <CheckBox x:Name="CheckboxEnableFilename"
-                          IsChecked="False"
-                          Content="Enable Filename Box"
-                          Foreground="White"></CheckBox>
-                <Label Content="Series:"
-                       Foreground="Wheat"
-                       FontWeight="Bold" />
-                <ComboBox x:Name="ComboBoxSeriesFromDatabase"
-                          ItemsSource="{Binding Path=DataContext.SeriesInDatabase,RelativeSource={RelativeSource AncestorType=UserControl}}"
-                          DisplayMemberPath="Name"
-                          SelectedItem="{Binding Path=Series}" />
-                <!--<TextBlock Text="{Binding Series.Name}"
-                           Foreground="#FFF08AF1"
-                           FontWeight="Bold" />-->
-                <ListBox x:Name="PerformersList"
-                         ItemsSource="{Binding Path=Performers}"
-                         Height="106">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate x:Name="PerformersTemplate">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="Performer"
-                                           FontFamily="Arial"
-                                           Foreground="#FF0BC40F"
-                                           FontWeight="Bold">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} ({1}) ">
-                                            <Binding Path="Name" />
-                                            <Binding Path="Id" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                    <Hyperlink x:Name="HyperlinkRemovePerformer"
-                                               Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                               CommandParameter="{Binding Path=Name}"
-                                               TextDecorations="None"
-                                               Foreground="#FFF08AF1"
-                                               FontWeight="Bold">[x]</Hyperlink>
-                                </TextBlock>
-                            </StackPanel>
-                            <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding Path=Id}"
-                                             Value="-1">
-                                    <DataTrigger.Setters>
-                                        <Setter Property="Background"
-                                                Value="Black"
-                                                TargetName="Performer" />
-                                        <Setter Property="Foreground"
-                                                Value="#FFF70000"
-                                                TargetName="Performer" />
-                                        <Setter Property="Background"
-                                                Value="Black"
-                                                TargetName="HyperlinkRemovePerformer" />
-                                        <Setter Property="Foreground"
-                                                Value="#FFF08AF1"
-                                                TargetName="HyperlinkRemovePerformer" />
-                                    </DataTrigger.Setters>
-                                </DataTrigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <ComboBox x:Name="ComboBoxNamesFromDatabase"
-                          ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                          DisplayMemberPath="Name"
-                          Margin="0,40,0,0" />
-                <Button Command="{Binding Path=DataContext.AddPerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                        CommandParameter="{Binding ElementName=ComboBoxNamesFromDatabase, Path=SelectedItem}"
-                        Content="Add Performer" />
+            <StackPanel Height="313"
+                        Orientation="Horizontal">
+                <StackPanel Width="313">
+                    <!--<Border Width="200" BorderBrush="Aqua" BorderThickness="1" Padding="8" />-->
+                    <TextBox x:Name="DetailFilename"
+                             Text="{Binding Path=Filename}"
+                             IsEnabled="{Binding ElementName=CheckboxEnableFilename, Path=IsChecked}"
+                             Foreground="#FFF08AF1"
+                             FontWeight="Bold"
+                             Width="300"
+                             Height="60"
+                             TextWrapping="Wrap" />
+                    
+                    <CheckBox x:Name="CheckboxEnableFilename"
+                              IsChecked="False"
+                              Content="Enable Filename Box"
+                              Foreground="White"></CheckBox>
+                    <Label Content="Series:"
+                           Foreground="Wheat"
+                           FontWeight="Bold" />
+                    <ComboBox x:Name="ComboBoxSeriesFromDatabase"
+                              ItemsSource="{Binding Path=DataContext.SeriesInDatabase,RelativeSource={RelativeSource AncestorType=UserControl}}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding Path=Series}" />
+                    <ListBox x:Name="PerformersList"
+                             ItemsSource="{Binding Path=Performers}"
+                             Height="106">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:Name="PerformersTemplate">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="Performer"
+                                               FontFamily="Arial"
+                                               Foreground="#FF0BC40F"
+                                               FontWeight="Bold">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} ({1}) ">
+                                                <Binding Path="Name" />
+                                                <Binding Path="Id" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                        <Hyperlink x:Name="HyperlinkRemovePerformer"
+                                                   Command="{Binding Path=DataContext.RemovePerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding Path=Name}"
+                                                   TextDecorations="None"
+                                                   Foreground="#FFF08AF1"
+                                                   FontWeight="Bold">[x]</Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=Id}"
+                                                 Value="-1">
+                                        <DataTrigger.Setters>
+                                            <Setter Property="Background"
+                                                    Value="Black"
+                                                    TargetName="Performer" />
+                                            <Setter Property="Foreground"
+                                                    Value="#FFF70000"
+                                                    TargetName="Performer" />
+                                            <Setter Property="Background"
+                                                    Value="Black"
+                                                    TargetName="HyperlinkRemovePerformer" />
+                                            <Setter Property="Foreground"
+                                                    Value="#FFF08AF1"
+                                                    TargetName="HyperlinkRemovePerformer" />
+                                        </DataTrigger.Setters>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ComboBox x:Name="ComboBoxNamesFromDatabase"
+                              ItemsSource="{Binding Path=DataContext.PerformersInDatabase, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                              DisplayMemberPath="Name"
+                              Margin="0,40,0,0" />
+                    <Button Command="{Binding Path=DataContext.AddPerformerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding ElementName=ComboBoxNamesFromDatabase, Path=SelectedItem}"
+                            Content="Add Performer" />
+                </StackPanel>
+                <StackPanel Width="300">
+                    <TextBlock Text="{Binding Path=FilenameDisplayNonAscii}" 
+                               Foreground="WhiteSmoke"
+                               FontWeight="Bold"
+                               Width="200"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Left" />
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -96,6 +105,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="400" />
             <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="315" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -148,9 +158,10 @@
                 Margin="5,18,0,3" />
         <Button Command="{Binding SaveFilenameListCommand}"
                 Content="Save FilenameList"
-                Grid.Column="4"
+                Grid.Column="3"
                 Grid.Row="1"
-                Height="20" />
+                Height="20"
+                HorizontalAlignment="Left" />
         <Label Content="DVD Name:"
                Grid.Column="0"
                Grid.Row="2"
@@ -233,14 +244,16 @@
                         ContentTemplate="{StaticResource FileDetailTemplate}"
                         Grid.Column="3"
                         Grid.Row="3"
+                        Grid.ColumnSpan="2"
                         Margin="4,11,0,163" />
         <ListBox ItemsSource="{Binding PerformersInFolder}"
-                 Grid.Column="4"
+                 Grid.Column="3"
                  Grid.Row="3"
                  Width="310"
                  Height="100"
                  Margin="5,282,-1,18"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 HorizontalAlignment="Left">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"
