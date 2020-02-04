@@ -51,10 +51,10 @@ namespace FilesOnDvdLocal {
             }
         }
 
+        public string FilenameDisplayNonAscii { get; set; }
+
         public List<string> PerformersString { get; set; }
         public string SeriesString { get; set; }
-
-
 
         public FileToImport(string path, IPerformerRepository perfRepository, 
             ISeriesRepository seriesRepository = null) {
@@ -70,6 +70,8 @@ namespace FilesOnDvdLocal {
             PerformersString = FilenameParser.GetPerformers(Filename);
             Performers = new List<PerformerLocalDto>();
             PopulatePerformersFromRepository(perfRepository);
+
+            FilenameDisplayNonAscii = GetFilenameWithVisibleNonAscii();
         }
 
         private void PopulatePerformersFromRepository(IPerformerRepository dataRepository) {
@@ -163,5 +165,20 @@ namespace FilesOnDvdLocal {
                 }
             }
         }
+
+        private string GetFilenameWithVisibleNonAscii() {
+            string filenameWithVisibleNonAscii = null;
+            for (int i = 0; i < Filename.Length; i++) {
+                char c = Filename[i];
+                if (c < 128) {
+                    filenameWithVisibleNonAscii += c;
+                }
+                else {
+                    filenameWithVisibleNonAscii += "Œ";
+                }
+            }
+            return filenameWithVisibleNonAscii;
+        }
+
     }
 }
