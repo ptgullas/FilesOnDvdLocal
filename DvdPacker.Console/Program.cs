@@ -10,13 +10,45 @@ namespace DvdPacker {
     class Program
     {
         static void Main(string[] args) {
+            DisplayIntro();
             SetUpLogging();
-            string folderPath = args[0];
-            BinPacker binPacker = new BinPacker(folderPath, "P");
-            binPacker.ProcessFolder();
-            string binListing = binPacker.GetBinListing();
-            Console.WriteLine(binListing);
-            binPacker.MoveFilesIntoBins();
+            if (args.Length == 0) {
+                DisplayHelpText();
+            }
+            else {
+                string folderPath = args[0];
+                string prefix = "P";
+                if (args.Length == 2) {
+                    prefix = args[1];
+                }
+                BinPacker binPacker = new BinPacker(folderPath, prefix);
+                binPacker.ProcessFolder();
+                string binListing = binPacker.GetBinListing();
+                Console.WriteLine(binListing);
+                binPacker.MoveFilesIntoBins();
+            }
+        }
+
+        static void DisplayIntro() {
+            ColorHelpers.WriteColor("Thanks for running ", ConsoleColor.White);
+            ColorHelpers.WriteColor("DVD", ConsoleColor.Yellow);
+            ColorHelpers.WriteColor("PACKER", ConsoleColor.Magenta);
+            ColorHelpers.WriteLineColor("!", ConsoleColor.White);
+            ColorHelpers.WriteColor("Copyright \u00a9 2020, ");
+            ColorHelpers.WriteLineColor("Paul T. Gullas", ConsoleColor.Cyan);
+            ColorHelpers.WriteLineColor("https://github.com/ptgullas/FilesOnDvdLocal/tree/master/DvdPacker.Console", ConsoleColor.Magenta);
+        }
+
+        static void DisplayHelpText() {
+            string applicationName = "DvdPacker";
+            Console.WriteLine("Usage:");
+            ColorHelpers.WriteLineColor($"{applicationName}: ");
+            Console.WriteLine("\tDisplay this help text");
+            ColorHelpers.WriteColor($"{applicationName} ");
+            ColorHelpers.WriteColor($"<path of folder containing files to pack> ", ConsoleColor.Yellow);
+            ColorHelpers.WriteLineColor($"<folder prefix (default is P)>:", ConsoleColor.Green);
+            Console.WriteLine("\tOrganize files into separate folders that will optimally fit on a DVD");
+
         }
 
         private static void SetUpLogging() {
