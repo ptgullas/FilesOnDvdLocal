@@ -94,8 +94,21 @@
                                Foreground="WhiteSmoke"
                                FontWeight="Bold"
                                Width="200"
+                               Height="80"
                                TextWrapping="Wrap"
                                HorizontalAlignment="Left" />
+                    <Label Content="Notes:"
+                           Foreground="Wheat" 
+                           FontWeight="Bold"
+                           />
+                    <TextBox Text="{Binding Path=Notes}" 
+                             Margin="5,0,0,0"
+                             Width="200"
+                             Height="200"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             TextWrapping="Wrap"
+                               />
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -180,6 +193,7 @@
                  Grid.Row="3"
                  Grid.ColumnSpan="3"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  MinHeight="350"
                  MaxHeight="350"
                  MaxWidth="620"
