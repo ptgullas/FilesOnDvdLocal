@@ -62,6 +62,7 @@ namespace FilesOnDvdLocal {
             Filename = File.Name;
             DatabaseId = null;
             DiscId = null;
+            Notes = null;
             SeriesString = FilenameParser.GetSeriesName(Filename);
             Series = new SeriesLocalDto();
             PopulateSeriesFromRepository(seriesRepository);

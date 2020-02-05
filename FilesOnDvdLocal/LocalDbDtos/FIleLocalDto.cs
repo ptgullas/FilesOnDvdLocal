@@ -12,6 +12,7 @@ namespace FilesOnDvdLocal.LocalDbDtos {
         public int? Genre { get; set; }
         public int? Disc { get; set; }
         public int? Series { get; set; }
+        public string Notes { get; set; }
 
         public FileLocalDto() {
 
@@ -22,6 +23,7 @@ namespace FilesOnDvdLocal.LocalDbDtos {
             Genre = file.Genre;
             Disc = file.DiscId;
             Series = file.Series?.Id;
+            Notes = file.Notes;
         }
     }
 }
