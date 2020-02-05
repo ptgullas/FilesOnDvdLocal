@@ -51,6 +51,13 @@ namespace FilesOnDvdLocal {
             }
         }
 
+        public int OverflowFilenameCharacterCount { 
+            get {
+                if (!NameIsTooLong) { return 0; }
+                else { return Filename.Length - 98;  }
+            }
+        }
+
         public string FilenameDisplayNonAscii { get; set; }
 
         public List<string> PerformersString { get; set; }
