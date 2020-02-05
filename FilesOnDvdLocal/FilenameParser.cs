@@ -109,15 +109,16 @@ namespace FilesOnDvdLocal {
         private static int GetIndexOfNextDelimeter(string filename, int start) {
             int indexOfHyphen = filename.IndexOf("-", start);
             int indexOfOpenParen = filename.IndexOf("(", start);
+            int indexOfDot = filename.IndexOf(".", start);
 
-            if (indexOfHyphen < 0) {
-                return indexOfOpenParen;
+            if ((indexOfHyphen < 0) && (indexOfOpenParen < 0)) {
+                return indexOfDot;
             }
             else if ((indexOfHyphen >= 0) && (indexOfOpenParen >= 0)) {
                 return Math.Min(indexOfHyphen, indexOfOpenParen);
             }
             else {
-                return indexOfHyphen;
+                return Math.Max(indexOfHyphen, indexOfOpenParen);
             }
         }
 

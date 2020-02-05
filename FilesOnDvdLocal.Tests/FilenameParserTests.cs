@@ -176,5 +176,23 @@ namespace FilesOnDvdLocal.Tests {
 
             Assert.AreEqual(expectedNumber, resultNumber);
         }
+
+        [TestMethod]
+        public void GetPerformers_NameHasSeriesButNoTitleOrDate_ReturnsPerformers() {
+            string filename = @"Doctor Who - The Doctor, Amy Pond, Sarah Jane Smith.mp4";
+            string expectedName1 = "The Doctor";
+            string expectedName2 = "Amy Pond";
+            string expectedName3 = "Sarah Jane Smith";
+            int expectedNumber = 3;
+
+            var result = FilenameParser.GetPerformers(filename);
+            int resultNumber = result.Count;
+
+            Assert.AreEqual(expectedNumber, resultNumber);
+            Assert.AreEqual(expectedName1, result[0]);
+            Assert.AreEqual(expectedName2, result[1]);
+            Assert.AreEqual(expectedName3, result[2]);
+
+        }
     }
 }
