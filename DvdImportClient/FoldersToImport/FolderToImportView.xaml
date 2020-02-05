@@ -101,6 +101,19 @@
                                Height="80"
                                TextWrapping="Wrap"
                                HorizontalAlignment="Left" />
+                    <StackPanel Visibility="{Binding NameIsTooLong, Converter={StaticResource BooleanToHiddenConverter}}"
+                                Orientation="Horizontal">
+                        <Label Content="Overflow:"
+                               Foreground="Wheat"
+                               FontWeight="Bold" 
+                               VerticalAlignment="Bottom" />
+                        <TextBlock Text="{Binding Path=OverflowFilenameCharacterCount}"
+                                   Foreground="WhiteSmoke"
+                                   FontWeight="Bold"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left" />
+                    </StackPanel>
                     <Label Content="Notes:"
                            Foreground="Wheat" 
                            FontWeight="Bold"
