@@ -14,9 +14,9 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
             string dbLocation = @"c:\temp\Files on Dvd.accdb";
             FileRepository repository = new FileRepository(dbLocation);
             List<FileLocalDto> fileDtos = new List<FileLocalDto>() {
-                new FileLocalDto() {Disc = 225, Filename = "2020-01-27 WWE RAW.mkv", Genre = 4, Series = 88 },
+                new FileLocalDto() {Disc = 225, Filename = "2020-01-27 WWE RAW.mkv", Genre = 4, Series = 88, Notes = "This episode sucked" },
                 new FileLocalDto() {Disc = 225, Filename = "2020-01-22 WWE NXT.mkv", Genre = 4, Series = 70 },
-                new FileLocalDto() {Disc = 225, Filename = "2020-01-26 WWE Royal Rumble 2020.mp4", Genre = 4},
+                new FileLocalDto() {Disc = 225, Filename = "2020-01-26 WWE Royal Rumble 2020.mp4", Genre = 4, Notes = "Brock rules"},
                 new FileLocalDto() {Disc = 225, Filename = "2020-01-22 AEW Dynamite.avi", Genre = 4},
             };
             repository.Add(fileDtos);
