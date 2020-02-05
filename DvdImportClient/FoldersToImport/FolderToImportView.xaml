@@ -10,7 +10,9 @@
              Name="RootUserControl"
              >
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:BoolToVisibilityConverter x:Key="BooleanToHiddenConverter" 
+                                         TrueValue="Visible"
+                                         FalseValue="Hidden" />
         <DataTemplate x:Key="FileDetailTemplate">
             <StackPanel Height="313"
                         Orientation="Horizontal">
@@ -92,6 +94,7 @@
                 </StackPanel>
                 <StackPanel Width="300">
                     <TextBlock Text="{Binding Path=FilenameDisplayNonAscii}" 
+                               Visibility="{Binding NameContainsNonAscii, Converter={StaticResource BooleanToHiddenConverter}}"
                                Foreground="WhiteSmoke"
                                FontWeight="Bold"
                                Width="200"
