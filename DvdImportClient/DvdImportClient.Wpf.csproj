@@ -162,7 +162,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="FoldersToImport\BoolToVisibilityConverter.cs" />
     <Compile Include="RelayCommand.cs" />
     <Page Include="FoldersToImport\FolderToImportView.xaml">
       <SubType>Designer</SubType>

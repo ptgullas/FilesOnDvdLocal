@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace DvdImportClient {
+namespace DvdImportClient.FoldersToImport {
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public sealed class BoolToVisibilityConverter : IValueConverter {
         public Visibility TrueValue { get; set; }
