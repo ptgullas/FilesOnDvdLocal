@@ -53,6 +53,12 @@ namespace FilesOnDvdLocal.Repositories
                 else {
                     newRow["Series"] = file.Series;
                 }
+                if (file.Notes is null) {
+                    newRow["Notes"] = DBNull.Value;
+                }
+                else {
+                    newRow["Notes"] = file.Notes;
+                }
                 filenamesTable.Rows.Add(newRow);
             }
             retriever.UpdateFileEntries(dataSet);
