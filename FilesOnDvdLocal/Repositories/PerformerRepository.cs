@@ -89,6 +89,7 @@ namespace FilesOnDvdLocal.Repositories {
                 }
                 else {
                     perf = Performers.Find(p => p.Id == aliasDto.Performer);
+                    perf.IsAlias = true;
                 }
             }
             return perf;
