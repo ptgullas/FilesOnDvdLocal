@@ -8,5 +8,10 @@ namespace FilesOnDvdLocal.LocalDbDtos {
     public class PerformerLocalDto {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsAlias { get; set; }
+
+        public PerformerLocalDto() {
+            IsAlias = false;
+        }
     }
 }
