@@ -36,6 +36,10 @@ namespace FilesOnDvdLocal.Data
             return GetAccessTableAsDataSet("SELECT ID, Performer FROM tblPerformers", "tblPerformers");
         }
 
+        public DataSet GetAliases() {
+            return GetAccessTableAsDataSet("SELECT * FROM tblPerformerAliases", "tblPerformerAliases");
+        }
+
         public DataSet GetAllSeries() {
             return GetAccessTableAsDataSet("SELECT ID, Series FROM tblSeries", "tblSeries");
         }
