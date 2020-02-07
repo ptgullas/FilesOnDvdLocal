@@ -63,6 +63,7 @@
     <Compile Include="DvdBin.cs" />
     <Compile Include="IDataRepository.cs" />
     <Compile Include="Importer.cs" />
+    <Compile Include="LocalDbDtos\AliasLocalDto.cs" />
     <Compile Include="LocalDbDtos\DiscLocalDto.cs" />
     <Compile Include="LocalDbDtos\FileLocalDto.cs" />
     <Compile Include="LocalDbDtos\GenreLocalDto.cs" />
