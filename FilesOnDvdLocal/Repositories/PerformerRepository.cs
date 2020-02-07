@@ -12,11 +12,12 @@ namespace FilesOnDvdLocal.Repositories {
     public class PerformerRepository : IPerformerRepository {
         private readonly string DatabasePath;
         private List<PerformerLocalDto> Performers;
+        private List<AliasLocalDto> Aliases;
 
         public PerformerRepository(string databasePath) {
             DatabasePath = databasePath;
             Performers = RetrievePerformersFromDatabase();
-
+            Aliases = RetrieveAliasesFromDatabase();
         }
         private List<PerformerLocalDto> RetrievePerformersFromDatabase() {
             List<PerformerLocalDto> allPerformers = new List<PerformerLocalDto>();
@@ -25,10 +26,9 @@ namespace FilesOnDvdLocal.Repositories {
                 DataSet resultsetFromDb = retriever.GetPerformers();
                 DataTable performersTable = resultsetFromDb.Tables[0];
                 foreach (DataRow row in performersTable.Rows) {
-                    string idStr = row["ID"].ToString();
-                    bool result = int.TryParse(idStr, out int id);
+                    int? id = GetStringValueAsInt(row, "ID");
                     PerformerLocalDto performer = new PerformerLocalDto() {
-                        Id = id,
+                        Id = (int) id,
                         Name = row["Performer"].ToString()
                     };
                     allPerformers.Add(performer);
@@ -41,6 +41,37 @@ namespace FilesOnDvdLocal.Repositories {
             return allPerformers;
         }
 
+        private List<AliasLocalDto> RetrieveAliasesFromDatabase() {
+            List<AliasLocalDto> aliases = new List<AliasLocalDto>();
+            try {
+                AccessRetriever retriever = new AccessRetriever(DatabasePath);
+                DataSet ds = retriever.GetAliases();
+                DataTable dt = ds.Tables[0];
+                foreach (DataRow row in dt.Rows) {
+                    int? id = GetStringValueAsInt(row, "ID");
+                    int? performerId = GetStringValueAsInt(row, "Performer");
+                    AliasLocalDto aliasDto = new AliasLocalDto() {
+                        Id = (int) id,
+                        Performer = (int) performerId,
+                        Alias = row["Alias"].ToString()
+                    };
+                    aliases.Add(aliasDto);
+                }
+                Log.Information("Read {0} aliases from database", aliases.Count);
+            }
+            catch (Exception e) {
+                Log.Error(e, "Could not retrieve aliases from database");
+            }
+            return aliases;
+        }
+
+        private int? GetStringValueAsInt(DataRow row, string columnName) {
+            string intStr = row[columnName].ToString();
+            bool result = int.TryParse(intStr, out int intInt);
+            if (result) { return intInt; }
+            else { return null;  }
+        }
+
         public List<PerformerLocalDto> Get() {
             return Performers;
         }
@@ -48,14 +79,25 @@ namespace FilesOnDvdLocal.Repositories {
         public PerformerLocalDto Get(string name) {
             PerformerLocalDto perf = Performers.FirstOrDefault(b =>
                 b.Name.ToUpper() == name.ToUpper());
-            // should null check be here or in caller?
             if (perf == null) {
-                perf = new PerformerLocalDto() {
-                    Id = -1,
-                    Name = name
-                };
+                AliasLocalDto aliasDto = GetAlias(name);
+                if (aliasDto == null) {
+                    perf = new PerformerLocalDto() {
+                        Id = -1,
+                        Name = name
+                    };
+                }
+                else {
+                    perf = Performers.Find(p => p.Id == aliasDto.Performer);
+                }
             }
             return perf;
+        }
+
+        private AliasLocalDto GetAlias(string name) {
+            AliasLocalDto alias = Aliases
+                .FirstOrDefault(a => a.Alias.ToUpper() == name.ToUpper());
+            return alias;
         }
 
         public PerformerLocalDto Get(int id) {

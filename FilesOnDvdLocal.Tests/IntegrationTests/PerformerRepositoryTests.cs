@@ -43,6 +43,40 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
         }
 
         [TestMethod]
+        public void Get_ByName_PerformerDoesNotExist_ReturnsPerformer() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            PerformerRepository repository = new PerformerRepository(dbLocation);
+            PerformerLocalDto expected = new PerformerLocalDto() {
+                Id = -1,
+                Name = "Oscar the Grouch"
+            };
+
+            string performerNameToFind = "oscar the grouch";
+
+            var result = repository.Get(performerNameToFind);
+
+            Assert.AreEqual(expected.Id, result.Id);
+
+        }
+
+        [TestMethod]
+        public void Get_ByName_AliasIsUsed_ReturnsPerformer() {
+            string dbLocation = @"c:\temp\Files on Dvd.accdb";
+            PerformerRepository repository = new PerformerRepository(dbLocation);
+            PerformerLocalDto expected = new PerformerLocalDto() {
+                Id = 177,
+                Name = "Steve Austin"
+            };
+
+            string performerNameToFind = "chilly mcfreeze";
+
+            var result = repository.Get(performerNameToFind);
+
+            Console.WriteLine("Breakpoint this line");
+            Assert.AreEqual(expected.Id, result.Id);
+        }
+
+        [TestMethod]
         public void JoinPerformerToFile_PerformerAndFileExist_AddsToJoinTable() {
             string dbLocation = @"c:\temp\Files on Dvd.accdb";
             PerformerRepository repository = new PerformerRepository(dbLocation);
