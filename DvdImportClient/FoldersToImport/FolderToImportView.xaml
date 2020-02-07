@@ -63,6 +63,14 @@
                                     </TextBlock>
                                 </StackPanel>
                                 <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsAlias}"
+                                                 Value="true">
+                                        <DataTrigger.Setters>
+                                            <Setter Property="Foreground"
+                                                    Value="Turquoise"
+                                                    TargetName="Performer" />
+                                        </DataTrigger.Setters>
+                                    </DataTrigger>
                                     <DataTrigger Binding="{Binding Path=Id}"
                                                  Value="-1">
                                         <DataTrigger.Setters>
