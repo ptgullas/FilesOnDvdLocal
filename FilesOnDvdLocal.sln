@@ -15,7 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesOnDvdLocal.Data", "Fil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttachmentsSaver.Console", "AttachmentsSaver.Console\AttachmentsSaver.Console.csproj", "{E3493E29-912B-4E88-9FAC-ABD48E85BA2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.Data", "MediaFilesOnDvd.Data\MediaFilesOnDvd.Data.csproj", "{3DDB4E5C-DEAD-40E3-89E9-9D42193E344C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaFilesOnDvd.Data", "MediaFilesOnDvd.Data\MediaFilesOnDvd.Data.csproj", "{3DDB4E5C-DEAD-40E3-89E9-9D42193E344C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegacyMediaFilesOnDvd.Data", "LegacyMediaFilesOnDvd.Data\LegacyMediaFilesOnDvd.Data.csproj", "{8A3AC46C-300E-46BE-847F-66D60B892C47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateLegacy.Services", "MigrateLegacy.Services\MigrateLegacy.Services.csproj", "{3CA6F2EF-09DE-44C3-9652-3875955B530B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateLegacy.Tests", "MigrateLegacy.Tests\MigrateLegacy.Tests.csproj", "{7849B071-7D6B-4E7F-828A-13A7A6BB2899}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,18 @@ Global
 		{3DDB4E5C-DEAD-40E3-89E9-9D42193E344C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DDB4E5C-DEAD-40E3-89E9-9D42193E344C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DDB4E5C-DEAD-40E3-89E9-9D42193E344C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A3AC46C-300E-46BE-847F-66D60B892C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A3AC46C-300E-46BE-847F-66D60B892C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A3AC46C-300E-46BE-847F-66D60B892C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A3AC46C-300E-46BE-847F-66D60B892C47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CA6F2EF-09DE-44C3-9652-3875955B530B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CA6F2EF-09DE-44C3-9652-3875955B530B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CA6F2EF-09DE-44C3-9652-3875955B530B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CA6F2EF-09DE-44C3-9652-3875955B530B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7849B071-7D6B-4E7F-828A-13A7A6BB2899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7849B071-7D6B-4E7F-828A-13A7A6BB2899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7849B071-7D6B-4E7F-828A-13A7A6BB2899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7849B071-7D6B-4E7F-828A-13A7A6BB2899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
