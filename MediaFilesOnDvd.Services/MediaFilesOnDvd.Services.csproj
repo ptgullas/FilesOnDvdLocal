@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\LegacyMediaFilesOnDvd.Data\LegacyMediaFilesOnDvd.Data.csproj" />
+    <ProjectReference Include="..\MediaFilesOnDvd.Data\MediaFilesOnDvd.Data.csproj" />
   </ItemGroup>
 
 </Project>
