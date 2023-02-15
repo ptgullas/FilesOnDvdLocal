@@ -16,5 +16,14 @@ namespace MediaFilesOnDvd.Data.Entities {
         public List<HeadshotUrl> HeadshotUrls { get; set; } = new List<HeadshotUrl>();
         // comment this out until I'm ready
         public virtual ICollection<MediaFile>? MediaFiles { get; set; } = new List<MediaFile>();
+
+        public Performer() {
+
+        }
+
+        public Performer(string name, string headshotUrl = null) {
+            Name = name;
+            HeadshotUrls.Add(new HeadshotUrl(headshotUrl));
+        }
     }
 }
