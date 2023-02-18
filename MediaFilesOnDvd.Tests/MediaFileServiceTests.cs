@@ -63,6 +63,7 @@ namespace MediaFilesOnDvd.Tests {
             var jordan = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Jordan"));
             var heidi = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Heidi"));
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var mediaFiles = new MediaFile[] {
                 new MediaFile {
                     Name = "The White Lotus - 1.01 - Arrivals.mkv",
@@ -101,6 +102,7 @@ namespace MediaFilesOnDvd.Tests {
                 }
 
             };
+#pragma warning restore CS8604 // Possible null reference argument.
 
             context.MediaFiles.AddRange(mediaFiles);
             context.SaveChanges();
@@ -202,6 +204,73 @@ namespace MediaFilesOnDvd.Tests {
                 );
         }
 
+        [Fact]
+        public void AddPerformerToMediaFile_PerformerIsNotAlreadyInFile_AddsPerformer() {
+            // Arrange
+            using var context = new MediaFilesContext(_contextOptions);
+            var service = new MediaFileService(context);
+            var performerService = new PerformerService(context);
+
+            string mediaFileNameToGet = "The White Lotus - 1.01 - Arrivals.mkv";
+
+            string expectedName1 = "John Cena";
+            int expectedPerformerCountBeforeRefresh = 1;
+            int expectedPerformerCountAfterRefresh = 3;
+            // Act
+            var mediaFiles = service.Get();
+            var whiteLotusPremiere = mediaFiles.FirstOrDefault(m => m.Name == mediaFileNameToGet);
+            var cena = performerService.GetWithMediaFiles("John Cena");
+
+            var result = service.AddPerformerToMediaFile(whiteLotusPremiere, cena);
+            // Assert
+
+            Assert.True(result.Success);
+
+            // should test to see if the whiteLotusPremiere entity retrieved above gets updated, or if
+            // we need to do another Get() from the context to get the updated one
+
+            // The whiteLotusPremiere object has only 1 Performer (Cena), probably because the original
+            // one taken from the context didn't Include Performers, so it only tracks the one that was added
+
+            Assert.Equal(expectedPerformerCountBeforeRefresh, whiteLotusPremiere.Performers.Count);
+
+            Assert.Contains(whiteLotusPremiere.Performers, p => p.Name == "John Cena");
+
+            // Retrieve the MediaFile again, with the Performers
+            var whiteLotusPremiereWithPerformers = service.Get(whiteLotusPremiere.Id);
+
+            // even though we got another object, the original object is now updated with
+            // this should have all 3 Performers
+            Assert.Equal(expectedPerformerCountAfterRefresh, whiteLotusPremiere.Performers.Count);
+            Assert.Equal(expectedPerformerCountAfterRefresh, whiteLotusPremiereWithPerformers.Performers.Count);
+
+            Assert.Contains(whiteLotusPremiere.Performers, p => p.Name == "John Cena");
+
+            Assert.Equal(2, cena.MediaFiles.Count);
+        }
+
+        [Fact]
+        public void AddPerformerToMediaFile_PerformerIsAlreadyInFile_ReturnsError() {
+            // Arrange
+            using var context = new MediaFilesContext(_contextOptions);
+            var service = new MediaFileService(context);
+            var performerService = new PerformerService(context);
+
+            string mediaFileNameToGet = "Saturday Night Live - 44.01 - Adam Driver";
+
+            string expectedError = "MediaFile 'Saturday Night Live - 44.01 - Adam Driver' already contains Performer Cecily Strong";
+            // Act
+            var mediaFiles = service.Get();
+            var snlAdamDriver = mediaFiles.FirstOrDefault(m => m.Name == mediaFileNameToGet);
+            var cecily = performerService.GetWithMediaFiles("Cecily Strong");
+
+            var result = service.AddPerformerToMediaFile(snlAdamDriver, cecily);
+            // Assert
+
+            Assert.False(result.Success);
+            Assert.Equal(expectedError, result.Message);
+
+        }
         // eventually will want a GetMediaFilesBySeries? Or would that go in a SeriesService?
     }
 }

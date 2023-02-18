@@ -46,5 +46,20 @@ namespace MediaFilesOnDvd.Services {
                 return false;
             }
         }
+
+        public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer p) {
+            try {
+                if (mf.Performers.Any(p => p.Name.ToLower() == p.Name.ToLower())) {
+                    return new(false, $"MediaFile '{mf.Name}' already contains Performer {p.Name}");
+                }
+                mf.Performers.Add(p);
+                _context.SaveChanges();
+                return new(true);
+            }
+            catch (Exception e) {
+                // Log.Exception(e, "Error adding MediaFiles to database);
+                return new(false, "Error adding performer to database");
+            }
+        }
     }
 }

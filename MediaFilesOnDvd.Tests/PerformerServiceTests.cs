@@ -66,6 +66,7 @@ namespace MediaFilesOnDvd.Tests {
             var jordan = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Jordan"));
             var heidi = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Heidi"));
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var mediaFiles = new MediaFile[] {
                 new MediaFile {
                     Name = "The White Lotus - 2.01 - Ciao.mkv",
@@ -104,6 +105,7 @@ namespace MediaFilesOnDvd.Tests {
                 }
 
             };
+#pragma warning restore CS8604 // Possible null reference argument.
 
             context.MediaFiles.AddRange(mediaFiles);
             context.SaveChanges();
