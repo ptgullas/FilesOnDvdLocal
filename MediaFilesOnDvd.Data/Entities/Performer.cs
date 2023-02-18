@@ -17,6 +17,8 @@ namespace MediaFilesOnDvd.Data.Entities {
         // comment this out until I'm ready
         public virtual ICollection<MediaFile>? MediaFiles { get; set; } = new List<MediaFile>();
 
+        public string? Notes { get; set; }
+
         public Performer() {
 
         }
