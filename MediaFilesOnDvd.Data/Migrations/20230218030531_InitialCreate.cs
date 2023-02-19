@@ -16,7 +16,8 @@ namespace MediaFilesOnDvd.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,6 +38,19 @@ namespace MediaFilesOnDvd.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScreenshotUrls",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Url = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScreenshotUrls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Wallets",
                 columns: table => new
                 {
@@ -53,7 +67,7 @@ namespace MediaFilesOnDvd.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScreenshotUrls",
+                name: "HeadshotUrl",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -63,9 +77,9 @@ namespace MediaFilesOnDvd.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScreenshotUrls", x => x.Id);
+                    table.PrimaryKey("PK_HeadshotUrl", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScreenshotUrls_Performers_PerformerId",
+                        name: "FK_HeadshotUrl_Performers_PerformerId",
                         column: x => x.PerformerId,
                         principalTable: "Performers",
                         principalColumn: "Id");
@@ -115,7 +129,7 @@ namespace MediaFilesOnDvd.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PerformerMediaFile",
+                name: "MediaFilePerformer",
                 columns: table => new
                 {
                     MediaFilesId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -123,15 +137,15 @@ namespace MediaFilesOnDvd.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PerformerMediaFile", x => new { x.MediaFilesId, x.PerformersId });
+                    table.PrimaryKey("PK_MediaFilePerformer", x => new { x.MediaFilesId, x.PerformersId });
                     table.ForeignKey(
-                        name: "FK_PerformerMediaFile_MediaFiles_MediaFilesId",
+                        name: "FK_MediaFilePerformer_MediaFiles_MediaFilesId",
                         column: x => x.MediaFilesId,
                         principalTable: "MediaFiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PerformerMediaFile_Performers_PerformersId",
+                        name: "FK_MediaFilePerformer_Performers_PerformersId",
                         column: x => x.PerformersId,
                         principalTable: "Performers",
                         principalColumn: "Id",
@@ -144,26 +158,29 @@ namespace MediaFilesOnDvd.Data.Migrations
                 column: "WalletId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaFiles_DiscId",
-                table: "MediaFiles",
-                column: "DiscId");
+                name: "IX_HeadshotUrl_PerformerId",
+                table: "HeadshotUrl",
+                column: "PerformerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PerformerMediaFile_PerformersId",
-                table: "PerformerMediaFile",
+                name: "IX_MediaFilePerformer_PerformersId",
+                table: "MediaFilePerformer",
                 column: "PerformersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScreenshotUrls_PerformerId",
-                table: "ScreenshotUrls",
-                column: "PerformerId");
+                name: "IX_MediaFiles_DiscId",
+                table: "MediaFiles",
+                column: "DiscId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PerformerMediaFile");
+                name: "HeadshotUrl");
+
+            migrationBuilder.DropTable(
+                name: "MediaFilePerformer");
 
             migrationBuilder.DropTable(
                 name: "PerformerTypes");

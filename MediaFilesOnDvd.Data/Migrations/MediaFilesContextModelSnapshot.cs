@@ -29,7 +29,7 @@ namespace MediaFilesOnDvd.Data.Migrations
 
                     b.HasIndex("PerformersId");
 
-                    b.ToTable("PerformerMediaFile", (string)null);
+                    b.ToTable("MediaFilePerformer");
                 });
 
             modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.Disc", b =>
@@ -53,6 +53,26 @@ namespace MediaFilesOnDvd.Data.Migrations
                     b.HasIndex("WalletId");
 
                     b.ToTable("Discs");
+                });
+
+            modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.HeadshotUrl", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PerformerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PerformerId");
+
+                    b.ToTable("HeadshotUrl");
                 });
 
             modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.MediaFile", b =>
@@ -94,6 +114,9 @@ namespace MediaFilesOnDvd.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Performers");
@@ -120,16 +143,11 @@ namespace MediaFilesOnDvd.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PerformerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PerformerId");
 
                     b.ToTable("ScreenshotUrls");
                 });
@@ -182,10 +200,17 @@ namespace MediaFilesOnDvd.Data.Migrations
                     b.Navigation("Wallet");
                 });
 
+            modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.HeadshotUrl", b =>
+                {
+                    b.HasOne("MediaFilesOnDvd.Data.Entities.Performer", null)
+                        .WithMany("HeadshotUrls")
+                        .HasForeignKey("PerformerId");
+                });
+
             modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.MediaFile", b =>
                 {
                     b.HasOne("MediaFilesOnDvd.Data.Entities.Disc", "Disc")
-                        .WithMany()
+                        .WithMany("Files")
                         .HasForeignKey("DiscId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -193,16 +218,14 @@ namespace MediaFilesOnDvd.Data.Migrations
                     b.Navigation("Disc");
                 });
 
-            modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.ScreenshotUrl", b =>
+            modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.Disc", b =>
                 {
-                    b.HasOne("MediaFilesOnDvd.Data.Entities.Performer", null)
-                        .WithMany("ImageUrls")
-                        .HasForeignKey("PerformerId");
+                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.Performer", b =>
                 {
-                    b.Navigation("ImageUrls");
+                    b.Navigation("HeadshotUrls");
                 });
 
             modelBuilder.Entity("MediaFilesOnDvd.Data.Entities.Wallet", b =>

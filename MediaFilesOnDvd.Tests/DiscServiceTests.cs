@@ -167,5 +167,7 @@ namespace MediaFilesOnDvd.Tests {
             Assert.False(opResult.Success);
             Assert.Equal(expectedMessage, opResult.Message);
         }
+
+        // change tests to include MediaFiles (want to test the Include())
     }
 }

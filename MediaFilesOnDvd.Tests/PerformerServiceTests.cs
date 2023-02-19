@@ -107,8 +107,21 @@ namespace MediaFilesOnDvd.Tests {
             };
 #pragma warning restore CS8604 // Possible null reference argument.
 
-            context.MediaFiles.AddRange(mediaFiles);
-            context.SaveChanges();
+            // context.MediaFiles.AddRange(mediaFiles);
+            // context.SaveChanges();
+            Wallet tvWallet = new() { Name = "TV", Notes = "TV wallet in work drawer" };
+            WalletService walletService = new(context);
+            walletService.Add(tvWallet);
+
+            Disc miscTV2023a = new() {
+                Name = "MiscTV2023-02-17",
+                Notes = "Misc TV episodes",
+                Files = mediaFiles
+            };
+
+            DiscService discService = new(context);
+            discService.AddToWallet(miscTV2023a, tvWallet);
+
         }
         public void Dispose() => _connection.Dispose();
         #endregion

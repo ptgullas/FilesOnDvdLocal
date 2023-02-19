@@ -9,7 +9,7 @@ namespace MediaFilesOnDvd.Data.Entities {
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Notes { get; set; }
-        // public ICollection<MediaFile> Files { get; set; } = new List<MediaFile>();
+        public ICollection<MediaFile> Files { get; set; } = new List<MediaFile>();
         public int? WalletId { get; set; }
         public Wallet Wallet { get; set; }
 

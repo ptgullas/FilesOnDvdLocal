@@ -14,13 +14,12 @@ namespace MediaFilesOnDvd.Data.Entities {
         public virtual ICollection<Performer> Performers { get; set; } = new List<Performer>();
         public string? Notes { get; set; }
         public bool IsUnwatched { get; set; } = false;
-        public int UnknownPerformerCount { get; set; } = 0;
-        /*
+        public int UnknownPerformerCount { get; set; } = 0;        
         public int DiscId { get; set; }
         public Disc Disc { get; set; }
         public MediaFile() {
 
         }
-        */
+        
     }
 }
