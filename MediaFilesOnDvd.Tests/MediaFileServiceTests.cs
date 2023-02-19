@@ -146,6 +146,7 @@ namespace MediaFilesOnDvd.Tests {
             string expectedNotes = "Series premiere of this show about rich ppl";
             Performer expectedPerformer1 = context.Performers.First(p => p.Name == "Connie Britton");
             Performer expectedPerformer2 = context.Performers.First(p => p.Name == "Jennifer Coolidge");
+            string expectedDiscName = "MiscTV2023-02-17";
             // Act
             var results = service.Get("The White Lotus - 1.01 - Arrivals.mkv");
 
@@ -158,6 +159,7 @@ namespace MediaFilesOnDvd.Tests {
                 p => Assert.Equal(expectedPerformer2, p)
                 );
             Assert.Equal(expectedNotes, result.Notes);
+            Assert.Equal(expectedDiscName, result.Disc.Name);
         }
 
         [Fact]
@@ -171,6 +173,8 @@ namespace MediaFilesOnDvd.Tests {
             string expectedName = "Peacemaker - 1.01 - A Whole New Whirled.mkv";
 
             Performer expectedPerformer1 = context.Performers.First(p => p.Name == "John Cena");
+            string expectedDiscName = "MiscTV2023-02-17";
+
             // Act
             var result = service.Get(mediaFileIdToGet);
 
@@ -180,6 +184,7 @@ namespace MediaFilesOnDvd.Tests {
             Assert.Collection(result.Performers,
                 p => Assert.Equal(expectedPerformer1, p)
                 );
+            Assert.Equal(expectedDiscName, result.Disc.Name);
         }
 
         [Fact]
