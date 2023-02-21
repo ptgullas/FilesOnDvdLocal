@@ -1,0 +1,57 @@
+﻿using LegacyMediaFilesOnDvd.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MigrateLegacy.Services;
+
+namespace MigrateLegacy.Tests {
+    public class LegacyFilenameServiceTests {
+        const string pathToLegacyDb = @"Data Source=C:\temp\FilesOnDvd\MigrationToSqlLite\LegacyMediaFilesOnDvd.db";
+        [Fact]
+        public void Get_GetAll_ReturnsAllFilenames() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
+                .UseSqlite(pathToLegacyDb)
+                .Options;
+            var context = new LegacyMediaFilesContext(options);
+
+            LegacyFilenameService service = new(context);
+
+            int expectedFilenameCount = 4711;
+
+            // Act
+            var results = service.Get();
+            // Assert
+            Assert.NotEmpty(results);
+            Assert.Equal(expectedFilenameCount, results.Count());
+        }
+
+        [Fact]
+        public void Get_GetById_ReturnsSingleFilename() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
+                .UseSqlite(pathToLegacyDb)
+                .Options;
+            var context = new LegacyMediaFilesContext(options);
+
+            LegacyFilenameService service = new(context);
+
+            int fileNameIdToGet = 4377;
+            string expectedFilename = "2012-09-24 WWE RAW - Layla & Alicia Fox vs. Eve & Beth Phoenix.mp4";
+
+            // change these to the Genre & Series names when we add them
+            int expectedGenre = 4;
+            int expectedSeries = 88;
+            int expectedDisc = 202;
+            // string expectedDiscName = "W2015-08-05b";
+            // Act
+            var result = service.Get(fileNameIdToGet);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(expectedFilename, result.Name);
+            Assert.Equal(expectedGenre, result.Genre);
+            Assert.Equal(expectedSeries, result.Series);
+            Assert.Equal(expectedDisc, result.Disc);
+        }
+
+    }
+}
