@@ -20,6 +20,8 @@ public partial class LegacyMediaFilesContext : DbContext
 
     public virtual DbSet<LegacyDisc> LegacyDiscs { get; set; }
 
+    public virtual DbSet<LegacyGenre> LegacyGenres { get; set; }
+
     public virtual DbSet<LegacyWallet> LegacyWallets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,6 +31,11 @@ public partial class LegacyMediaFilesContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<LegacyDisc>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<LegacyGenre>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
         });

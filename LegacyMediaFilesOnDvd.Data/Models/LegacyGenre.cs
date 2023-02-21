@@ -8,18 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LegacyMediaFilesOnDvd.Data.Models;
 
-public partial class LegacyDisc
+public partial class LegacyGenre
 {
     [Key]
     public long Id { get; set; }
 
     public string Name { get; set; }
-
-    public long? Wallet { get; set; }
-
-    public string Notes { get; set; }
-
-    [ForeignKey("Wallet")]
-    [InverseProperty("LegacyDiscs")]
-    public virtual LegacyWallet WalletNavigation { get; set; }
 }
