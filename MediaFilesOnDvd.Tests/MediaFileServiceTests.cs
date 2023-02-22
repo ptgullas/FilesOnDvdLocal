@@ -21,7 +21,6 @@ namespace MediaFilesOnDvd.Tests {
             _connection = new SqliteConnection("Filename=:memory:");
             _connection.Open();
 
-            
             _contextOptions = new DbContextOptionsBuilder<MediaFilesContext>()
                 .UseSqlite(_connection)
                 .Options;

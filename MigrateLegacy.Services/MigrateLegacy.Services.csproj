@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LegacyMediaFilesOnDvd.Data\LegacyMediaFilesOnDvd.Data.csproj" />
     <ProjectReference Include="..\MediaFilesOnDvd.Data\MediaFilesOnDvd.Data.csproj" />
+    <ProjectReference Include="..\MediaFilesOnDvd.Services\MediaFilesOnDvd.Services.csproj" />
   </ItemGroup>
 
 </Project>
