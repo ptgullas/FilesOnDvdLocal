@@ -15,14 +15,14 @@ public partial class LegacyDisc
 
     public string Name { get; set; }
 
-    public long? Wallet { get; set; }
+    public long? WalletId { get; set; }
 
     public string Notes { get; set; }
 
     [InverseProperty("DiscNavigation")]
     public virtual ICollection<LegacyFilename> LegacyFilenames { get; } = new List<LegacyFilename>();
 
-    [ForeignKey("Wallet")]
+    [ForeignKey("WalletId")]
     [InverseProperty("LegacyDiscs")]
-    public virtual LegacyWallet WalletNavigation { get; set; }
+    public virtual LegacyWallet Wallet { get; set; }
 }

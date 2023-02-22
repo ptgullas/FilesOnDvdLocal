@@ -15,6 +15,6 @@ public partial class LegacyWallet
 
     public string Name { get; set; }
 
-    [InverseProperty("WalletNavigation")]
+    [InverseProperty("Wallet")]
     public virtual ICollection<LegacyDisc> LegacyDiscs { get; } = new List<LegacyDisc>();
 }

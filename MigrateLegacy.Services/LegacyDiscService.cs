@@ -17,7 +17,7 @@ namespace MigrateLegacy.Services {
 
         public List<LegacyDisc> FindByWalletId(int walletId) {
             var discs = _legacyContext.LegacyDiscs
-                .Where(d => d.WalletNavigation.Id == walletId)
+                .Where(d => d.Wallet.Id == walletId)
                 .OrderBy(discs => discs.Id)
                 .ToList();
             return discs;
