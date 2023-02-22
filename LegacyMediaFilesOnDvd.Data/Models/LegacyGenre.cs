@@ -15,6 +15,6 @@ public partial class LegacyGenre
 
     public string Name { get; set; }
 
-    [InverseProperty("GenreNavigation")]
+    [InverseProperty("Genre")]
     public virtual ICollection<LegacyFilename> LegacyFilenames { get; } = new List<LegacyFilename>();
 }

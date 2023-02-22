@@ -18,7 +18,7 @@ namespace MigrateLegacy.Services {
 
         public LegacyFilename? Get(int id) {
             return _legacyContext.LegacyFilenames
-                .Include(lf => lf.GenreNavigation)
+                .Include(lf => lf.Genre)
                 .FirstOrDefault(lf => lf.Id == id)
                 ;
         }

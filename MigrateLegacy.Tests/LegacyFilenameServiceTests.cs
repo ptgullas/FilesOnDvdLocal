@@ -39,7 +39,7 @@ namespace MigrateLegacy.Tests {
             string expectedFilename = "2012-09-24 WWE RAW - Layla & Alicia Fox vs. Eve & Beth Phoenix.mp4";
 
             // change these to the Genre & Series names when we add them
-            int expectedGenre = 4;
+            int expectedGenreId = 4;
             string expectedGenreName = "Wrestling";
             int expectedSeries = 88;
             int expectedDisc = 202;
@@ -49,8 +49,8 @@ namespace MigrateLegacy.Tests {
             // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedFilename, result.Name);
-            Assert.Equal(expectedGenre, result.Genre);
-            Assert.Equal(expectedGenreName, result.GenreNavigation.Name);
+            Assert.Equal(expectedGenreId, result.GenreId);
+            Assert.Equal(expectedGenreName, result.Genre.Name);
             Assert.Equal(expectedSeries, result.Series);
             Assert.Equal(expectedDisc, result.Disc);
         }
