@@ -42,8 +42,8 @@ namespace MigrateLegacy.Tests {
             int expectedGenreId = 4;
             string expectedGenreName = "Wrestling";
             int expectedSeries = 88;
-            int expectedDisc = 202;
-            // string expectedDiscName = "W2015-08-05b";
+            int expectedDiscId = 202;
+            string expectedDiscName = "W2015-08-05b";
             // Act
             var result = service.Get(fileNameIdToGet);
             // Assert
@@ -52,7 +52,8 @@ namespace MigrateLegacy.Tests {
             Assert.Equal(expectedGenreId, result.GenreId);
             Assert.Equal(expectedGenreName, result.Genre.Name);
             Assert.Equal(expectedSeries, result.Series);
-            Assert.Equal(expectedDisc, result.Disc);
+            Assert.Equal(expectedDiscId, result.DiscId);
+            Assert.Equal(expectedDiscName, result.Disc.Name);
         }
 
         [Fact]

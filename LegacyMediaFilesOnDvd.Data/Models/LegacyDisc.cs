@@ -19,7 +19,7 @@ public partial class LegacyDisc
 
     public string Notes { get; set; }
 
-    [InverseProperty("DiscNavigation")]
+    [InverseProperty("Disc")]
     public virtual ICollection<LegacyFilename> LegacyFilenames { get; } = new List<LegacyFilename>();
 
     [ForeignKey("WalletId")]

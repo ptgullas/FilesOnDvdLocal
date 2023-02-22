@@ -18,7 +18,7 @@ public partial class LegacyFilename
 
     public long? GenreId { get; set; }
 
-    public long? Disc { get; set; }
+    public long? DiscId { get; set; }
 
     public long? Series { get; set; }
 
@@ -28,9 +28,9 @@ public partial class LegacyFilename
 
     public string Unwatched { get; set; }
 
-    [ForeignKey("Disc")]
+    [ForeignKey("DiscId")]
     [InverseProperty("LegacyFilenames")]
-    public virtual LegacyDisc DiscNavigation { get; set; }
+    public virtual LegacyDisc Disc { get; set; }
 
     [ForeignKey("GenreId")]
     [InverseProperty("LegacyFilenames")]
