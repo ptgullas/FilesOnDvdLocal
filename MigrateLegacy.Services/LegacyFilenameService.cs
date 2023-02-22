@@ -24,7 +24,10 @@ namespace MigrateLegacy.Services {
         }
 
         public IEnumerable<LegacyFilename> GetByDiscName(string discName) {
-            throw new NotImplementedException();
+            return _legacyContext.LegacyFilenames
+                .Where(lf => lf.DiscNavigation.Name.ToLower() == discName.ToLower())
+                .OrderBy(lf => lf.Name)
+                ;
         }
     }
 }

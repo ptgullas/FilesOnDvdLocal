@@ -55,5 +55,28 @@ namespace MigrateLegacy.Tests {
             Assert.Equal(expectedDisc, result.Disc);
         }
 
+        [Fact]
+        public void GetByDisc_GetWrestlingDiscs_ReturnsWrestlingDiscs() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
+                .UseSqlite(pathToLegacyDb)
+                .Options;
+            var context = new LegacyMediaFilesContext(options);
+
+            LegacyFilenameService service = new(context);
+
+            string discNameToGet = "W2010-04-24";
+            int expectedCount = 44;
+
+            string expectedFirstFileName = "1984-01-23 - Hulk Hogan vs. The Iron Sheik.mp4";
+            // Act
+
+            var results = service.GetByDiscName(discNameToGet);
+            // Assert
+
+            Assert.NotEmpty(results);
+            Assert.Equal(expectedCount, results.Count());
+            Assert.Equal(expectedFirstFileName, results.First().Name);
+        }
     }
 }
