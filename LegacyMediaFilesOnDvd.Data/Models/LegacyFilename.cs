@@ -27,4 +27,8 @@ public partial class LegacyFilename
     public long? UnknownActors { get; set; }
 
     public string Unwatched { get; set; }
+
+    [ForeignKey("Genre")]
+    [InverseProperty("LegacyFilenames")]
+    public virtual LegacyGenre GenreNavigation { get; set; }
 }

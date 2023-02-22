@@ -40,6 +40,8 @@ public partial class LegacyMediaFilesContext : DbContext
         modelBuilder.Entity<LegacyFilename>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.GenreNavigation).WithMany(p => p.LegacyFilenames).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<LegacyGenre>(entity =>

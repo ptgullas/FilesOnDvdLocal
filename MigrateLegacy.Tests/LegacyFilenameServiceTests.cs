@@ -40,6 +40,7 @@ namespace MigrateLegacy.Tests {
 
             // change these to the Genre & Series names when we add them
             int expectedGenre = 4;
+            string expectedGenreName = "Wrestling";
             int expectedSeries = 88;
             int expectedDisc = 202;
             // string expectedDiscName = "W2015-08-05b";
@@ -49,6 +50,7 @@ namespace MigrateLegacy.Tests {
             Assert.NotNull(result);
             Assert.Equal(expectedFilename, result.Name);
             Assert.Equal(expectedGenre, result.Genre);
+            Assert.Equal(expectedGenreName, result.GenreNavigation.Name);
             Assert.Equal(expectedSeries, result.Series);
             Assert.Equal(expectedDisc, result.Disc);
         }

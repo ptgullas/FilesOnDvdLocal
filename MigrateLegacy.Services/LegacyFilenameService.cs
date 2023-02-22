@@ -1,5 +1,6 @@
 ﻿using LegacyMediaFilesOnDvd.Data.Context;
 using LegacyMediaFilesOnDvd.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MigrateLegacy.Services {
     public class LegacyFilenameService {
@@ -17,7 +18,9 @@ namespace MigrateLegacy.Services {
 
         public LegacyFilename? Get(int id) {
             return _legacyContext.LegacyFilenames
-                .FirstOrDefault(lf => lf.Id == id);
+                .Include(lf => lf.GenreNavigation)
+                .FirstOrDefault(lf => lf.Id == id)
+                ;
         }
 
         public IEnumerable<LegacyFilename> GetByDiscName(string discName) {
