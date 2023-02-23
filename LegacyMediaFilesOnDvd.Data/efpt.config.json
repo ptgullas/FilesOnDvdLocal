@@ -27,6 +27,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "LegacyPublishers",
+         "ObjectType": 0
+      },
+      {
+         "Name": "LegacySeries",
+         "ObjectType": 0
+      },
+      {
          "Name": "LegacyWallets",
          "ObjectType": 0
       }

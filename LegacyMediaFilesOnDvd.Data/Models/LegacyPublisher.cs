@@ -8,16 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LegacyMediaFilesOnDvd.Data.Models;
 
-public partial class LegacyGenre
+public partial class LegacyPublisher
 {
     [Key]
     public long Id { get; set; }
 
     public string Name { get; set; }
 
-    [InverseProperty("Genre")]
-    public virtual ICollection<LegacyFilename> LegacyFilenames { get; } = new List<LegacyFilename>();
-
-    [InverseProperty("Genre")]
+    [InverseProperty("Publisher")]
     public virtual ICollection<LegacySeries> LegacySeries { get; } = new List<LegacySeries>();
 }

@@ -24,6 +24,10 @@ public partial class LegacyMediaFilesContext : DbContext
 
     public virtual DbSet<LegacyGenre> LegacyGenres { get; set; }
 
+    public virtual DbSet<LegacyPublisher> LegacyPublishers { get; set; }
+
+    public virtual DbSet<LegacySeries> LegacySeries { get; set; }
+
     public virtual DbSet<LegacyWallet> LegacyWallets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -49,6 +53,20 @@ public partial class LegacyMediaFilesContext : DbContext
         modelBuilder.Entity<LegacyGenre>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<LegacyPublisher>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<LegacySeries>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.LegacySeries).OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(d => d.Publisher).WithMany(p => p.LegacySeries).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<LegacyWallet>(entity =>
