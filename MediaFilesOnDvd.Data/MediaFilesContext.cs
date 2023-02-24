@@ -11,10 +11,11 @@ namespace MediaFilesOnDvd.Data {
         public DbSet<MediaFile> MediaFiles { get; set; }
         public DbSet<Performer> Performers { get; set; }
         public DbSet<ScreenshotUrl> ScreenshotUrls { get; set; }
-        /*
-        public DbSet<FileGenre> FileGenres { get; set; }
         public DbSet<Series> Series { get; set; }
         public DbSet<SeriesPublisher> SeriesPublishers { get; set; }
+
+        /*
+        public DbSet<FileGenre> FileGenres { get; set; }
         */
 
         public MediaFilesContext() {
