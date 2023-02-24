@@ -12,9 +12,19 @@ namespace MigrateLegacy.Services {
         }
 
         public IEnumerable<LegacyPublisher> Get() {
-            throw new NotImplementedException();
+            return _legacyContext.LegacyPublishers
+                .OrderBy(p => p.Id);
         }
 
-        // MigrateToNewPublisher
+        public IEnumerable<SeriesPublisher> MigrateToSeriesPublisher(IEnumerable<LegacyPublisher> legacyPublishers) {
+            List<SeriesPublisher> seriesPublishers = new();
+            foreach (LegacyPublisher legacyPublisher in legacyPublishers) {
+                SeriesPublisher seriesPublisher = new() {
+                    Name = legacyPublisher.Name
+                };
+                seriesPublishers.Add(seriesPublisher);
+            }
+            return seriesPublishers;
+        }
     }
 }
