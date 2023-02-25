@@ -24,6 +24,10 @@ public partial class LegacyMediaFilesContext : DbContext
 
     public virtual DbSet<LegacyGenre> LegacyGenres { get; set; }
 
+    public virtual DbSet<LegacyPerformer> LegacyPerformers { get; set; }
+
+    public virtual DbSet<LegacyPerformerType> LegacyPerformerTypes { get; set; }
+
     public virtual DbSet<LegacyPublisher> LegacyPublishers { get; set; }
 
     public virtual DbSet<LegacySeries> LegacySeries { get; set; }
@@ -53,6 +57,18 @@ public partial class LegacyMediaFilesContext : DbContext
         });
 
         modelBuilder.Entity<LegacyGenre>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<LegacyPerformer>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.PerformerType).WithMany(p => p.LegacyPerformers).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<LegacyPerformerType>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
         });

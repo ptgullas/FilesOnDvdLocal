@@ -27,6 +27,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "LegacyPerformers",
+         "ObjectType": 0
+      },
+      {
+         "Name": "LegacyPerformerTypes",
+         "ObjectType": 0
+      },
+      {
          "Name": "LegacyPublishers",
          "ObjectType": 0
       },
