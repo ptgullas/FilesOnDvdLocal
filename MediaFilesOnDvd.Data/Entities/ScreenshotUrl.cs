@@ -9,8 +9,10 @@ namespace MediaFilesOnDvd.Data.Entities {
         public int Id { get; set; }
         public string Url { get; set; }
 
-        public ScreenshotUrl(string url) {
-            Url = url;
+        public int MediaFileId { get; set; }
+        public MediaFile MediaFile { get; set; }
+
+        public ScreenshotUrl() {
         }
     }
 }

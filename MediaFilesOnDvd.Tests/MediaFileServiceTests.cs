@@ -67,37 +67,60 @@ namespace MediaFilesOnDvd.Tests {
                 new MediaFile {
                     Name = "The White Lotus - 1.01 - Arrivals.mkv",
                     Performers = new List<Performer> {connie, jennifer},
-                    Notes = "Series premiere of this show about rich ppl"
+                    Notes = "Series premiere of this show about rich ppl",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "01.jpg"},
+                        new ScreenshotUrl() { Url = "01a.jpg"}
+                    }
                 },
                 new MediaFile {
                     Name = "Schmigadoon! - 1.06 - How We Change.mkv",
                     Performers = {cecily, keegan},
-                    Notes = "Fun musical show"
+                    Notes = "Fun musical show",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "02.jpg"},
+                    }
                 },
                 new MediaFile {
                     Name = "Peacemaker - 1.01 - A Whole New Whirled.mkv",
                     Performers = {john},
-                    Notes = "Follow-up to James Gunn's 'The Suicide Squad'"
+                    Notes = "Follow-up to James Gunn's 'The Suicide Squad'",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "03.jpg"},
+                    }
                 },
                 new MediaFile {
                     Name = "Hawkeye (2021) - 1.04 - Partners, Am I Right.mkv",
                     Performers = {jeremy},
-                    Notes = "MCU show on Disney+"
+                    Notes = "MCU show on Disney+",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "04.jpg"},
+                    }
                 },
                 new MediaFile {
                     Name = "The Hurt Locker (2008).avi",
                     Performers = {jeremy},
-                    Notes = "Kathryn Bigelow film about effects of war or whatever"
+                    Notes = "Kathryn Bigelow film about effects of war or whatever",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "05.jpg"},
+                    }
                 },
                 new MediaFile {
                     Name = "Saturday Night Live - 44.01 - Adam Driver",
                     Performers = {cecily, kenan, heidi},
-                    Notes = "Kathryn Bigelow film about effects of war or whatever"
+                    Notes = "That Star Wars Undercover Boss sketch",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "06.jpg"},
+                    }
                 },
                 new MediaFile {
                     Name = "Key & Peele - 1.01",
                     Performers = {keegan, jordan},
-                    Notes = "Series premiere of great sketch show"
+                    Notes = "Series premiere of great sketch show",
+                    Screenshots = new List<ScreenshotUrl> {
+                        new ScreenshotUrl() { Url = "07.jpg"},
+                        new ScreenshotUrl() { Url = "07a.jpg"}
+                    }
                 }
 
             };
@@ -146,6 +169,9 @@ namespace MediaFilesOnDvd.Tests {
             Performer expectedPerformer1 = context.Performers.First(p => p.Name == "Connie Britton");
             Performer expectedPerformer2 = context.Performers.First(p => p.Name == "Jennifer Coolidge");
             string expectedDiscName = "MiscTV2023-02-17";
+
+            int expectedScreenshotCount = 2;
+            string expectedScreenshotUrl = "01.jpg";
             // Act
             var results = service.Get("The White Lotus - 1.01 - Arrivals.mkv");
 
@@ -159,6 +185,8 @@ namespace MediaFilesOnDvd.Tests {
                 );
             Assert.Equal(expectedNotes, result.Notes);
             Assert.Equal(expectedDiscName, result.Disc.Name);
+            Assert.Equal(expectedScreenshotCount, result.Screenshots.Count);
+            Assert.Equal(expectedScreenshotUrl, result.Screenshots.First().Url);
         }
 
         [Fact]

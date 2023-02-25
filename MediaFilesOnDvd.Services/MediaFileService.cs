@@ -21,6 +21,7 @@ namespace MediaFilesOnDvd.Services {
         public MediaFile? Get(int id) {
             return _context.MediaFiles
                 .Include(m => m.Performers)
+                .Include(m => m.Screenshots)
                 .Include(m => m.Disc)
                 .FirstOrDefault(f => f.Id == id)
                 ;
@@ -30,6 +31,7 @@ namespace MediaFilesOnDvd.Services {
             return _context.MediaFiles.Where(
                 n => n.Name.ToLower() == name.ToLower())
                 .Include(m => m.Performers)
+                .Include(m => m.Screenshots)
                 .Include(m => m.Disc);
         }
         public void Add(MediaFile mediaFile) {
