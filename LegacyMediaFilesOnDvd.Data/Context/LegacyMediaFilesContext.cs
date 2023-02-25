@@ -54,6 +54,17 @@ public partial class LegacyMediaFilesContext : DbContext
             entity.HasOne(d => d.Genre).WithMany(p => p.LegacyFilenames).OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(d => d.Series).WithMany(p => p.LegacyFilenames).OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasMany(d => d.Performers).WithMany(p => p.Filenames)
+                .UsingEntity<Dictionary<string, object>>(
+                    "LegacyPerformersFilename",
+                    r => r.HasOne<LegacyPerformer>().WithMany().HasForeignKey("PerformerId"),
+                    l => l.HasOne<LegacyFilename>().WithMany().HasForeignKey("FilenameId"),
+                    j =>
+                    {
+                        j.HasKey("FilenameId", "PerformerId");
+                        j.ToTable("LegacyPerformersFilenames");
+                    });
         });
 
         modelBuilder.Entity<LegacyGenre>(entity =>

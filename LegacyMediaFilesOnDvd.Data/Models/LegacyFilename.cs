@@ -39,4 +39,8 @@ public partial class LegacyFilename
     [ForeignKey("SeriesId")]
     [InverseProperty("LegacyFilenames")]
     public virtual LegacySeries Series { get; set; }
+
+    [ForeignKey("FilenameId")]
+    [InverseProperty("Filenames")]
+    public virtual ICollection<LegacyPerformer> Performers { get; } = new List<LegacyPerformer>();
 }

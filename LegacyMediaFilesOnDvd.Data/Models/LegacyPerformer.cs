@@ -22,4 +22,8 @@ public partial class LegacyPerformer
     [ForeignKey("PerformerTypeId")]
     [InverseProperty("LegacyPerformers")]
     public virtual LegacyPerformerType PerformerType { get; set; }
+
+    [ForeignKey("PerformerId")]
+    [InverseProperty("Performers")]
+    public virtual ICollection<LegacyFilename> Filenames { get; } = new List<LegacyFilename>();
 }

@@ -21,6 +21,7 @@ namespace MigrateLegacy.Services {
                 .Include(lf => lf.Genre)
                 .Include(lf => lf.Series)
                 .Include(lf => lf.Disc)
+                .Include(lf => lf.Performers.OrderBy(p => p.Name))
                 .FirstOrDefault(lf => lf.Id == id)
                 ;
         }

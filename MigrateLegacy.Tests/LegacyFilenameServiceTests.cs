@@ -59,6 +59,39 @@ namespace MigrateLegacy.Tests {
         }
 
         [Fact]
+        public void Get_GetById_ReturnsPerformers() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
+                .UseSqlite(pathToLegacyDb)
+                .Options;
+            var context = new LegacyMediaFilesContext(options);
+
+            LegacyFilenameService service = new(context);
+
+            int fileNameIdToGet = 1412;
+            string expectedFilename = "Predator 3 - The Final Chapter (2009) - Scene 4 - India Summer & Abbey Brooks.avi";
+
+            // change these to the Genre & Series names when we add them
+            int expectedGenreId = 3;
+            int expectedDiscId = 66;
+            string expectedDiscName = "P2010-11-24a-LES";
+
+            int expectedPerformerCount = 3;
+            string expectedFirstPerformerName = "Abbey Brooks";
+            // Act
+            var result = service.Get(fileNameIdToGet);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(expectedFilename, result.Name);
+            Assert.Equal(expectedGenreId, result.GenreId);
+            Assert.Equal(expectedDiscId, result.DiscId);
+            Assert.Equal(expectedDiscName, result.Disc.Name);
+
+            Assert.Equal(expectedPerformerCount, result.Performers.Count);
+            Assert.Equal(expectedFirstPerformerName, result.Performers.First().Name);
+        }
+
+        [Fact]
         public void GetByDisc_GetWrestlingDiscs_ReturnsWrestlingDiscs() {
             // Arrange
             var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
