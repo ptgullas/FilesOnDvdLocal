@@ -20,7 +20,7 @@ public partial class LegacyFilename
 
     public long? DiscId { get; set; }
 
-    public long? Series { get; set; }
+    public long? SeriesId { get; set; }
 
     public string Notes { get; set; }
 
@@ -35,4 +35,8 @@ public partial class LegacyFilename
     [ForeignKey("GenreId")]
     [InverseProperty("LegacyFilenames")]
     public virtual LegacyGenre Genre { get; set; }
+
+    [ForeignKey("SeriesId")]
+    [InverseProperty("LegacyFilenames")]
+    public virtual LegacySeries Series { get; set; }
 }

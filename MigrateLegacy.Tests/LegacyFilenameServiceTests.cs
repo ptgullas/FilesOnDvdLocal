@@ -41,7 +41,8 @@ namespace MigrateLegacy.Tests {
             // change these to the Genre & Series names when we add them
             int expectedGenreId = 4;
             string expectedGenreName = "Wrestling";
-            int expectedSeries = 88;
+            int expectedSeriesId = 88;
+            string expectedSeriesName = "WWE RAW";
             int expectedDiscId = 202;
             string expectedDiscName = "W2015-08-05b";
             // Act
@@ -51,7 +52,8 @@ namespace MigrateLegacy.Tests {
             Assert.Equal(expectedFilename, result.Name);
             Assert.Equal(expectedGenreId, result.GenreId);
             Assert.Equal(expectedGenreName, result.Genre.Name);
-            Assert.Equal(expectedSeries, result.Series);
+            Assert.Equal(expectedSeriesId, result.SeriesId);
+            Assert.Equal(expectedSeriesName, result.Series.Name);
             Assert.Equal(expectedDiscId, result.DiscId);
             Assert.Equal(expectedDiscName, result.Disc.Name);
         }
@@ -79,5 +81,30 @@ namespace MigrateLegacy.Tests {
             Assert.Equal(expectedCount, results.Count());
             Assert.Equal(expectedFirstFileName, results.First().Name);
         }
+
+        [Fact]
+        public void GetBySeries_GetPrisonBreakFiles_ReturnsFiles() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LegacyMediaFilesContext>()
+                .UseSqlite(pathToLegacyDb)
+                .Options;
+            var context = new LegacyMediaFilesContext(options);
+
+            LegacyFilenameService service = new(context);
+
+            string seriesToGet = "Prison Break";
+            int expectedCount = 12;
+
+            string expectedFirstFileName = "Prison Break - 1.01 - Pilot.avi";
+            // Act
+
+            var results = service.GetBySeries(seriesToGet);
+            // Assert
+
+            Assert.NotEmpty(results);
+            Assert.Equal(expectedCount, results.Count());
+            Assert.Equal(expectedFirstFileName, results.First().Name);
+        }
+
     }
 }

@@ -23,6 +23,9 @@ public partial class LegacySeries
     [InverseProperty("LegacySeries")]
     public virtual LegacyGenre Genre { get; set; }
 
+    [InverseProperty("Series")]
+    public virtual ICollection<LegacyFilename> LegacyFilenames { get; } = new List<LegacyFilename>();
+
     [ForeignKey("PublisherId")]
     [InverseProperty("LegacySeries")]
     public virtual LegacyPublisher Publisher { get; set; }

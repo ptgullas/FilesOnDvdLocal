@@ -19,6 +19,7 @@ namespace MigrateLegacy.Services {
         public LegacyFilename? Get(int id) {
             return _legacyContext.LegacyFilenames
                 .Include(lf => lf.Genre)
+                .Include(lf => lf.Series)
                 .Include(lf => lf.Disc)
                 .FirstOrDefault(lf => lf.Id == id)
                 ;
@@ -27,8 +28,13 @@ namespace MigrateLegacy.Services {
         public IEnumerable<LegacyFilename> GetByDiscName(string discName) {
             return _legacyContext.LegacyFilenames
                 .Where(lf => lf.Disc.Name.ToLower() == discName.ToLower())
-                .OrderBy(lf => lf.Name)
-                ;
+                .OrderBy(lf => lf.Name);
+        }
+
+        public IEnumerable<LegacyFilename> GetBySeries(string seriesName) {
+            return _legacyContext.LegacyFilenames
+                .Where(lf => lf.Series.Name.ToLower() == seriesName.ToLower())
+                .OrderBy(lf => lf.Name.ToLower());
         }
     }
 }
