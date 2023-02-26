@@ -13,7 +13,7 @@ namespace MediaFilesOnDvd.Data.Entities {
         public string? Notes { get; set; }
         public bool IsUnwatched { get; set; } = false;
         public int UnknownPerformerCount { get; set; } = 0;
-        public int SeriesId { get; set; }
+        public int? SeriesId { get; set; }
         public Series? Series { get; set; }
         public int DiscId { get; set; }
         public Disc Disc { get; set; }
