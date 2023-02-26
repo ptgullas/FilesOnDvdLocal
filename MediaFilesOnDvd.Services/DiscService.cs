@@ -112,5 +112,9 @@ namespace MediaFilesOnDvd.Services {
             }
         }
 
+        public void AddDiscsToWallet(Wallet wallet, Disc[] discs) {
+            wallet.Discs.AddRange(discs);
+            _context.SaveChanges();
+        }
     }
 }

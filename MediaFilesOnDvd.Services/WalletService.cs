@@ -37,9 +37,6 @@ namespace MediaFilesOnDvd.Services {
             return false;
         }
 
-        public void AddDiscsToWallet(Wallet wallet, Disc[] discs) {
-            wallet.Discs.AddRange(discs);
-            _context.SaveChanges();
-        }
+
     }
 }
