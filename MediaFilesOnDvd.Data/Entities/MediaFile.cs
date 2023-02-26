@@ -17,6 +17,8 @@ namespace MediaFilesOnDvd.Data.Entities {
         public Series? Series { get; set; }
         public int DiscId { get; set; }
         public Disc Disc { get; set; }
+        public int FileGenreId { get; set; }
+        public FileGenre FileGenre { get; set; }
         public virtual ICollection<ScreenshotUrl> Screenshots { get; set; } = new List<ScreenshotUrl>();
 
         public MediaFile() {

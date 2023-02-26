@@ -39,6 +39,12 @@ namespace MediaFilesOnDvd.Tests {
                 //viewCommand.CommandText = GetSqlCommand();
                 //viewCommand.ExecuteNonQuery();
             }
+
+            FileGenre tvGenre = new() {
+                Name = "TV show"
+            };
+            context.FileGenres.Add(tvGenre);
+
             var performers = new Performer[] {
                 new Performer {Name = "Aubrey Plaza", HeadshotUrls = { new HeadshotUrl("aubrey_plaza.jpg") } },
                 new Performer {Name = "Jennifer Coolidge", HeadshotUrls = { new HeadshotUrl("jennifer_coolidge.jpg") }},
@@ -118,7 +124,9 @@ namespace MediaFilesOnDvd.Tests {
                 Notes = "Misc TV episodes",
                 Files = mediaFiles
             };
-
+            foreach (var file in mediaFiles) {
+                tvGenre.MediaFiles.Add(file);
+            }
             DiscService discService = new(context);
             discService.AddToWallet(miscTV2023a, tvWallet);
 

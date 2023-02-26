@@ -24,7 +24,7 @@ namespace MediaFilesOnDvd.Tests {
             _contextOptions = new DbContextOptionsBuilder<MediaFilesContext>()
                 .UseSqlite(_connection)
                 .Options;
-            
+
             // uncomment this to test with an actual file:
             // _contextOptions = CreateDbContextOptions();
 
@@ -38,6 +38,12 @@ namespace MediaFilesOnDvd.Tests {
                 //viewCommand.CommandText = GetSqlCommand();
                 //viewCommand.ExecuteNonQuery();
             }
+
+            FileGenre tvGenre = new() {
+                Name = "TV show"
+            };
+            context.FileGenres.Add(tvGenre);
+
             var performers = new Performer[] {
                 new Performer {Name = "Connie Britton"},
                 new Performer {Name = "Jennifer Coolidge"},
@@ -137,6 +143,9 @@ namespace MediaFilesOnDvd.Tests {
                 Notes = "Misc TV episodes",
                 Files = mediaFiles
             };
+            foreach (var file in mediaFiles) {
+                tvGenre.MediaFiles.Add(file);
+            }
             // miscTV2023a.Files.Add(mediaFiles[0]);
 
             DiscService discService = new(context);
