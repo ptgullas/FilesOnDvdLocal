@@ -13,6 +13,7 @@ namespace MigrateLegacy.Services {
 
         public IEnumerable<LegacyWallet> Get() {
             return _legacyContext.LegacyWallets
+                .Include(lw => lw.LegacyDiscs)
                 .OrderBy(lw => lw.Id);
         }
 

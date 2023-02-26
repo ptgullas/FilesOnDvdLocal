@@ -95,16 +95,31 @@ namespace MigrateLegacy.Tests {
             int expectedCount = 233;
             string expectedNotes = "WWE Smackdown";
             string expectedWalletName = "Wrestling";
+
+            int expectedWalletCount1 = 177;
+            int expectedWalletCount2 = 16;
+            int expectedWalletCount3 = 40;
             // Act
             var legacyDiscs = discService.Get();
             var newDiscs = discService.MigrateToNewDiscs(legacyDiscs, newWalletService);
             var disc = newDiscs.FirstOrDefault(d => d.Name.ToLower() == discNameToTest.ToLower());
+
+            modernContext.SaveChanges();
+            var newWallets = newWalletService.Get();
+
+            Wallet wallet1 = newWallets.First();
+            Wallet wallet2 = newWallets.Skip(1).First();
+            Wallet wallet3 = newWallets.Skip(2).First();
 
             // Assert
             Assert.Equal(expectedCount, newDiscs.Count());
             Assert.NotNull(disc);
             Assert.Equal(expectedNotes, disc.Notes);
             Assert.Equal(expectedWalletName, disc.Wallet.Name);
+
+            Assert.Equal(expectedWalletCount1, wallet1.Discs.Count);
+            Assert.Equal(expectedWalletCount2, wallet2.Discs.Count);
+            Assert.Equal(expectedWalletCount3, wallet3.Discs.Count);
         }
     }
 }

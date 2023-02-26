@@ -27,20 +27,17 @@ namespace MigrateLegacy.Services {
             return discs;
         }
 
-        public IEnumerable<Disc> MigrateToNewDiscs(IEnumerable<LegacyDisc> legacyDiscs, WalletService newWalletService) {
+        public static IEnumerable<Disc> MigrateToNewDiscs(IEnumerable<LegacyDisc> legacyDiscs, WalletService newWalletService) {
             List<Disc> newDiscs = new();
-            // var newWallets = newWalletService.Get();
-            // LegacyWalletService legacyWalletService = new(_legacyContext);
-            // var wallets = legacyWalletService.Get();
             foreach (var legacyDisc in legacyDiscs) {
                 var newParentWallet = newWalletService.Get(legacyDisc.Wallet.Name);
                 if (newParentWallet is not null) {
                     Disc newDisc = new() {
                         Name = legacyDisc.Name,
-                        Wallet = newParentWallet,
                         Notes = legacyDisc.Notes
                     };
                     newDiscs.Add(newDisc);
+                    newParentWallet.Discs.Add(newDisc);
                 }
             }
             return newDiscs;
