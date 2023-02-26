@@ -10,5 +10,7 @@ namespace MediaFilesOnDvd.Data.Entities {
         public string Name { get; set; }
         public int SeriesPublisherId { get; set; }
         public SeriesPublisher Publisher { get; set; }
+
+        public virtual ICollection<MediaFile> MediaFiles { get; set; } = new List<MediaFile>();
     }
 }

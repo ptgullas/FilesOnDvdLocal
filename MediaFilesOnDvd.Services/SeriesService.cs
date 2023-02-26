@@ -21,7 +21,9 @@ namespace MediaFilesOnDvd.Services {
         }
 
         public Series? Get(int id) {
-            return _context.Series.FirstOrDefault(s => s.Id == id);
+            return _context.Series
+                .Include(s => s.MediaFiles.OrderBy(mf => mf.Name))
+                .FirstOrDefault(s => s.Id == id);
         }
 
         public OperationResult Add(Series series) {
