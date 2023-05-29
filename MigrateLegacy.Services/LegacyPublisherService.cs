@@ -16,7 +16,7 @@ namespace MigrateLegacy.Services {
                 .OrderBy(p => p.Id);
         }
 
-        public IEnumerable<SeriesPublisher> MigrateToSeriesPublisher(IEnumerable<LegacyPublisher> legacyPublishers) {
+        public IEnumerable<SeriesPublisher> MigrateToSeriesPublishers(IEnumerable<LegacyPublisher> legacyPublishers) {
             List<SeriesPublisher> seriesPublishers = new();
             foreach (LegacyPublisher legacyPublisher in legacyPublishers) {
                 SeriesPublisher seriesPublisher = new() {
