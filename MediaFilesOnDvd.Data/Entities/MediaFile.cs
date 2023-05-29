@@ -8,6 +8,7 @@ namespace MediaFilesOnDvd.Data.Entities {
     public class MediaFile {
         public int Id { get; set; }
         public string Name { get; set; }
+
         // public FileGenre Genre { get; set; }
         public virtual ICollection<Performer> Performers { get; set; } = new List<Performer>();
         public string? Notes { get; set; }
@@ -21,9 +22,16 @@ namespace MediaFilesOnDvd.Data.Entities {
         public FileGenre FileGenre { get; set; }
         public virtual ICollection<ScreenshotUrl> Screenshots { get; set; } = new List<ScreenshotUrl>();
 
-        public MediaFile() {
+        private MediaFile() {
 
         }
-        
+
+        // Constructor for Legacy migration
+        public MediaFile(string name, List<Performer> performers, string? notes = null, List<ScreenshotUrl>? screenshots = null) {
+            Name = name;
+            Performers = performers;
+            Notes = notes;
+            Screenshots = screenshots;
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace MediaFilesOnDvd.Tests {
             context.FileGenres.Add(tvGenre);
 
             var performers = new Performer[] {
+                new Performer {Name = "Connie Britton"},
                 new Performer {Name = "Aubrey Plaza", HeadshotUrls = { new HeadshotUrl("aubrey_plaza.jpg") } },
                 new Performer {Name = "Jennifer Coolidge", HeadshotUrls = { new HeadshotUrl("jennifer_coolidge.jpg") }},
                 new Performer {Name = "Sabrina Impacciatore", HeadshotUrls = { new HeadshotUrl("sabrina_impacciatore.jpg") }},
@@ -61,6 +62,7 @@ namespace MediaFilesOnDvd.Tests {
             context.Performers.AddRange(performers);
             context.SaveChanges();
 
+            var connie = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Connie"));
             var aubrey = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Aubrey"));
             var jennifer = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Jennifer"));
             var sabrina = context.Performers.FirstOrDefault(p => p.Name.StartsWith("Sabrina"));
@@ -74,42 +76,27 @@ namespace MediaFilesOnDvd.Tests {
 
 #pragma warning disable CS8604 // Possible null reference argument.
             var mediaFiles = new MediaFile[] {
-                new MediaFile {
-                    Name = "The White Lotus - 2.01 - Ciao.mkv",
-                    Performers = new List<Performer> {aubrey, jennifer, sabrina},
-                    Notes = "Second season premiere of this fantastic show, filmed in Sicily!"
-                },
-                new MediaFile {
-                    Name = "Schmigadoon! - 1.06 - How We Change.mkv",
-                    Performers = {cecily, keegan},
-                    Notes = "Fun musical show"
-                },
-                new MediaFile {
-                    Name = "Peacemaker - 1.01 - A Whole New Whirled.mkv",
-                    Performers = {john},
-                    Notes = "Follow-up to James Gunn's 'The Suicide Squad'"
-                },
-                new MediaFile {
-                    Name = "Hawkeye (2021) - 1.04 - Partners, Am I Right.mkv",
-                    Performers = {jeremy},
-                    Notes = "MCU show on Disney+"
-                },
-                new MediaFile {
-                    Name = "The Hurt Locker (2008).avi",
-                    Performers = {jeremy},
-                    Notes = "Kathryn Bigelow film about effects of war or whatever"
-                },
-                new MediaFile {
-                    Name = "Saturday Night Live - 44.01 - Adam Driver",
-                    Performers = {cecily, kenan, heidi},
-                    Notes = "Kathryn Bigelow film about effects of war or whatever"
-                },
-                new MediaFile {
-                    Name = "Key & Peele - 1.01",
-                    Performers = {keegan, jordan},
-                    Notes = "Series premiere of great sketch show"
-                }
-
+                new MediaFile("The White Lotus - 2.01 - Ciao.mkv",
+                    new List<Performer> {aubrey, jennifer, sabrina},
+                    "Second season premiere of this fantastic show, filmed in Sicily!"),
+                new MediaFile("Schmigadoon! - 1.06 - How We Change.mkv",
+                    new List<Performer> {cecily, keegan},
+                    "Fun musical show"),
+                new MediaFile("Peacemaker - 1.01 - A Whole New Whirled.mkv",
+                    new List<Performer> {john},
+                    "Follow-up to James Gunn's 'The Suicide Squad'"),
+                new MediaFile("Hawkeye (2021) - 1.04 - Partners, Am I Right.mkv",
+                    new List<Performer> {jeremy},
+                    "MCU show on Disney+"),
+                new MediaFile("The Hurt Locker (2008).avi",
+                    new List<Performer> {jeremy},
+                    "Kathryn Bigelow film about effects of war or whatever"),
+                new MediaFile("Saturday Night Live - 44.01 - Adam Driver",
+                    new List<Performer> {cecily, kenan, heidi},
+                    "That Star Wars Undercover Boss sketch"),
+                new MediaFile("Key & Peele - 1.01",
+                    new List<Performer> {keegan, jordan},
+                    "Series premiere of great sketch show")
             };
 #pragma warning restore CS8604 // Possible null reference argument.
 
@@ -140,18 +127,20 @@ namespace MediaFilesOnDvd.Tests {
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
 
-            int expectedCount = 11;
+            int expectedCount = 12;
             string expectedName1 = "Aubrey Plaza";
             string expectedName2 = "Cecily Strong";
-            string expectedName3 = "Heidi Gardner";
-            string expectedName4 = "Jennifer Coolidge";
-            string expectedName5 = "Jeremy Renner";
-            string expectedName6 = "John Cena";
-            string expectedName7 = "Jordan Peele";
-            string expectedName8 = "Keegan-Michael Key";
-            string expectedName9 = "Kenan Thompson";
-            string expectedName10 = "Sabrina Impacciatore";
-            string expectedName11 = "Zazie Beetz";
+            string expectedName3 = "Connie Britton";
+            string expectedName4 = "Heidi Gardner";
+            string expectedName5 = "Jennifer Coolidge";
+            string expectedName6 = "Jeremy Renner";
+            string expectedName7 = "John Cena";
+            string expectedName8 = "Jordan Peele";
+            string expectedName9 = "Keegan-Michael Key";
+            string expectedName10 = "Kenan Thompson";
+            string expectedName11 = "Sabrina Impacciatore";
+            string expectedName12 = "Zazie Beetz";
+
             // Act
 
             var performers = service.Get();
@@ -170,7 +159,8 @@ namespace MediaFilesOnDvd.Tests {
                 p => Assert.Equal(expectedName8, p.Name),
                 p => Assert.Equal(expectedName9, p.Name),
                 p => Assert.Equal(expectedName10, p.Name),
-                p => Assert.Equal(expectedName11, p.Name)
+                p => Assert.Equal(expectedName11, p.Name),
+                p => Assert.Equal(expectedName12, p.Name)
                 );
 
             // Get does not include a Performer's MediaFiles
@@ -183,18 +173,19 @@ namespace MediaFilesOnDvd.Tests {
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
 
-            int expectedCount = 11;
+            int expectedCount = 12;
             string expectedName1 = "Aubrey Plaza";
             string expectedName2 = "Cecily Strong";
-            string expectedName3 = "Heidi Gardner";
-            string expectedName4 = "Jennifer Coolidge";
-            string expectedName5 = "Jeremy Renner";
-            string expectedName6 = "John Cena";
-            string expectedName7 = "Jordan Peele";
-            string expectedName8 = "Keegan-Michael Key";
-            string expectedName9 = "Kenan Thompson";
-            string expectedName10 = "Sabrina Impacciatore";
-            string expectedName11 = "Zazie Beetz";
+            string expectedName3 = "Connie Britton";
+            string expectedName4 = "Heidi Gardner";
+            string expectedName5 = "Jennifer Coolidge";
+            string expectedName6 = "Jeremy Renner";
+            string expectedName7 = "John Cena";
+            string expectedName8 = "Jordan Peele";
+            string expectedName9 = "Keegan-Michael Key";
+            string expectedName10 = "Kenan Thompson";
+            string expectedName11 = "Sabrina Impacciatore";
+            string expectedName12 = "Zazie Beetz";
 
             string performerToGet = "Cecily Strong";
             string expectedMediaName01 = "Saturday Night Live - 44.01 - Adam Driver";
@@ -217,7 +208,8 @@ namespace MediaFilesOnDvd.Tests {
                 p => Assert.Equal(expectedName8, p.Name),
                 p => Assert.Equal(expectedName9, p.Name),
                 p => Assert.Equal(expectedName10, p.Name),
-                p => Assert.Equal(expectedName11, p.Name)
+                p => Assert.Equal(expectedName11, p.Name),
+                p => Assert.Equal(expectedName12, p.Name)
                 );
 
             // a Performer's MediaFiles should be ordered by Name
@@ -237,18 +229,19 @@ namespace MediaFilesOnDvd.Tests {
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
 
-            int expectedCount = 11;
+            int expectedCount = 12;
             string expectedName1 = "Aubrey Plaza";
             string expectedName2 = "Cecily Strong";
-            string expectedName3 = "Heidi Gardner";
-            string expectedName4 = "Jennifer Coolidge";
-            string expectedName5 = "Jeremy Renner";
-            string expectedName6 = "John Cena";
-            string expectedName7 = "Jordan Peele";
-            string expectedName8 = "Keegan-Michael Key";
-            string expectedName9 = "Kenan Thompson";
-            string expectedName10 = "Sabrina Impacciatore";
-            string expectedName11 = "Zazie Beetz";
+            string expectedName3 = "Connie Britton";
+            string expectedName4 = "Heidi Gardner";
+            string expectedName5 = "Jennifer Coolidge";
+            string expectedName6 = "Jeremy Renner";
+            string expectedName7 = "John Cena";
+            string expectedName8 = "Jordan Peele";
+            string expectedName9 = "Keegan-Michael Key";
+            string expectedName10 = "Kenan Thompson";
+            string expectedName11 = "Sabrina Impacciatore";
+            string expectedName12 = "Zazie Beetz";
 
             string performerToGet = "Zazie Beetz";
             
@@ -270,7 +263,8 @@ namespace MediaFilesOnDvd.Tests {
                 p => Assert.Equal(expectedName8, p.Name),
                 p => Assert.Equal(expectedName9, p.Name),
                 p => Assert.Equal(expectedName10, p.Name),
-                p => Assert.Equal(expectedName11, p.Name)
+                p => Assert.Equal(expectedName11, p.Name),
+                p => Assert.Equal(expectedName12, p.Name)
                 );
 
             // a Performer's MediaFiles should be ordered by Name
@@ -287,7 +281,7 @@ namespace MediaFilesOnDvd.Tests {
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
 
-            int idToGet = 3;
+            int idToGet = 4;
             string expectedName = "Sabrina Impacciatore";
             string expectedMediaName1 = "The White Lotus - 2.01 - Ciao.mkv";
 
@@ -331,10 +325,11 @@ namespace MediaFilesOnDvd.Tests {
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
 
-            int expectedCount = 3;
+            int expectedCount = 4;
             string expectedName1 = "Zazie Beetz";
             string expectedName2 = "Heidi Gardner";
             string expectedName3 = "Jordan Peele";
+            string expectedName4 = "Connie Britton";
 
             // Act
 
@@ -348,7 +343,8 @@ namespace MediaFilesOnDvd.Tests {
             Assert.Collection(performers,
                 m => Assert.Equal(expectedName1, m.Name),
                 m => Assert.Equal(expectedName2, m.Name),
-                m => Assert.Equal(expectedName3, m.Name)
+                m => Assert.Equal(expectedName3, m.Name),
+                m => Assert.Equal(expectedName4, m.Name)
                 );
         }
 

@@ -70,65 +70,51 @@ namespace MediaFilesOnDvd.Tests {
 
 #pragma warning disable CS8604 // Possible null reference argument.
             var mediaFiles = new MediaFile[] {
-                new MediaFile {
-                    Name = "The White Lotus - 1.01 - Arrivals.mkv",
-                    Performers = new List<Performer> {connie, jennifer},
-                    Notes = "Series premiere of this show about rich ppl",
-                    Screenshots = new List<ScreenshotUrl> {
+                new MediaFile("The White Lotus - 1.01 - Arrivals.mkv",
+                    new List<Performer> {connie, jennifer},
+                    "Series premiere of this show about rich ppl",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "01.jpg"},
                         new ScreenshotUrl() { Url = "01a.jpg"}
-                    }
-                },
-                new MediaFile {
-                    Name = "Schmigadoon! - 1.06 - How We Change.mkv",
-                    Performers = {cecily, keegan},
-                    Notes = "Fun musical show",
-                    Screenshots = new List<ScreenshotUrl> {
+                    })
+                ,
+                new MediaFile("Schmigadoon! - 1.06 - How We Change.mkv",
+                    new List<Performer> {cecily, keegan},
+                    "Fun musical show",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "02.jpg"},
-                    }
-                },
-                new MediaFile {
-                    Name = "Peacemaker - 1.01 - A Whole New Whirled.mkv",
-                    Performers = {john},
-                    Notes = "Follow-up to James Gunn's 'The Suicide Squad'",
-                    Screenshots = new List<ScreenshotUrl> {
+                    }),
+                new MediaFile("Peacemaker - 1.01 - A Whole New Whirled.mkv",
+                    new List<Performer> {john},
+                    "Follow-up to James Gunn's 'The Suicide Squad'",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "03.jpg"},
-                    }
-                },
-                new MediaFile {
-                    Name = "Hawkeye (2021) - 1.04 - Partners, Am I Right.mkv",
-                    Performers = {jeremy},
-                    Notes = "MCU show on Disney+",
-                    Screenshots = new List<ScreenshotUrl> {
+                    }),
+                new MediaFile("Hawkeye (2021) - 1.04 - Partners, Am I Right.mkv",
+                    new List<Performer> {jeremy},
+                    "MCU show on Disney+",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "04.jpg"},
-                    }
-                },
-                new MediaFile {
-                    Name = "The Hurt Locker (2008).avi",
-                    Performers = {jeremy},
-                    Notes = "Kathryn Bigelow film about effects of war or whatever",
-                    Screenshots = new List<ScreenshotUrl> {
+                    }),
+                new MediaFile("The Hurt Locker (2008).avi",
+                    new List<Performer> {jeremy},
+                    "Kathryn Bigelow film about effects of war or whatever",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "05.jpg"},
-                    }
-                },
-                new MediaFile {
-                    Name = "Saturday Night Live - 44.01 - Adam Driver",
-                    Performers = {cecily, kenan, heidi},
-                    Notes = "That Star Wars Undercover Boss sketch",
-                    Screenshots = new List<ScreenshotUrl> {
+                    }),
+                new MediaFile("Saturday Night Live - 44.01 - Adam Driver",
+                    new List<Performer> {cecily, kenan, heidi},
+                    "That Star Wars Undercover Boss sketch",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "06.jpg"},
-                    }
-                },
-                new MediaFile {
-                    Name = "Key & Peele - 1.01",
-                    Performers = {keegan, jordan},
-                    Notes = "Series premiere of great sketch show",
-                    Screenshots = new List<ScreenshotUrl> {
+                    }),
+                new MediaFile("Key & Peele - 1.01",
+                    new List<Performer> {keegan, jordan},
+                    "Series premiere of great sketch show",
+                    new List<ScreenshotUrl> {
                         new ScreenshotUrl() { Url = "07.jpg"},
                         new ScreenshotUrl() { Url = "07a.jpg"}
-                    }
-                }
-
+                    })
             };
 #pragma warning restore CS8604 // Possible null reference argument.
 
@@ -168,6 +154,15 @@ namespace MediaFilesOnDvd.Tests {
                 .Options;
         }
         #endregion
+
+        [Fact]
+        public void Add_UseConstructor_AllPropertiesCorrectlyAdded() {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
 
         [Fact]
         public void Get_GetByName_RetrievesMediaFile() {
