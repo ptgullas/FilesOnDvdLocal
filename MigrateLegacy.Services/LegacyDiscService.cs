@@ -27,7 +27,7 @@ namespace MigrateLegacy.Services {
             return discs;
         }
 
-        public static IEnumerable<Disc> MigrateToNewDiscs(IEnumerable<LegacyDisc> legacyDiscs, WalletService newWalletService) {
+        public IEnumerable<Disc> MigrateToNewDiscs(IEnumerable<LegacyDisc> legacyDiscs, WalletService newWalletService) {
             List<Disc> newDiscs = new();
             foreach (var legacyDisc in legacyDiscs) {
                 var newParentWallet = newWalletService.Get(legacyDisc.Wallet.Name);
