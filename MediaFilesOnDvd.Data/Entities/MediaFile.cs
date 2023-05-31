@@ -26,12 +26,20 @@ namespace MediaFilesOnDvd.Data.Entities {
 
         }
 
-        // Constructor for Legacy migration
+        // Constructor for testing
         public MediaFile(string name, List<Performer> performers, string? notes = null, List<ScreenshotUrl>? screenshots = null) {
             Name = name;
             Performers = performers;
             Notes = notes;
             Screenshots = screenshots;
+        }
+
+        // Constructor for Legacy migration
+        public MediaFile(string name, string? notes, string legacyScreenshotFilename) {
+            Name = name;
+            Notes = notes;
+            ScreenshotUrl screenshotUrl = new() { Url = legacyScreenshotFilename };
+            Screenshots.Add(screenshotUrl);
         }
     }
 }
