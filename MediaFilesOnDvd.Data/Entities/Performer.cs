@@ -11,6 +11,10 @@ namespace MediaFilesOnDvd.Data.Entities {
         // comment this out until ready
         // public PerformerType Type { get; set; }
 
+        // Id from the MS Access database.
+        // Used for matching MediaFile with Performer during Access migration
+        public int? LegacyId { get; set; }
+
         // Aliases should probably be in its own table, if we're going to query on it
         // public List<string> Aliases { get; set; } = new List<string>();
         public List<HeadshotUrl> HeadshotUrls { get; set; } = new List<HeadshotUrl>();
