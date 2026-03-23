@@ -80,15 +80,14 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void GetDiscIdByName_DbDoesNotExist_ThrowsException() {
             string dbLocation = @"c:\temp\dvdBadPath.accdb";
             AccessRepository repository = new AccessRepository(dbLocation);
 
             string dvdName = "M1977-13-31z";
             int expectedDvdId = -1;
-
-            int result = repository.GetDiscIdByName(dvdName);
+           
+            Assert.Throws<ArgumentException>(() => repository.GetDiscIdByName(dvdName));
             Assert.AreEqual(expectedDvdId, result);
         }
 
