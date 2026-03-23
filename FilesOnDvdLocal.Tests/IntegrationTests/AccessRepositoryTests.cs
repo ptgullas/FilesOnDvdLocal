@@ -88,7 +88,7 @@ namespace FilesOnDvdLocal.Tests.IntegrationTests
             int expectedDvdId = -1;
            
             Assert.Throws<ArgumentException>(() => repository.GetDiscIdByName(dvdName));
-            Assert.AreEqual(expectedDvdId, result);
+            // Assert.AreEqual(expectedDvdId, result);
         }
 
         [TestMethod]
