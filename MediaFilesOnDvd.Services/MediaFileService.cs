@@ -53,7 +53,7 @@ namespace MediaFilesOnDvd.Services {
 
         public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer p) {
             try {
-                if (mf.Performers.Any(p => p.Name.ToLower() == p.Name.ToLower())) {
+                if (mf.Performers.Any(perf => perf.Name.ToLower() == p.Name.ToLower())) {
                     return new(false, $"MediaFile '{mf.Name}' already contains Performer {p.Name}");
                 }
                 mf.Performers.Add(p);
