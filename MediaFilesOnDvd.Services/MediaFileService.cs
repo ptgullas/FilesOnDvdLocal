@@ -51,12 +51,12 @@ namespace MediaFilesOnDvd.Services {
             }
         }
 
-        public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer p) {
+        public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer perf) {
             try {
-                if (mf.Performers.Any(perf => perf.Name.ToLower() == p.Name.ToLower())) {
-                    return new(false, $"MediaFile '{mf.Name}' already contains Performer {p.Name}");
+                if (mf.Performers.Any(p => p.Name.ToLower() == perf.Name.ToLower())) {
+                    return new(false, $"MediaFile '{mf.Name}' already contains Performer {perf.Name}");
                 }
-                mf.Performers.Add(p);
+                mf.Performers.Add(perf);
                 _context.SaveChanges();
                 return new(true);
             }
