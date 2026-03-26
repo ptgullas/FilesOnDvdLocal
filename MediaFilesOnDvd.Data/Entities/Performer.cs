@@ -8,8 +8,9 @@ namespace MediaFilesOnDvd.Data.Entities {
     public class Performer {
         public int Id { get; set; }
         public string Name { get; set; }
-        // comment this out until ready
-        // public PerformerType Type { get; set; }
+        
+        public int? PerformerTypeId { get; set; }
+        public PerformerType? Type { get; set; }
 
         // Id from the MS Access database.
         // Used for matching MediaFile with Performer during Access migration

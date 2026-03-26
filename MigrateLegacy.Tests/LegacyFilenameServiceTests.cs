@@ -206,8 +206,15 @@ namespace MigrateLegacy.Tests {
             LegacyDisc movieDisc = new() { Id = 40, Name = "Mov2023-05-30", Notes = "James Franco movies"};
             LegacyDisc freaksGeeksDisc = new() { Id = 41, Name = "FreaksAndGeeks", Notes = "Freaks & Geeks"};
 
+            var legacyPerformer1 = new LegacyPerformer { Id = 101, Name = "James Franco" };
+            var legacyPerformer2 = new LegacyPerformer { Id = 102, Name = "Seth Rogen" };
+
+            var filename1 = new LegacyFilename() { Id = 23, Name = "This is the End.mkv", Genre = movieGenre, GenreId = 6, Disc = movieDisc, DiscId = 40 };
+            filename1.Performers.Add(legacyPerformer1);
+            filename1.Performers.Add(legacyPerformer2);
+
             List<LegacyFilename> testLegacyFilenames = new() {
-                new LegacyFilename() {Id = 23, Name = "This is the End.mkv", Genre = movieGenre, GenreId = 6, Disc = movieDisc, DiscId = 40},
+                filename1,
                 new LegacyFilename() {Id = 24, Name = "Freaks and Geeks - 1.01.mkv", Genre = tvGenre, GenreId = 5, Disc = freaksGeeksDisc, DiscId = 41},
                 new LegacyFilename() {Id = 25, Name = "Spider-Man (2002).mp4", Genre = movieGenre, GenreId = 6, Disc = movieDisc, DiscId = 40}
             };
@@ -215,6 +222,12 @@ namespace MigrateLegacy.Tests {
             using var modernContext = new MediaFilesContext(_modernContextOptions);
             DiscService discService = new(modernContext);
             FileGenreService fileGenreService = new(modernContext);
+            PerformerService performerService = new(modernContext);
+
+            // Seed modern performers
+            modernContext.Performers.Add(new Performer { Name = "James Franco", LegacyId = 101 });
+            modernContext.Performers.Add(new Performer { Name = "Seth Rogen", LegacyId = 102 });
+            modernContext.SaveChanges();
 
             var expectedMediaFiles = new MediaFile[] {
                 new MediaFile("This is the End.mkv", null, "23.jpg"),
@@ -231,7 +244,7 @@ namespace MigrateLegacy.Tests {
 
             // Act
 
-            var result = legacyFilenameService.MigrateToMediaFiles(testLegacyFilenames, discService, fileGenreService);
+            var result = legacyFilenameService.MigrateToMediaFiles(testLegacyFilenames, discService, fileGenreService, performerService);
             modernContext.MediaFiles.AddRange(result);
             modernContext.SaveChanges();
             // Assert
@@ -245,6 +258,9 @@ namespace MigrateLegacy.Tests {
                     Assert.Equal(expectedMediaFiles[0].Screenshots.First().Url, m.Screenshots.First().Url);
                     Assert.Equal(expectedMovieDiscName, m.Disc.Name);
                     Assert.Equal(expectedFilmGenreName, m.FileGenre.Name);
+                    Assert.Equal(2, m.Performers.Count);
+                    Assert.Contains(m.Performers, p => p.Name == "James Franco");
+                    Assert.Contains(m.Performers, p => p.Name == "Seth Rogen");
                 },
                 m => {
                     Assert.Equal(expectedMediaFiles[1].Name, m.Name);

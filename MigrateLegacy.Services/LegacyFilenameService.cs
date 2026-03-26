@@ -41,21 +41,29 @@ namespace MigrateLegacy.Services {
                 .OrderBy(lf => lf.Name.ToLower());
         }
 
-        public IEnumerable<MediaFile> MigrateToMediaFiles(IEnumerable<LegacyFilename> legacyFiles, DiscService discService, FileGenreService fileGenreService) {
+        public IEnumerable<MediaFile> MigrateToMediaFiles(IEnumerable<LegacyFilename> legacyFiles, DiscService discService, FileGenreService fileGenreService, PerformerService performerService) {
             List<MediaFile> mediaFiles = new();
             var fileGenres = fileGenreService.Get();
-            var discs = discService.Get();
+            var performers = performerService.Get().ToList();
             foreach (var legacyFile in legacyFiles) {
                 MediaFile mf = new(legacyFile.Name, legacyFile.Notes, $"{legacyFile.Id}.jpg");
-                mediaFiles.Add(mf);
+                
                 var disc = discService.Get(legacyFile.Disc.Name.ToLower());
                 if (disc is not null) {
-                    disc.Files.Add(mf);
+                    mf.Disc = disc;
                 }
                 var genre = fileGenres.FirstOrDefault(g => g.Name.ToLower() == legacyFile.Genre.Name.ToLower());
                 if (genre is not null) {
-                    genre.MediaFiles.Add(mf);
+                    mf.FileGenre = genre;
                 }
+
+                foreach (var legacyPerformer in legacyFile.Performers) {
+                    var modernPerformer = performers.FirstOrDefault(p => p.LegacyId == (int)legacyPerformer.Id);
+                    if (modernPerformer is not null) {
+                        mf.Performers.Add(modernPerformer);
+                    }
+                }
+                mediaFiles.Add(mf);
             }
             return mediaFiles;
         }
