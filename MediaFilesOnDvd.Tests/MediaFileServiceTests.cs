@@ -321,5 +321,61 @@ namespace MediaFilesOnDvd.Tests {
 
         }
         // eventually will want a GetMediaFilesBySeries? Or would that go in a SeriesService?
+        [Fact]
+        public void AddTagToMediaFile_ValidTag_AddsSuccessfully() {
+            // Arrange
+            using var context = new MediaFilesContext(_contextOptions);
+            var service = new MediaFileService(context);
+            var file = context.MediaFiles.First();
+            var tag = new FileTag("Drama");
+            context.FileTags.Add(tag);
+            context.SaveChanges();
+
+            // Act
+            var result = service.AddTagToMediaFile(file, tag);
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Single(file.Tags);
+            Assert.Equal("Drama", file.Tags.First().Name);
+        }
+
+        [Fact]
+        public void RemoveTagFromMediaFile_ValidTag_RemovesSuccessfully() {
+            // Arrange
+            using var context = new MediaFilesContext(_contextOptions);
+            var service = new MediaFileService(context);
+            var file = context.MediaFiles.First();
+            var tag = new FileTag("Thriller");
+            context.FileTags.Add(tag);
+            file.Tags.Add(tag);
+            context.SaveChanges();
+
+            // Act
+            var result = service.RemoveTagFromMediaFile(file, tag);
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Empty(file.Tags);
+        }
+
+        [Fact]
+        public void GetByTag_ReturnsCorrectFiles() {
+            // Arrange
+            using var context = new MediaFilesContext(_contextOptions);
+            var service = new MediaFileService(context);
+            var tag = new FileTag("Horror");
+            context.FileTags.Add(tag);
+            var file = context.MediaFiles.First();
+            file.Tags.Add(tag);
+            context.SaveChanges();
+
+            // Act
+            var results = service.GetByTag("Horror");
+
+            // Assert
+            Assert.Single(results);
+            Assert.Equal(file.Name, results.First().Name);
+        }
     }
 }

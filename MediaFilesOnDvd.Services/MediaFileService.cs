@@ -51,19 +51,58 @@ namespace MediaFilesOnDvd.Services {
             }
         }
 
-        public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer perf) {
+        public OperationResult AddPerformerToMediaFile(MediaFile mf, Performer p) {
             try {
-                if (mf.Performers.Any(p => p.Name.ToLower() == perf.Name.ToLower())) {
-                    return new(false, $"MediaFile '{mf.Name}' already contains Performer {perf.Name}");
+                if (mf.Performers.Any(perf => perf.Name.ToLower() == p.Name.ToLower())) {
+                    return new(false, $"MediaFile '{mf.Name}' already contains Performer {p.Name}");
                 }
-                mf.Performers.Add(perf);
+                mf.Performers.Add(p);
                 _context.SaveChanges();
                 return new(true);
             }
             catch (Exception e) {
-                // Log.Exception(e, "Error adding MediaFiles to database);
+                // Log.Exception(e, "Error adding performer to database);
                 return new(false, "Error adding performer to database");
             }
         }
+
+        public OperationResult AddTagToMediaFile(MediaFile mf, FileTag tag) {
+            try {
+                if (mf.Tags.Any(t => t.Name.ToLower() == tag.Name.ToLower())) {
+                    return new(false, $"MediaFile '{mf.Name}' already contains Tag {tag.Name}");
+                }
+                mf.Tags.Add(tag);
+                _context.SaveChanges();
+                return new(true);
+            }
+            catch (Exception e) {
+                return new(false, "Error adding tag to media file");
+            }
+        }
+
+        public OperationResult RemoveTagFromMediaFile(MediaFile mf, FileTag tag) {
+            try {
+                var tagToRemove = mf.Tags.FirstOrDefault(t => t.Id == tag.Id);
+                if (tagToRemove is null) {
+                    return new(false, $"MediaFile '{mf.Name}' does not contain Tag {tag.Name}");
+                }
+                mf.Tags.Remove(tagToRemove);
+                _context.SaveChanges();
+                return new(true);
+            }
+            catch (Exception e) {
+                return new(false, "Error removing tag from media file");
+            }
+        }
+
+        public IEnumerable<MediaFile> GetByTag(string tagName) {
+            return _context.MediaFiles
+                .Where(mf => mf.Tags.Any(t => t.Name.ToLower() == tagName.ToLower()))
+                .Include(m => m.Performers)
+                .Include(m => m.Screenshots)
+                .Include(m => m.Disc)
+                .Include(m => m.Tags);
+        }
     }
 }
+
