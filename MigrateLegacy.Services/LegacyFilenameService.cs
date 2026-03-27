@@ -15,6 +15,10 @@ namespace MigrateLegacy.Services {
 
         public IEnumerable<LegacyFilename> Get() {
             var legacyFilenames = _legacyContext.LegacyFilenames
+                .Include(lf => lf.Genre)
+                .Include(lf => lf.Series)
+                .Include(lf => lf.Disc)
+                .Include(lf => lf.Performers)
                 .OrderBy(lf => lf.Id);
             return legacyFilenames;
         }
@@ -41,10 +45,11 @@ namespace MigrateLegacy.Services {
                 .OrderBy(lf => lf.Name.ToLower());
         }
 
-        public IEnumerable<MediaFile> MigrateToMediaFiles(IEnumerable<LegacyFilename> legacyFiles, DiscService discService, FileGenreService fileGenreService, PerformerService performerService) {
+        public IEnumerable<MediaFile> MigrateToMediaFiles(IEnumerable<LegacyFilename> legacyFiles, DiscService discService, FileGenreService fileGenreService, PerformerService performerService, SeriesService seriesService) {
             List<MediaFile> mediaFiles = new();
             var fileGenres = fileGenreService.Get();
             var performers = performerService.Get().ToList();
+            var series = seriesService.Get().ToList();
             foreach (var legacyFile in legacyFiles) {
                 MediaFile mf = new(legacyFile.Name, legacyFile.Notes, $"{legacyFile.Id}.jpg");
                 
@@ -55,6 +60,13 @@ namespace MigrateLegacy.Services {
                 var genre = fileGenres.FirstOrDefault(g => g.Name.ToLower() == legacyFile.Genre.Name.ToLower());
                 if (genre is not null) {
                     mf.FileGenre = genre;
+                }
+
+                if (legacyFile.Series is not null) {
+                    var modernSeries = series.FirstOrDefault(s => s.Name.ToLower() == legacyFile.Series.Name.ToLower());
+                    if (modernSeries is not null) {
+                        mf.Series = modernSeries;
+                    }
                 }
 
                 foreach (var legacyPerformer in legacyFile.Performers) {

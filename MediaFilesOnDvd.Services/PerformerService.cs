@@ -57,6 +57,10 @@ namespace MediaFilesOnDvd.Services {
 
         }
 
+        public Performer? GetByLegacyId(int legacyId) {
+            return _context.Performers.FirstOrDefault(p => p.LegacyId == legacyId);
+        }
+
         public OperationResult Add(Performer performer) {
             if (performer == null) {
                 return new(false, "Performer is null");

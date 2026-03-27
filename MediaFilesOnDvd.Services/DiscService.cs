@@ -90,25 +90,25 @@ namespace MediaFilesOnDvd.Services {
             return true;
         }
 
-        public bool Add(Disc disc) {
+        public OperationResult Add(Disc disc) {
             var discFromDb = Get(disc.Name);
             if (discFromDb is null) {
                 _context.Discs.Add(disc);
                 _context.SaveChanges();
-                return true;
+                return new(true);
             }
-            return false;
+            return new(false, $"Disc {disc.Name} already exists in database");
         }
 
-        public bool Add(Disc[] discs) {
+        public OperationResult Add(Disc[] discs) {
             try {
                 _context.Discs.AddRange(discs);
                 _context.SaveChanges();
-                return true;
+                return new(true);
             }
             catch (Exception e) {
                 // Log.Exception(e, "Error adding discs to database);
-                return false;
+                return new(false, "Error adding discs to database");
             }
         }
 

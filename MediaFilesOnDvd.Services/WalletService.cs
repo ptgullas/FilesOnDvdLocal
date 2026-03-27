@@ -27,14 +27,14 @@ namespace MediaFilesOnDvd.Services {
             return _context.Wallets.FirstOrDefault(w => w.Id == id);
         }
 
-        public bool Add(Wallet wallet) {
+        public OperationResult Add(Wallet wallet) {
             var walletFromDb = Get(wallet.Name);
             if (walletFromDb == null) {
                 _context.Wallets.Add(wallet);
                 _context.SaveChanges();
-                return true;
+                return new(true);
             }
-            return false;
+            return new(false, $"Wallet {wallet.Name} already exists in database");
         }
 
 

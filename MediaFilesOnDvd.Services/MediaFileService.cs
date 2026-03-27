@@ -34,20 +34,27 @@ namespace MediaFilesOnDvd.Services {
                 .Include(m => m.Screenshots)
                 .Include(m => m.Disc);
         }
-        public void Add(MediaFile mediaFile) {
-            _context.MediaFiles.Add(mediaFile);
-            _context.SaveChanges();
+        public OperationResult Add(MediaFile mediaFile) {
+            try {
+                _context.MediaFiles.Add(mediaFile);
+                _context.SaveChanges();
+                return new(true);
+            }
+            catch (Exception e) {
+                // Log.Exception(e, "Error adding MediaFile to database);
+                return new(false, "Error adding MediaFile to database");
+            }
         }
 
-        public bool Add(MediaFile[] mediaFiles) {
+        public OperationResult Add(MediaFile[] mediaFiles) {
             try {
                 _context.MediaFiles.AddRange(mediaFiles);
                 _context.SaveChanges();
-                return true;
+                return new(true);
             }
             catch (Exception e) {
                 // Log.Exception(e, "Error adding MediaFiles to database);
-                return false;
+                return new(false, "Error adding MediaFiles to database");
             }
         }
 

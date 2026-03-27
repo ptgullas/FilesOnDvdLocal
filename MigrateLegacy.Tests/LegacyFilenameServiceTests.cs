@@ -223,6 +223,7 @@ namespace MigrateLegacy.Tests {
             DiscService discService = new(modernContext);
             FileGenreService fileGenreService = new(modernContext);
             PerformerService performerService = new(modernContext);
+            SeriesService seriesService = new(modernContext);
 
             // Seed modern performers
             modernContext.Performers.Add(new Performer { Name = "James Franco", LegacyId = 101 });
@@ -244,7 +245,7 @@ namespace MigrateLegacy.Tests {
 
             // Act
 
-            var result = legacyFilenameService.MigrateToMediaFiles(testLegacyFilenames, discService, fileGenreService, performerService);
+            var result = legacyFilenameService.MigrateToMediaFiles(testLegacyFilenames, discService, fileGenreService, performerService, seriesService);
             modernContext.MediaFiles.AddRange(result);
             modernContext.SaveChanges();
             // Assert
