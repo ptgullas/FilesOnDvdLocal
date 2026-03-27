@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.Tests", "MediaFilesOnDvd.Tests\MediaFilesOnDvd.Tests.csproj", "{9C8A945E-2436-414E-A794-61A967B921DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateLegacy.Console", "MigrateLegacy.Console\MigrateLegacy.Console.csproj", "{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{9C8A945E-2436-414E-A794-61A967B921DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C8A945E-2436-414E-A794-61A967B921DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C8A945E-2436-414E-A794-61A967B921DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
