@@ -19,6 +19,7 @@ namespace MediaFilesOnDvd.Data.Entities {
         // Aliases should probably be in its own table, if we're going to query on it
         // public List<string> Aliases { get; set; } = new List<string>();
         public List<HeadshotUrl> HeadshotUrls { get; set; } = new List<HeadshotUrl>();
+        public virtual ICollection<GalleryPhotoUrl> GalleryPhotoUrls { get; set; } = new List<GalleryPhotoUrl>();
         // comment this out until I'm ready
         public virtual ICollection<MediaFile>? MediaFiles { get; set; } = new List<MediaFile>();
 
