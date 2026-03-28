@@ -1,5 +1,6 @@
 ﻿using MediaFilesOnDvd.Data;
 using MediaFilesOnDvd.Data.Entities;
+using MediaFilesOnDvd.Services.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,35 @@ namespace MediaFilesOnDvd.Services {
                 .Include(m => m.Performers)
                 .Include(m => m.Screenshots)
                 .Include(m => m.Disc)
+                .Include(m => m.FileGenre)
+                .Include(m => m.Series)
+                .Include(m => m.Tags)
                 .FirstOrDefault(f => f.Id == id)
                 ;
+        }
+
+        public MediaFileDetailDto? GetDetailDto(int id) {
+            return _context.MediaFiles
+                .Where(f => f.Id == id)
+                .Select(f => new MediaFileDetailDto {
+                    Id = f.Id,
+                    Name = f.Name,
+                    Notes = f.Notes,
+                    GenreId = f.FileGenreId,
+                    GenreName = f.FileGenre.Name,
+                    DiscId = f.DiscId,
+                    DiscName = f.Disc.Name,
+                    SeriesId = f.SeriesId,
+                    SeriesName = f.Series != null ? f.Series.Name : null,
+                    Performers = f.Performers.Select(p => new PerformerSummaryDto {
+                        Id = p.Id,
+                        Name = p.Name,
+                        HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault()
+                    }).ToList(),
+                    ScreenshotUrls = f.Screenshots.Select(s => s.Url).ToList(),
+                    Tags = f.Tags.Select(t => t.Name).ToList()
+                })
+                .FirstOrDefault();
         }
 
         public IEnumerable<MediaFile> Get(string name) {
@@ -40,6 +68,29 @@ namespace MediaFilesOnDvd.Services {
                 .Include(m => m.Screenshots)
                 .Include(m => m.Disc);
         }
+        public int? GetNextId(int currentId) {
+            return _context.MediaFiles
+                .Where(f => f.Id > currentId)
+                .OrderBy(f => f.Id)
+                .Select(f => f.Id)
+                .FirstOrDefault();
+        }
+
+        public int? GetPreviousId(int currentId) {
+            return _context.MediaFiles
+                .Where(f => f.Id < currentId)
+                .OrderByDescending(f => f.Id)
+                .Select(f => f.Id)
+                .FirstOrDefault();
+        }
+
+        public int? GetLatestId() {
+            return _context.MediaFiles
+                .OrderByDescending(f => f.Id)
+                .Select(f => f.Id)
+                .FirstOrDefault();
+        }
+
         public OperationResult Add(MediaFile mediaFile) {
             try {
                 _context.MediaFiles.Add(mediaFile);

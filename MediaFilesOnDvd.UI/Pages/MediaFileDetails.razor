@@ -1,6 +1,10 @@
 @page "/mediafiles"
 @page "/mediafiles/{Id:int}"
+@using MediaFilesOnDvd.Services.Dtos
 @inject MediaFileService MediaFileService
+@inject FileGenreService GenreService
+@inject DiscService DiscService
+@inject SeriesService SeriesService
 @inject PathResolverService PathResolver
 @inject NavigationManager Nav
 
@@ -13,7 +17,7 @@
         </div>
         <div class="mode-toggle">
             <label class="switch">
-                <input type="checkbox" @bind="_isEditMode" />
+                <input type="checkbox" @bind="_isEditMode" @onclick="OnToggleEditMode" />
                 <span class="slider round"></span>
             </label>
             <span class="mode-label">Edit Mode: @(_isEditMode ? "ON" : "OFF")</span>
@@ -35,13 +39,16 @@
                     <label>Genre</label>
                     @if (_isEditMode)
                     {
-                        <select class="form-control">
-                            <option>@_currentFile.FileGenre?.Name</option>
+                        <select class="form-control" @bind="_currentFile.GenreId">
+                            @foreach (var g in _allGenres)
+                            {
+                                <option value="@g.Id">@g.Name</option>
+                            }
                         </select>
                     }
                     else
                     {
-                        <div class="field-value">@_currentFile.FileGenre?.Name</div>
+                        <div class="field-value">@_currentFile.GenreName</div>
                     }
                 </div>
 
@@ -49,13 +56,16 @@
                     <label>Disc</label>
                     @if (_isEditMode)
                     {
-                        <select class="form-control">
-                            <option>@_currentFile.Disc?.Name</option>
+                        <select class="form-control" @bind="_currentFile.DiscId">
+                            @foreach (var d in _allDiscs)
+                            {
+                                <option value="@d.Id">@d.Name</option>
+                            }
                         </select>
                     }
                     else
                     {
-                        <div class="field-value">@_currentFile.Disc?.Name</div>
+                        <div class="field-value">@_currentFile.DiscName</div>
                     }
                 </div>
 
@@ -63,13 +73,17 @@
                     <label>Series</label>
                     @if (_isEditMode)
                     {
-                        <select class="form-control">
-                            <option>@(_currentFile.Series?.Name ?? "None")</option>
+                        <select class="form-control" @bind="_currentFile.SeriesId">
+                            <option value="">None</option>
+                            @foreach (var s in _allSeries)
+                            {
+                                <option value="@s.Id">@s.Name</option>
+                            }
                         </select>
                     }
                     else
                     {
-                        <div class="field-value">@(_currentFile.Series?.Name ?? "None")</div>
+                        <div class="field-value">@(_currentFile.SeriesName ?? "None")</div>
                     }
                 </div>
 
@@ -81,9 +95,12 @@
                             <div class="actor-item">
                                 @if (_isEditMode)
                                 {
-                                    <select class="form-control">
-                                        <option>@actor.Name</option>
-                                    </select>
+                                    <div class="d-flex gap-2">
+                                        <select class="form-control">
+                                            <option>@actor.Name</option>
+                                        </select>
+                                        <button class="btn-icon text-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
                                 }
                                 else
                                 {
@@ -106,21 +123,28 @@
                     <label>Notes</label>
                     @if (_isEditMode)
                     {
-                        <textarea class="form-control" rows="4">@_currentFile.Notes</textarea>
+                        <textarea class="form-control" rows="4" @bind="_currentFile.Notes"></textarea>
                     }
                     else
                     {
                         <div class="field-value notes-text">@(_currentFile.Notes ?? "No notes.")</div>
                     }
                 </div>
+
+                @if (_isEditMode)
+                {
+                    <button class="btn-primary" @onclick="SaveChanges">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                }
             </div>
 
             <!-- Right Column: Media -->
             <div class="media-column">
                 <div class="screenshot-large">
-                    @if (_currentFile.Screenshots.Any())
+                    @if (_currentFile.ScreenshotUrls.Any())
                     {
-                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(_currentFile.Screenshots.First().Url))" alt="" />
+                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(_currentFile.ScreenshotUrls.First()))" alt="" />
                     }
                     else
                     {
@@ -144,7 +168,7 @@
                 @foreach (var tag in _currentFile.Tags)
                 {
                     <span class="tag-pill">
-                        @tag.Name
+                        @tag
                         @if (_isEditMode)
                         {
                             <i class="fas fa-times ml-2"></i>
@@ -162,8 +186,12 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
-    private MediaFile? _currentFile;
-    private bool _isEditMode = false;
+    private MediaFileDetailDto? _currentFile;
+    private static bool _isEditMode = false; // Static to persist across navigation
+
+    private List<FileGenre> _allGenres = new();
+    private List<Disc> _allDiscs = new();
+    private List<Series> _allSeries = new();
 
     protected override void OnParametersSet()
     {
@@ -172,28 +200,47 @@
 
     private void LoadFile()
     {
-        var allFiles = MediaFileService.Get().ToList();
         if (Id.HasValue)
         {
-            _currentFile = allFiles.FirstOrDefault(f => f.Id == Id.Value);
+            _currentFile = MediaFileService.GetDetailDto(Id.Value);
         }
         else
         {
-            // Default to most recent (highest ID for now)
-            _currentFile = allFiles.OrderByDescending(f => f.Id).FirstOrDefault();
+            var latestId = MediaFileService.GetLatestId();
+            if (latestId.HasValue)
+            {
+                _currentFile = MediaFileService.GetDetailDto(latestId.Value);
+            }
         }
+
+        if (_isEditMode) LoadDropdowns();
+    }
+
+    private void OnToggleEditMode()
+    {
+        _isEditMode = !_isEditMode;
+        if (_isEditMode) LoadDropdowns();
+    }
+
+    private void LoadDropdowns()
+    {
+        _allGenres = GenreService.Get().ToList();
+        _allDiscs = DiscService.Get().ToList();
+        _allSeries = SeriesService.Get().ToList();
+    }
+
+    private void SaveChanges()
+    {
+        // Implementation for saving back to DB
+        _isEditMode = false;
     }
 
     private void PreviousFile()
     {
         if (_currentFile != null)
         {
-            var prev = MediaFileService.Get()
-                .Where(f => f.Id < _currentFile.Id)
-                .OrderByDescending(f => f.Id)
-                .FirstOrDefault();
-            
-            if (prev != null) Nav.NavigateTo($"/mediafiles/{prev.Id}");
+            var prevId = MediaFileService.GetPreviousId(_currentFile.Id);
+            if (prevId.HasValue) Nav.NavigateTo($"/mediafiles/{prevId.Value}");
         }
     }
 
@@ -201,12 +248,8 @@
     {
         if (_currentFile != null)
         {
-            var next = MediaFileService.Get()
-                .Where(f => f.Id > _currentFile.Id)
-                .OrderBy(f => f.Id)
-                .FirstOrDefault();
-            
-            if (next != null) Nav.NavigateTo($"/mediafiles/{next.Id}");
+            var nextId = MediaFileService.GetNextId(_currentFile.Id);
+            if (nextId.HasValue) Nav.NavigateTo($"/mediafiles/{nextId.Value}");
         }
     }
 }

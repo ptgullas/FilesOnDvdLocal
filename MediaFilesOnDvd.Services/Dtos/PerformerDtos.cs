@@ -5,13 +5,6 @@ namespace MediaFilesOnDvd.Services.Dtos {
         public string? HeadshotUrl { get; set; }
     }
 
-    public class MediaFileSummaryDto {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? DiscName { get; set; }
-        public string? ScreenshotUrl { get; set; }
-    }
-
     public class PerformerDetailDto {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -24,6 +17,5 @@ namespace MediaFilesOnDvd.Services.Dtos {
         public string Name { get; set; } = string.Empty;
         public string? HeadshotUrl { get; set; }
         public string? GalleryPhotoUrl { get; set; }
-
     }
 }
