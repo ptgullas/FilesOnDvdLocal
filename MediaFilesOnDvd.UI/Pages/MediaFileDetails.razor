@@ -1,0 +1,212 @@
+@page "/mediafiles"
+@page "/mediafiles/{Id:int}"
+@inject MediaFileService MediaFileService
+@inject PathResolverService PathResolver
+@inject NavigationManager Nav
+
+<div class="media-file-view">
+    <header class="view-header">
+        <div class="nav-controls">
+            <button class="btn-icon" @onclick="PreviousFile"><i class="fas fa-chevron-left"></i></button>
+            <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
+            <button class="btn-icon" @onclick="NextFile"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="mode-toggle">
+            <label class="switch">
+                <input type="checkbox" @bind="_isEditMode" />
+                <span class="slider round"></span>
+            </label>
+            <span class="mode-label">Edit Mode: @(_isEditMode ? "ON" : "OFF")</span>
+        </div>
+    </header>
+
+    @if (_currentFile == null)
+    {
+        <div class="empty-state">
+            <p>File not found or loading...</p>
+        </div>
+    }
+    else
+    {
+        <div class="view-grid">
+            <!-- Left Column: Metadata -->
+            <div class="metadata-column">
+                <div class="field-group">
+                    <label>Genre</label>
+                    @if (_isEditMode)
+                    {
+                        <select class="form-control">
+                            <option>@_currentFile.FileGenre?.Name</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <div class="field-value">@_currentFile.FileGenre?.Name</div>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label>Disc</label>
+                    @if (_isEditMode)
+                    {
+                        <select class="form-control">
+                            <option>@_currentFile.Disc?.Name</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <div class="field-value">@_currentFile.Disc?.Name</div>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label>Series</label>
+                    @if (_isEditMode)
+                    {
+                        <select class="form-control">
+                            <option>@(_currentFile.Series?.Name ?? "None")</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <div class="field-value">@(_currentFile.Series?.Name ?? "None")</div>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label>Actors</label>
+                    <div class="actor-list">
+                        @foreach (var actor in _currentFile.Performers)
+                        {
+                            <div class="actor-item">
+                                @if (_isEditMode)
+                                {
+                                    <select class="form-control">
+                                        <option>@actor.Name</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <span class="actor-name">@actor.Name</span>
+                                }
+                            </div>
+                        }
+                        @if (_isEditMode)
+                        {
+                            <div class="actor-item">
+                                <select class="form-control">
+                                    <option value="">-- Add Actor --</option>
+                                </select>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label>Notes</label>
+                    @if (_isEditMode)
+                    {
+                        <textarea class="form-control" rows="4">@_currentFile.Notes</textarea>
+                    }
+                    else
+                    {
+                        <div class="field-value notes-text">@(_currentFile.Notes ?? "No notes.")</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Right Column: Media -->
+            <div class="media-column">
+                <div class="screenshot-large">
+                    @if (_currentFile.Screenshots.Any())
+                    {
+                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(_currentFile.Screenshots.First().Url))" alt="" />
+                    }
+                    else
+                    {
+                        <div class="placeholder-img"><i class="fas fa-file-video fa-5x"></i></div>
+                    }
+                </div>
+                <button class="btn-primary btn-block">
+                    <i class="fas fa-image"></i> Add/Update Screenshot
+                </button>
+
+                <div class="field-group mt-4">
+                    <label>Database ID</label>
+                    <input type="text" class="form-control" value="@_currentFile.Id" readonly />
+                </div>
+            </div>
+        </div>
+
+        <footer class="view-footer">
+            <h3>Keyword Tags</h3>
+            <div class="tag-manager">
+                @foreach (var tag in _currentFile.Tags)
+                {
+                    <span class="tag-pill">
+                        @tag.Name
+                        @if (_isEditMode)
+                        {
+                            <i class="fas fa-times ml-2"></i>
+                        }
+                    </span>
+                }
+                <div class="add-tag">
+                    <input type="text" placeholder="Add new tag..." />
+                    <button class="btn-icon"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+        </footer>
+    }
+</div>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    private MediaFile? _currentFile;
+    private bool _isEditMode = false;
+
+    protected override void OnParametersSet()
+    {
+        LoadFile();
+    }
+
+    private void LoadFile()
+    {
+        var allFiles = MediaFileService.Get().ToList();
+        if (Id.HasValue)
+        {
+            _currentFile = allFiles.FirstOrDefault(f => f.Id == Id.Value);
+        }
+        else
+        {
+            // Default to most recent (highest ID for now)
+            _currentFile = allFiles.OrderByDescending(f => f.Id).FirstOrDefault();
+        }
+    }
+
+    private void PreviousFile()
+    {
+        if (_currentFile != null)
+        {
+            var prev = MediaFileService.Get()
+                .Where(f => f.Id < _currentFile.Id)
+                .OrderByDescending(f => f.Id)
+                .FirstOrDefault();
+            
+            if (prev != null) Nav.NavigateTo($"/mediafiles/{prev.Id}");
+        }
+    }
+
+    private void NextFile()
+    {
+        if (_currentFile != null)
+        {
+            var next = MediaFileService.Get()
+                .Where(f => f.Id > _currentFile.Id)
+                .OrderBy(f => f.Id)
+                .FirstOrDefault();
+            
+            if (next != null) Nav.NavigateTo($"/mediafiles/{next.Id}");
+        }
+    }
+}

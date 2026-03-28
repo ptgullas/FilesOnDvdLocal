@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.Tests", "Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateLegacy.Console", "MigrateLegacy.Console\MigrateLegacy.Console.csproj", "{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.Desktop", "MediaFilesOnDvd.Desktop\MediaFilesOnDvd.Desktop.csproj", "{8B07C061-3090-92D8-F465-75B9179D0393}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaFilesOnDvd.UI", "MediaFilesOnDvd.UI\MediaFilesOnDvd.UI.csproj", "{B2A99389-E5FF-42D3-E51B-301EF22A1C72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E2F913F-C0B9-C3DA-E584-4FE033F3B3F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B07C061-3090-92D8-F465-75B9179D0393}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8B07C061-3090-92D8-F465-75B9179D0393}.Debug|Any CPU.Build.0 = Debug|x64
+		{8B07C061-3090-92D8-F465-75B9179D0393}.Release|Any CPU.ActiveCfg = Release|x64
+		{8B07C061-3090-92D8-F465-75B9179D0393}.Release|Any CPU.Build.0 = Release|x64
+		{B2A99389-E5FF-42D3-E51B-301EF22A1C72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A99389-E5FF-42D3-E51B-301EF22A1C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A99389-E5FF-42D3-E51B-301EF22A1C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A99389-E5FF-42D3-E51B-301EF22A1C72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

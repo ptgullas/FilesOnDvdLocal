@@ -1,0 +1,94 @@
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.nav-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hamburger-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 0.5rem;
+}
+
+.hamburger-btn:hover {
+    background-color: var(--hover-color);
+    border-radius: 4px;
+}
+
+.app-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.nav-content {
+    flex: 1;
+    padding-top: 1rem;
+}
+
+.nav-item {
+    margin-bottom: 0.25rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.nav-link:hover {
+    background-color: var(--hover-color);
+    color: white;
+    text-decoration: none;
+}
+
+.nav-link.active {
+    background-color: #2d2d2d;
+    color: white;
+    border-left-color: var(--accent-color);
+}
+
+.nav-icon {
+    width: 24px;
+    margin-right: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.nav-icon-small {
+    width: 24px;
+    margin-right: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.nav-text {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Child Menu Item */
+.nav-child {
+    padding-left: 1.5rem;
+}
+
+.child-link {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+}

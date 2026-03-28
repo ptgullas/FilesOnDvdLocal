@@ -15,7 +15,13 @@ namespace MediaFilesOnDvd.Services {
         }
 
         public IEnumerable<MediaFile> Get() {
-            return _context.MediaFiles.OrderBy(f => f.Id);
+            return _context.MediaFiles
+                .Include(m => m.Screenshots)
+                .Include(m => m.Performers)
+                .Include(m => m.Disc)
+                .Include(m => m.FileGenre)
+                .Include(m => m.Tags)
+                .OrderBy(f => f.Id);
         }
 
         public MediaFile? Get(int id) {

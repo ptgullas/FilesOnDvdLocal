@@ -1,0 +1,90 @@
+@page "/discs"
+@inject DiscService DiscService
+@inject MediaFileService MediaFileService
+
+<div class="disc-browse">
+    <!-- Top Left: Disc List -->
+    <aside class="disc-list-panel">
+        <div class="panel-header">
+            <h3>Discs</h3>
+        </div>
+        <div class="disc-scroll-list">
+            @foreach (var disc in _allDiscs)
+            {
+                <div class="disc-list-item @(disc.Id == _selectedDisc?.Id ? "selected" : "")" 
+                     @onclick="() => SelectDisc(disc)">
+                    <i class="fas fa-compact-disc"></i>
+                    <span class="disc-name">@disc.Name</span>
+                </div>
+            }
+        </div>
+    </aside>
+
+    <!-- Main Section: Disc Detail & Files -->
+    <main class="disc-content">
+        @if (_selectedDisc == null)
+        {
+            <div class="empty-state">
+                <i class="fas fa-compact-disc fa-4x"></i>
+                <h3>Select a disc to view contents</h3>
+            </div>
+        }
+        else
+        {
+            <div class="disc-detail-header">
+                <div class="disc-meta">
+                    <h1>@_selectedDisc.Name</h1>
+                    <div class="meta-grid">
+                        <div class="meta-item"><label>ID:</label> <span>@_selectedDisc.Id</span></div>
+                        <div class="meta-item"><label>Wallet:</label> <span>@(_selectedDisc.Wallet?.Name ?? "None")</span></div>
+                    </div>
+                    <div class="notes-box">
+                        <label>Notes</label>
+                        <p>@(_selectedDisc.Notes ?? "No notes available.")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="file-list-section">
+                <h3>Files on this Disc</h3>
+                <div class="file-grid">
+                    @foreach (var file in _selectedDisc.Files)
+                    {
+                        <div class="file-row @(file.Id == _selectedFile?.Id ? "active" : "")" 
+                             @onclick="() => SelectFile(file.Id)">
+                            <span class="file-name">@file.Name</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </main>
+
+    <!-- Right Panel: File Detail -->
+    <aside class="file-detail-panel">
+        <MediaFileDetail File="_selectedFile" />
+    </aside>
+</div>
+
+@code {
+    private List<Disc> _allDiscs = new();
+    private Disc? _selectedDisc;
+    private MediaFile? _selectedFile;
+
+    protected override void OnInitialized()
+    {
+        _allDiscs = DiscService.Get().ToList();
+    }
+
+    private void SelectDisc(Disc disc)
+    {
+        _selectedDisc = disc;
+        _selectedFile = null;
+    }
+
+    private void SelectFile(int id)
+    {
+        _selectedFile = MediaFileService.Get().FirstOrDefault(f => f.Id == id);
+    }
+}

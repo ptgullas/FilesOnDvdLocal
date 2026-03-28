@@ -1,5 +1,6 @@
 ﻿using MediaFilesOnDvd.Data;
 using MediaFilesOnDvd.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.SymbolStore;
@@ -16,11 +17,17 @@ namespace MediaFilesOnDvd.Services {
         }
 
         public IEnumerable<Disc> Get() {
-            return _context.Discs.OrderBy(d => d.Id);
+            return _context.Discs
+                .Include(d => d.Files)
+                .Include(d => d.Wallet)
+                .OrderBy(d => d.Id);
         }
 
         public Disc? Get(int id) {
-            return _context.Discs.FirstOrDefault(d => d.Id == id);
+            return _context.Discs
+                .Include(d => d.Files)
+                .Include(d => d.Wallet)
+                .FirstOrDefault(d => d.Id == id);
         }
 
         public Disc? Get(string name) {

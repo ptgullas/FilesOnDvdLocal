@@ -1,0 +1,125 @@
+@page "/performers"
+@using MediaFilesOnDvd.Services.Dtos
+@inject PerformerService PerformerService
+@inject PathResolverService PathResolver
+@inject NavigationManager Nav
+
+<div class="performer-browse">
+    <!-- Left Panel: Master List -->
+    <aside class="performer-list-panel">
+        <div class="search-box">
+            <i class="fas fa-filter"></i>
+            <input type="text" placeholder="Filter performers..." @bind="_searchTerm" @bind:event="oninput" />
+        </div>
+        <div class="performer-scroll-list">
+            <Virtualize Items="FilteredPerformers" Context="performer" OverscanCount="10">
+                <div class="performer-list-item @(performer.Id == _selectedPerformer?.Id ? "selected" : "")" 
+                     @onclick="() => SelectPerformer(performer.Id)">
+                    <div class="performer-thumb">
+                        @if (!string.IsNullOrEmpty(performer.HeadshotUrl))
+                        {
+                            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(performer.HeadshotUrl))" alt="" />
+                        }
+                        else
+                        {
+                            <i class="fas fa-user"></i>
+                        }
+                    </div>
+                    <span class="performer-name">@performer.Name</span>
+                </div>
+            </Virtualize>
+        </div>
+    </aside>
+
+    <!-- Center Panel: Detail -->
+    <main class="performer-detail-panel">
+        @if (_selectedPerformer == null)
+        {
+            <div class="empty-state">
+                <i class="fas fa-users fa-4x"></i>
+                <h3>Select a performer to view details</h3>
+            </div>
+        }
+        else
+        {
+            <div class="detail-header">
+                <div class="headshot-large">
+                    @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
+                    {
+                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" alt="@_selectedPerformer.Name" />
+                    }
+                    else
+                    {
+                        <div class="placeholder-large"><i class="fas fa-user fa-5x"></i></div>
+                    }
+                </div>
+                <div class="header-info">
+                    <h1>@_selectedPerformer.Name</h1>
+                    <p class="aliases">Aliases: --</p>
+                    <div class="gallery-preview">
+                        <span class="badge">Gallery coming soon</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-list-section">
+                <h3>Appears In (@(_selectedPerformer.MediaFiles.Count) files)</h3>
+                <div class="media-grid">
+                    @foreach (var file in _selectedPerformer.MediaFiles)
+                    {
+                        <div class="media-item" @onclick="() => ViewMediaFile(file.Id)">
+                            <div class="media-thumb">
+                                @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" alt="" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-file-video"></i>
+                                }
+                            </div>
+                            <div class="media-info">
+                                <span class="file-name">@file.Name</span>
+                                <span class="disc-name">@file.DiscName</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </main>
+
+    <!-- Right Panel: Media Detail -->
+    <aside class="media-detail-panel">
+        <MediaFileDetail File="_selectedMediaFile" />
+    </aside>
+</div>
+
+@code {
+    [Inject] private MediaFileService MediaFileService { get; set; } = default!;
+    private List<PerformerSummaryDto> _allPerformers = new();
+    private PerformerDetailDto? _selectedPerformer;
+    private MediaFile? _selectedMediaFile;
+    private string _searchTerm = "";
+
+    protected override void OnInitialized()
+    {
+        _allPerformers = PerformerService.GetSummaries().ToList();
+    }
+
+    private List<PerformerSummaryDto> FilteredPerformers => 
+        string.IsNullOrWhiteSpace(_searchTerm) 
+            ? _allPerformers 
+            : _allPerformers.Where(p => p.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    private void SelectPerformer(int id)
+    {
+        _selectedPerformer = PerformerService.GetDetails(id);
+        _selectedMediaFile = null;
+    }
+
+    private void ViewMediaFile(int id)
+    {
+        _selectedMediaFile = MediaFileService.Get(id);
+    }
+}

@@ -1,0 +1,47 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="@SidebarCssClass">
+        <NavMenu OnToggle="ToggleSidebar" IsCollapsed="@_sidebarCollapsed" />
+    </div>
+
+    <main>
+        <header class="top-header">
+            <div class="header-left">
+                @if (_sidebarCollapsed)
+                {
+                    <button class="hamburger-btn" @onclick="ToggleSidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                }
+            </div>
+            
+            <div class="header-center">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search filenames, performers, series..." class="search-input" />
+                </div>
+            </div>
+
+            <div class="header-right">
+                <!-- Profile/Settings placeholder -->
+                <i class="fas fa-user-circle fa-lg"></i>
+            </div>
+        </header>
+
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private bool _sidebarCollapsed = false;
+
+    private string SidebarCssClass => _sidebarCollapsed ? "sidebar collapsed" : "sidebar";
+
+    private void ToggleSidebar()
+    {
+        _sidebarCollapsed = !_sidebarCollapsed;
+    }
+}

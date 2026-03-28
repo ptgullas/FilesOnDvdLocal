@@ -1,0 +1,113 @@
+@page "/tags"
+@page "/tags/{SelectedTagId:int}"
+@inject FileTagService TagService
+@inject MediaFileService MediaFileService
+
+<div class="tag-cloud-view">
+    <!-- Left Panel: The Cloud -->
+    <aside class="cloud-panel">
+        <div class="panel-header">
+            <h3>Keyword Cloud</h3>
+        </div>
+        <div class="cloud-container">
+            @foreach (var tag in _allTags)
+            {
+                <span class="cloud-tag @(tag.Id == SelectedTagId ? "active" : "")" 
+                      style="font-size: @(CalculateFontSize(tag))rem"
+                      title="@tag.MediaFiles.Count files"
+                      @onclick="() => SelectTag(tag.Id)">
+                    @tag.Name
+                </span>
+            }
+        </div>
+    </aside>
+
+    <!-- Main Section: Results -->
+    <main class="results-panel">
+        <header class="results-header">
+            <h2>@(_selectedTag?.Name ?? "Select a tag")</h2>
+            @if (_selectedTag != null)
+            {
+                <span class="count-badge">@_taggedFiles.Count files</span>
+            }
+        </header>
+
+        <div class="results-grid">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th @onclick='() => Sort("Name")'>MediaFile <i class="fas fa-sort"></i></th>
+                        <th @onclick='() => Sort("Disc")'>Disc <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in _taggedFiles)
+                    {
+                        <tr class="@(file.Id == _selectedFile?.Id ? "selected" : "")" 
+                            @onclick="() => SelectFile(file)">
+                            <td>@file.Name</td>
+                            <td>@file.Disc?.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Right Panel: Selection Detail -->
+    <aside class="detail-panel">
+        <MediaFileDetail File="_selectedFile" />
+    </aside>
+</div>
+
+@code {
+    [Parameter] public int? SelectedTagId { get; set; }
+    private List<FileTag> _allTags = new();
+    private FileTag? _selectedTag;
+    private List<MediaFile> _taggedFiles = new();
+    private MediaFile? _selectedFile;
+    private int _maxUsage = 1;
+
+    protected override void OnInitialized()
+    {
+        _allTags = TagService.Get().ToList();
+        _maxUsage = _allTags.Any() ? _allTags.Max(t => t.MediaFiles.Count) : 1;
+        if (_maxUsage == 0) _maxUsage = 1;
+
+        if (SelectedTagId.HasValue)
+        {
+            SelectTag(SelectedTagId.Value);
+        }
+    }
+
+    private double CalculateFontSize(FileTag tag)
+    {
+        // Simple linear scaling between 0.8rem and 2.5rem
+        double minSize = 0.8;
+        double maxSize = 2.5;
+        double weight = (double)tag.MediaFiles.Count / _maxUsage;
+        return minSize + (weight * (maxSize - minSize));
+    }
+
+    private void SelectTag(int id)
+    {
+        SelectedTagId = id;
+        _selectedTag = _allTags.FirstOrDefault(t => t.Id == id);
+        if (_selectedTag != null)
+        {
+            _taggedFiles = MediaFileService.GetByTag(_selectedTag.Name).ToList();
+        }
+        _selectedFile = null;
+    }
+
+    private void SelectFile(MediaFile file)
+    {
+        _selectedFile = file;
+    }
+
+    private void Sort(string column)
+    {
+        if (column == "Name") _taggedFiles = _taggedFiles.OrderBy(f => f.Name).ToList();
+        if (column == "Disc") _taggedFiles = _taggedFiles.OrderBy(f => f.Disc?.Name).ToList();
+    }
+}

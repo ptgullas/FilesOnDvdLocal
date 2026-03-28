@@ -1,0 +1,54 @@
+<div class="nav-container">
+    <div class="nav-header">
+        <button class="hamburger-btn" @onclick="ToggleNav">
+            <i class="fas fa-bars"></i>
+        </button>
+        <span class="app-title">MediaFiles on DVD</span>
+    </div>
+
+    <nav class="nav-content">
+        <div class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </NavLink>
+        </div>
+
+        <div class="nav-item">
+            <NavLink class="nav-link" href="performers">
+                <i class="fas fa-users nav-icon"></i>
+                <span class="nav-text">Performers</span>
+            </NavLink>
+        </div>
+
+        <div class="nav-item">
+            <NavLink class="nav-link" href="discs">
+                <i class="fas fa-compact-disc nav-icon"></i>
+                <span class="nav-text">Disc Browse</span>
+            </NavLink>
+        </div>
+
+        <div class="nav-item">
+            <NavLink class="nav-link" href="mediafiles">
+                <i class="fas fa-file-video nav-icon"></i>
+                <span class="nav-text">MediaFile View</span>
+            </NavLink>
+            <div class="nav-child">
+                <NavLink class="nav-link child-link" href="tags">
+                    <i class="fas fa-tags nav-icon-small"></i>
+                    <span class="nav-text">Tag Cloud</span>
+                </NavLink>
+            </div>
+        </div>
+    </nav>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnToggle { get; set; }
+    [Parameter] public bool IsCollapsed { get; set; }
+
+    private async Task ToggleNav()
+    {
+        await OnToggle.InvokeAsync();
+    }
+}

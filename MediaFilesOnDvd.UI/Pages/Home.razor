@@ -1,0 +1,109 @@
+@page "/"
+@using MediaFilesOnDvd.Services.Dtos
+@inject PerformerService PerformerService
+@inject MediaFileService MediaFileService
+@inject PathResolverService PathResolver
+@inject IConfiguration Config
+@inject NavigationManager Nav
+
+<div class="dashboard">
+    <section class="carousel-section">
+        <h2 class="section-title">Explore Performers</h2>
+        <div class="carousel-container">
+            @if (_randomPerformers == null)
+            {
+                <p>Loading performers...</p>
+            }
+            else
+            {
+                <div class="carousel-track">
+                    @foreach (var performer in _randomPerformers)
+                    {
+                        <div class="carousel-item performer-card" @onclick="() => NavigateToPerformer(performer.Id)">
+                            <div class="image-wrapper">
+                                @if (performer.GalleryPhotoUrl.Any())
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(performer.GalleryPhotoUrl))" alt="@performer.Name" />
+                                }
+                                else if (performer.HeadshotUrl.Any())
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(performer.HeadshotUrl))" alt="@performer.Name" />
+                                }
+                                else
+                                {
+                                    <div class="placeholder-img"><i class="fas fa-user fa-3x"></i></div>
+                                }
+                                <div class="item-overlay">
+                                    <span class="item-name">@performer.Name</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <h2 class="section-title">Recent Media</h2>
+        <div class="carousel-container">
+            @if (_randomFiles == null)
+            {
+                <p>Loading media...</p>
+            }
+            else
+            {
+                <div class="carousel-track">
+                    @foreach (var file in _randomFiles)
+                    {
+                        <div class="carousel-item media-card" @onclick="() => NavigateToMediaFile(file.Id)">
+                            <div class="image-wrapper">
+                                @if (file.Screenshots.Any())
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.Screenshots.First().Url))" alt="@file.Name" />
+                                }
+                                else
+                                {
+                                    <div class="placeholder-img"><i class="fas fa-file-video fa-3x"></i></div>
+                                }
+                                <div class="item-overlay">
+                                    <span class="item-name">@file.Name</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<PerformerWithGalleryDto>? _randomPerformers;
+    private List<MediaFile>? _randomFiles;
+
+    protected override void OnInitialized()
+    {
+        // Get 10 random performers
+        _randomPerformers = PerformerService.GetWithGalleries()
+            .OrderBy(x => Guid.NewGuid())
+            .Take(10)
+            .ToList();
+
+        // Get 10 random files
+        _randomFiles = MediaFileService.Get()
+            .OrderBy(x => Guid.NewGuid())
+            .Take(10)
+            .ToList();
+    }
+
+    private void NavigateToPerformer(int id)
+    {
+        Nav.NavigateTo($"/performers/{id}");
+    }
+
+    private void NavigateToMediaFile(int id)
+    {
+        Nav.NavigateTo($"/mediafiles/{id}");
+    }
+}

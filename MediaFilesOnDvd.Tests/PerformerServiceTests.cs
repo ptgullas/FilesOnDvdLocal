@@ -122,7 +122,7 @@ namespace MediaFilesOnDvd.Tests {
         #endregion
 
         [Fact]
-        public void Get_GetAllWithoutMediaFiles_GetsPerformers() {
+        public void GetSummaries_GetsPerformers() {
             // Arrange
             using var context = new MediaFilesContext(_contextOptions);
             var service = new PerformerService(context);
@@ -143,7 +143,7 @@ namespace MediaFilesOnDvd.Tests {
 
             // Act
 
-            var performers = service.Get();
+            var performers = service.GetSummaries();
             // Assert
             Assert.NotNull(performers);
             Assert.Equal(expectedCount, performers.Count());
@@ -162,9 +162,6 @@ namespace MediaFilesOnDvd.Tests {
                 p => Assert.Equal(expectedName11, p.Name),
                 p => Assert.Equal(expectedName12, p.Name)
                 );
-
-            // Get does not include a Performer's MediaFiles
-            Assert.Empty(performers.First().MediaFiles);
         }
 
         [Fact]

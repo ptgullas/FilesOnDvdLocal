@@ -1,0 +1,74 @@
+@inject NavigationManager Nav
+@inject PathResolverService PathResolver
+
+<div class="media-file-detail">
+    @if (File == null)
+    {
+        <div class="no-selection">
+            <i class="fas fa-info-circle"></i>
+            <p>Select a file to view details</p>
+        </div>
+    }
+    else
+    {
+        <div class="detail-container">
+            <div class="screenshot-preview">
+                @if (File.Screenshots.Any())
+                {
+                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(File.Screenshots.First().Url))" alt="@File.Name" />
+                }
+                else
+                {
+                    <div class="placeholder-img"><i class="fas fa-file-video fa-4x"></i></div>
+                }
+            </div>
+
+            <div class="info-group">
+                <label>Filename</label>
+                <a class="value-link" @onclick="() => NavigateTo('f', File.Id)">@File.Name</a>
+            </div>
+
+            <div class="info-group">
+                <label>Disc</label>
+                <a class="value-link" @onclick="() => NavigateTo('d', File.DiscId)">@File.Disc?.Name</a>
+            </div>
+
+            <div class="info-group">
+                <label>Performers</label>
+                <div class="list-values">
+                    @foreach (var p in File.Performers)
+                    {
+                        <span class="value-link" @onclick="() => NavigateTo('p', p.Id)">@p.Name</span>
+                    }
+                </div>
+            </div>
+
+            <div class="info-group">
+                <label>Tags</label>
+                <div class="tag-list">
+                    @foreach (var t in File.Tags)
+                    {
+                        <span class="tag-pill" @onclick="() => NavigateTo('t', t.Id)">@t.Name</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public MediaFile? File { get; set; }
+
+    private void NavigateTo(char type, int id)
+    {
+        var url = type switch
+        {
+            'f' => $"/mediafiles/{id}",
+            'd' => $"/discs/{id}",
+            'p' => $"/performers/{id}",
+            't' => $"/tags/{id}",
+            _ => "/"
+        };
+        Nav.NavigateTo(url);
+    }
+}

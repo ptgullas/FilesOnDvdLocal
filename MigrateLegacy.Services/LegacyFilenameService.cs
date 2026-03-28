@@ -48,7 +48,7 @@ namespace MigrateLegacy.Services {
         public IEnumerable<MediaFile> MigrateToMediaFiles(IEnumerable<LegacyFilename> legacyFiles, DiscService discService, FileGenreService fileGenreService, PerformerService performerService, SeriesService seriesService) {
             List<MediaFile> mediaFiles = new();
             var fileGenres = fileGenreService.Get();
-            var performers = performerService.Get().ToList();
+            var performers = performerService.GetPerformerDbEntities().ToList();
             var series = seriesService.Get().ToList();
             foreach (var legacyFile in legacyFiles) {
                 MediaFile mf = new(legacyFile.Name, legacyFile.Notes, $"{legacyFile.Id}.jpg");

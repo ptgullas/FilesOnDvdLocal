@@ -1,5 +1,6 @@
 ﻿using MediaFilesOnDvd.Data;
 using MediaFilesOnDvd.Data.Entities;
+using MediaFilesOnDvd.Services.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,44 @@ namespace MediaFilesOnDvd.Services {
             _context = context;
         }
 
-        /// <summary>
-        /// Get all Performers, ordered by Name
-        /// </summary>
-        /// <returns>An <c>IEnumerable</c> of Performer, sorted by Name</returns>
-        public IEnumerable<Performer> Get() {
-            return _context.Performers.OrderBy(p => p.Name);
+
+        public IEnumerable<PerformerSummaryDto> GetSummaries() {
+            return _context.Performers
+                .OrderBy(p => p.Name)
+                .Select(p => new PerformerSummaryDto {
+                    Id = p.Id,
+                    Name = p.Name,
+                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault()
+                });
+        }
+
+        public PerformerDetailDto? GetDetails(int id) {
+            return _context.Performers
+                .Where(p => p.Id == id)
+                .Select(p => new PerformerDetailDto {
+                    Id = p.Id,
+                    Name = p.Name,
+                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
+                    MediaFiles = p.MediaFiles.Select(m => new MediaFileSummaryDto {
+                        Id = m.Id,
+                        Name = m.Name,
+                        DiscName = m.Disc.Name,
+                        ScreenshotUrl = m.Screenshots.Select(s => s.Url).FirstOrDefault()
+                    }).OrderBy(m => m.Name).ToList()
+                })
+                .FirstOrDefault();
+        }
+
+        public IEnumerable<PerformerWithGalleryDto?> GetWithGalleries() {
+            return _context.Performers
+                .OrderBy(p => p.Name)
+                .Select(p => new PerformerWithGalleryDto {
+                    Id = p.Id,
+                    Name = p.Name,
+                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
+                    GalleryPhotoUrl = p.GalleryPhotoUrls.Select(g => g.Url).FirstOrDefault()
+                });
+
         }
 
         public IEnumerable<Performer> GetWithMediaFiles() {
@@ -87,5 +120,15 @@ namespace MediaFilesOnDvd.Services {
             _context.SaveChanges();
             return new(true);
         }
+
+        /// <summary>
+        /// Get all Performer Entities, ordered by Name
+        /// Used for Migration from Legacy DB
+        /// </summary>
+        /// <returns>An <c>IEnumerable</c> of Performer, sorted by Name</returns>
+        public IEnumerable<Performer> GetPerformerDbEntities() {
+            return _context.Performers.OrderBy(p => p.Name);
+        }
+
     }
 }

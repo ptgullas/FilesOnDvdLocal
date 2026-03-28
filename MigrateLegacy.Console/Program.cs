@@ -97,7 +97,7 @@ void BrowseGenres(IServiceScope scope) {
 void BrowsePerformers(IServiceScope scope) {
     var service = scope.ServiceProvider.GetRequiredService<PerformerService>();
     var name = AnsiConsole.Ask<string>("Enter performer name (or leave blank for all):", "");
-    var performers = string.IsNullOrEmpty(name) ? service.Get() : service.Get().Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+    var performers = string.IsNullOrEmpty(name) ? service.GetPerformerDbEntities() : service.GetPerformerDbEntities().Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
     
     var table = new Table().AddColumns("ID", "Name", "LegacyID");
     foreach (var p in performers.Take(50)) {
