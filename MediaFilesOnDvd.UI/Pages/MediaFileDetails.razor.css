@@ -220,3 +220,51 @@ input:checked + .slider:before {
     border-radius: 4px;
     font-size: 0.85rem;
 }
+
+/* Navigation Overlay */
+.nav-overlay {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(30, 30, 30, 0.9);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.nav-button-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-nav {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s, transform 0.1s;
+}
+
+.btn-nav:hover {
+    color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+.btn-nav:active {
+    transform: scale(0.9);
+}
+
+.nav-info {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: center;
+}

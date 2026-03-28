@@ -91,6 +91,20 @@ namespace MediaFilesOnDvd.Services {
                 .FirstOrDefault();
         }
 
+        public int? GetFirstId() {
+            return _context.MediaFiles
+                .OrderBy(f => f.Id)
+                .Select(f => f.Id)
+                .FirstOrDefault();
+        }
+
+        public int? GetLastId() {
+            return _context.MediaFiles
+                .OrderByDescending(f => f.Id)
+                .Select(f => f.Id)
+                .FirstOrDefault();
+        }
+
         public OperationResult Add(MediaFile mediaFile) {
             try {
                 _context.MediaFiles.Add(mediaFile);

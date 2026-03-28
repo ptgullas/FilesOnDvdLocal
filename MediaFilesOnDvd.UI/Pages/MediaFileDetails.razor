@@ -10,11 +10,7 @@
 
 <div class="media-file-view">
     <header class="view-header">
-        <div class="nav-controls">
-            <button class="btn-icon" @onclick="PreviousFile"><i class="fas fa-chevron-left"></i></button>
-            <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
-            <button class="btn-icon" @onclick="NextFile"><i class="fas fa-chevron-right"></i></button>
-        </div>
+        <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
         <div class="mode-toggle">
             <label class="switch">
                 <input type="checkbox" @bind="_isEditMode" @onclick="OnToggleEditMode" />
@@ -181,17 +177,39 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Navigation Overlay -->
+        <div class="nav-overlay">
+            <div class="nav-button-group">
+                @if (!_isFirst)
+                {
+                    <button class="btn-nav" @onclick="GoToBeginning" title="First"><i class="fas fa-angles-left"></i></button>
+                    <button class="btn-nav" @onclick="PreviousFile" title="Previous"><i class="fas fa-chevron-left"></i></button>
+                }
+                <span class="nav-info">@_currentFile.Id</span>
+                @if (!_isLast)
+                {
+                    <button class="btn-nav" @onclick="NextFile" title="Next"><i class="fas fa-chevron-right"></i></button>
+                    <button class="btn-nav" @onclick="GoToEnd" title="Last"><i class="fas fa-angles-right"></i></button>
+                }
+            </div>
+        </div>
     }
 </div>
 
 @code {
     [Parameter] public int? Id { get; set; }
     private MediaFileDetailDto? _currentFile;
-    private static bool _isEditMode = false; // Static to persist across navigation
+    private static bool _isEditMode = false;
 
     private List<FileGenre> _allGenres = new();
     private List<Disc> _allDiscs = new();
     private List<Series> _allSeries = new();
+
+    private bool _isFirst = false;
+    private bool _isLast = false;
+    private int? _firstId;
+    private int? _lastId;
 
     protected override void OnParametersSet()
     {
@@ -200,17 +218,25 @@
 
     private void LoadFile()
     {
+        _firstId = MediaFileService.GetFirstId();
+        _lastId = MediaFileService.GetLastId();
+
         if (Id.HasValue)
         {
             _currentFile = MediaFileService.GetDetailDto(Id.Value);
         }
         else
         {
-            var latestId = MediaFileService.GetLatestId();
-            if (latestId.HasValue)
+            if (_lastId.HasValue)
             {
-                _currentFile = MediaFileService.GetDetailDto(latestId.Value);
+                _currentFile = MediaFileService.GetDetailDto(_lastId.Value);
             }
+        }
+
+        if (_currentFile != null)
+        {
+            _isFirst = _currentFile.Id == _firstId;
+            _isLast = _currentFile.Id == _lastId;
         }
 
         if (_isEditMode) LoadDropdowns();
@@ -231,7 +257,6 @@
 
     private void SaveChanges()
     {
-        // Implementation for saving back to DB
         _isEditMode = false;
     }
 
@@ -251,5 +276,15 @@
             var nextId = MediaFileService.GetNextId(_currentFile.Id);
             if (nextId.HasValue) Nav.NavigateTo($"/mediafiles/{nextId.Value}");
         }
+    }
+
+    private void GoToBeginning()
+    {
+        if (_firstId.HasValue) Nav.NavigateTo($"/mediafiles/{_firstId.Value}");
+    }
+
+    private void GoToEnd()
+    {
+        if (_lastId.HasValue) Nav.NavigateTo($"/mediafiles/{_lastId.Value}");
     }
 }
