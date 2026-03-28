@@ -1,4 +1,5 @@
 @page "/performers"
+@page "/performers/{Id:int}"
 @using MediaFilesOnDvd.Services.Dtos
 @inject PerformerService PerformerService
 @inject PathResolverService PathResolver
@@ -14,7 +15,7 @@
         <div class="performer-scroll-list">
             <Virtualize Items="FilteredPerformers" Context="performer" OverscanCount="10">
                 <div class="performer-list-item @(performer.Id == _selectedPerformer?.Id ? "selected" : "")" 
-                     @onclick="() => SelectPerformer(performer.Id)">
+                @onclick="() => SelectPerformer(performer.Id)">
                     <div class="performer-thumb">
                         @if (!string.IsNullOrEmpty(performer.HeadshotUrl))
                         {
@@ -96,6 +97,7 @@
 </div>
 
 @code {
+    [Parameter] public int? Id { get; set; }
     [Inject] private MediaFileService MediaFileService { get; set; } = default!;
     private List<PerformerSummaryDto> _allPerformers = new();
     private PerformerDetailDto? _selectedPerformer;
@@ -105,6 +107,12 @@
     protected override void OnInitialized()
     {
         _allPerformers = PerformerService.GetSummaries().ToList();
+    }
+
+    protected override void OnParametersSet() {
+        if (Id.HasValue) {
+            SelectPerformer(Id.Value);
+        }
     }
 
     private List<PerformerSummaryDto> FilteredPerformers => 
