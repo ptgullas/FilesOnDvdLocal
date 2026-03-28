@@ -4,6 +4,7 @@
 @inject PerformerService PerformerService
 @inject PathResolverService PathResolver
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <div class="performer-browse">
     <!-- Left Panel: Master List -->
@@ -120,10 +121,11 @@
             ? _allPerformers 
             : _allPerformers.Where(p => p.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
 
-    private void SelectPerformer(int id)
+    private async Task SelectPerformer(int id)
     {
         _selectedPerformer = PerformerService.GetDetails(id);
         _selectedMediaFile = null;
+        await JS.InvokeVoidAsync("scrollToTop", ".performer-detail-panel");
     }
 
     private void ViewMediaFile(int id)

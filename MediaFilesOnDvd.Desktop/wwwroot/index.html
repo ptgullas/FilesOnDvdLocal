@@ -65,6 +65,14 @@
 	</div>
 
 	<script src="_framework/blazor.webview.js" autostart="false"></script>
+	<script>
+		window.scrollToTop = (selector) => {
+			const element = document.querySelector(selector);
+			if (element) {
+				element.scrollTop = 0;
+			}
+		};
+	</script>
 
 </body>
 
