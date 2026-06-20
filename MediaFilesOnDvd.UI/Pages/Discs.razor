@@ -1,4 +1,5 @@
 @page "/discs"
+@page "/discs/{ID:int}"
 @inject DiscService DiscService
 @inject MediaFileService MediaFileService
 
@@ -12,7 +13,7 @@
             @foreach (var disc in _allDiscs)
             {
                 <div class="disc-list-item @(disc.Id == _selectedDisc?.Id ? "selected" : "")" 
-                     @onclick="() => SelectDisc(disc)">
+                @onclick="() => SelectDisc(disc)">
                     <i class="fas fa-compact-disc"></i>
                     <span class="disc-name">@disc.Name</span>
                 </div>
@@ -51,7 +52,7 @@
                     @foreach (var file in _selectedDisc.Files)
                     {
                         <div class="file-row @(file.Id == _selectedFile?.Id ? "active" : "")" 
-                             @onclick="() => SelectFile(file.Id)">
+                        @onclick="() => SelectFile(file.Id)">
                             <span class="file-name">@file.Name</span>
                             <i class="fas fa-chevron-right"></i>
                         </div>
@@ -68,6 +69,7 @@
 </div>
 
 @code {
+    [Parameter] public int? Id { get; set; }
     private List<Disc> _allDiscs = new();
     private Disc? _selectedDisc;
     private MediaFile? _selectedFile;
@@ -75,6 +77,19 @@
     protected override void OnInitialized()
     {
         _allDiscs = DiscService.Get().ToList();
+    }
+
+
+    protected override void OnParametersSet() {
+        if (Id.HasValue) {
+            // SelectDisc(Id.Value);
+            _selectedDisc = _allDiscs.FirstOrDefault(d => d.Id == Id.Value);
+        }
+    }
+
+    private void SelectDisc(int id)
+    {
+        _selectedDisc = DiscService.Get(id);
     }
 
     private void SelectDisc(Disc disc)
