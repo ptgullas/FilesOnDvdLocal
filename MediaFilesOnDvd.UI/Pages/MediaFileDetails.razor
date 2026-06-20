@@ -199,6 +199,7 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
+    [Parameter] public bool IsModal { get; set; }
     private MediaFileDetailDto? _currentFile;
     private static bool _isEditMode = false;
 
@@ -265,7 +266,11 @@
         if (_currentFile != null)
         {
             var prevId = MediaFileService.GetPreviousId(_currentFile.Id);
-            if (prevId.HasValue) Nav.NavigateTo($"/mediafiles/{prevId.Value}");
+            if (prevId.HasValue)
+            {
+                if (IsModal) { Id = prevId.Value; LoadFile(); }
+                else { Nav.NavigateTo($"/mediafiles/{prevId.Value}"); }
+            }
         }
     }
 
@@ -274,17 +279,29 @@
         if (_currentFile != null)
         {
             var nextId = MediaFileService.GetNextId(_currentFile.Id);
-            if (nextId.HasValue) Nav.NavigateTo($"/mediafiles/{nextId.Value}");
+            if (nextId.HasValue)
+            {
+                if (IsModal) { Id = nextId.Value; LoadFile(); }
+                else { Nav.NavigateTo($"/mediafiles/{nextId.Value}"); }
+            }
         }
     }
 
     private void GoToBeginning()
     {
-        if (_firstId.HasValue) Nav.NavigateTo($"/mediafiles/{_firstId.Value}");
+        if (_firstId.HasValue)
+        {
+            if (IsModal) { Id = _firstId.Value; LoadFile(); }
+            else { Nav.NavigateTo($"/mediafiles/{_firstId.Value}"); }
+        }
     }
 
     private void GoToEnd()
     {
-        if (_lastId.HasValue) Nav.NavigateTo($"/mediafiles/{_lastId.Value}");
+        if (_lastId.HasValue)
+        {
+            if (IsModal) { Id = _lastId.Value; LoadFile(); }
+            else { Nav.NavigateTo($"/mediafiles/{_lastId.Value}"); }
+        }
     }
 }
