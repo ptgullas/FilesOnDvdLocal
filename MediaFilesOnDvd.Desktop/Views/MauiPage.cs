@@ -7,7 +7,7 @@ namespace MediaFilesOnDvd.Desktop.Views
     {
         public MauiPage()
         {
-            ControlTemplate = (ControlTemplate)Application.Current!.Resources[nameof(VersionTemplate)];
+            // ControlTemplate = (ControlTemplate)Application.Current!.Resources[nameof(VersionTemplate)];
 
             // For a much simplified initialization
             // Add reference to the VijayAnand.MauiBlazor.Markup NuGet package

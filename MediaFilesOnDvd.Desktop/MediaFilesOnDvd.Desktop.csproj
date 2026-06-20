@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
         <OutputType>WinExe</OutputType>
+        <ApplicationIcon>motley-icon.ico</ApplicationIcon>
 
         <!-- WinUI 3 -->
         <UseWinUI>true</UseWinUI>
@@ -35,11 +36,20 @@
         <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
         <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     </PropertyGroup>
+    <ItemGroup>
+      <Content Remove="Assets\motley-icon-150.png" />
+      <Content Remove="Assets\motley-icon-44.png" />
+    </ItemGroup>
 
     <ItemGroup>
         <None Remove="MediaFilesOnDvd.Desktop.code-workspace" />
         <None Remove="Directory.Packages.props" />
         <None Remove="MediaFilesOnDvd.Desktop.slnx" />
+        <None Remove="motley-icon-taskbar.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="motley-icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -77,6 +87,12 @@
       <ProjectReference Include="..\MediaFilesOnDvd.UI\MediaFilesOnDvd.UI.csproj" />
       <ProjectReference Include="..\MediaFilesOnDvd.Services\MediaFilesOnDvd.Services.csproj" />
       <ProjectReference Include="..\MediaFilesOnDvd.Data\MediaFilesOnDvd.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Assets\motley-icon-150.png" />
+      <Resource Include="Assets\motley-icon-44.png" />
+      <Resource Include="motley-icon-taskbar.ico" />
     </ItemGroup>
 
     <!-- 

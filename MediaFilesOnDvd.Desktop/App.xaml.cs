@@ -31,6 +31,8 @@ namespace MediaFilesOnDvd.Desktop
         {
             window ??= new Window();
 
+            window.Title = "MediaFiles on DVD";
+
             if (window.Content is not Frame rootFrame)
             {
                 rootFrame = new Frame();
@@ -40,6 +42,12 @@ namespace MediaFilesOnDvd.Desktop
 
             _ = rootFrame.Navigate(typeof(MainPage), e.Arguments);
             window.Activate();
+
+            // --- Set the Runtime (taskbar/title bar) Icon ---
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            appWindow.SetIcon("motley-icon-taskbar.ico");
         }
 
         /// <summary>
