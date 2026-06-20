@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+using Microsoft.AspNetCore.Components.WebView.Maui;
 //using VijayAnand.MauiBlazor.Markup;
 
 namespace MediaFilesOnDvd.Desktop.Views
@@ -17,7 +17,7 @@ namespace MediaFilesOnDvd.Desktop.Views
 
             var bwv = new BlazorWebView()
             {
-                StartPath = "/counter",
+                StartPath = "/",
                 HostPage = "wwwroot/index.html"
             };
 
