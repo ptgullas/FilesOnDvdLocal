@@ -127,6 +127,7 @@
 
         // Get 10 random files
         _randomFiles = MediaFileService.Get()
+            .Where(mf => mf.FileGenreId == 3)
             .OrderBy(x => Guid.NewGuid())
             .Take(10)
             .ToList();
