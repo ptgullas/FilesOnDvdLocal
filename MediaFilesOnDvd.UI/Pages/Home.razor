@@ -8,7 +8,7 @@
 
 <div class="dashboard">
     <section class="carousel-section">
-        <h2 class="section-title">Explore Performers</h2>
+        <h2 class="section-title">Explore Performers (@(_randomPerformers?.Count ?? 0) loaded)</h2>
         <div class="carousel-container">
             @if (_randomPerformers == null)
             {
@@ -17,27 +17,38 @@
             else
             {
                 <div class="carousel-track">
+                    @if (_randomPerformers.Count == 0) { <p>No performers found in DB.</p> }
                     @foreach (var performer in _randomPerformers)
                     {
-                        <div class="carousel-item performer-card" @onclick="() => NavigateToPerformer(performer.Id)">
-                            <div class="image-wrapper">
-                                @if (performer.GalleryPhotoUrl.Any())
-                                {
-                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(performer.GalleryPhotoUrl))" alt="@performer.Name" />
-                                }
-                                else if (performer.HeadshotUrl.Any())
-                                {
-                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(performer.HeadshotUrl))" alt="@performer.Name" />
-                                }
-                                else
-                                {
-                                    <div class="placeholder-img"><i class="fas fa-user fa-3x"></i></div>
-                                }
-                                <div class="item-overlay">
-                                    <span class="item-name">@performer.Name</span>
+                        try {
+                            <div class="carousel-item performer-card" @onclick="() => NavigateToPerformer(performer.Id)">
+                                <div style="background: red; color: white; padding: 5px;">DEBUG: @performer.Name</div>
+                                <div class="image-wrapper" style="height: 420px; border: 5px solid blue;">
+                                    @if (!string.IsNullOrEmpty(performer.GalleryPhotoUrl))
+                                    {
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(performer.GalleryPhotoUrl))" alt="@performer.Name" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(performer.HeadshotUrl))
+                                    {
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(performer.HeadshotUrl))" alt="@performer.Name" />
+                                    }
+                                    else
+                                    {
+                                        <div class="placeholder-img"><i class="fas fa-user fa-3x"></i></div>
+                                    }
+                                    <div class="item-overlay">
+                                        <span class="item-name">@performer.Name</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+                        catch (Exception ex)
+                        {
+                            <div style="background: black; color: yellow; padding: 10px; margin: 10px; font-family: monospace;">
+                                EXCEPTION: @ex.Message<br/>
+                                TYPE: @ex.GetType().Name
+                            </div>
+                        }
                     }
                 </div>
             }
@@ -45,7 +56,7 @@
     </section>
 
     <section class="carousel-section">
-        <h2 class="section-title">Recent Media</h2>
+        <h2 class="section-title">Recent Media (@(_randomFiles?.Count ?? 0) loaded)</h2>
         <div class="carousel-container">
             @if (_randomFiles == null)
             {
@@ -54,23 +65,34 @@
             else
             {
                 <div class="carousel-track">
+                    @if (_randomFiles.Count == 0) { <p>No media files found in DB.</p> }
                     @foreach (var file in _randomFiles)
                     {
-                        <div class="carousel-item media-card" @onclick="() => NavigateToMediaFile(file.Id)">
-                            <div class="image-wrapper">
-                                @if (file.Screenshots.Any())
-                                {
-                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.Screenshots.First().Url))" alt="@file.Name" />
-                                }
-                                else
-                                {
-                                    <div class="placeholder-img"><i class="fas fa-file-video fa-3x"></i></div>
-                                }
-                                <div class="item-overlay">
-                                    <span class="item-name">@file.Name</span>
+                        try {
+                            <div class="carousel-item media-card" @onclick="() => OpenMediaFileModal(file.Id)">
+                                <div style="background: green; color: white; padding: 5px;">DEBUG: @file.Name</div>
+                                <div class="image-wrapper" style="height: 157px; border: 5px solid blue;">
+                                    @if (file.Screenshots != null && file.Screenshots.Any())
+                                    {
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.Screenshots.FirstOrDefault()?.Url ?? ""))" alt="@file.Name" />
+                                    }
+                                    else
+                                    {
+                                        <div class="placeholder-img"><i class="fas fa-file-video fa-3x"></i></div>
+                                    }
+                                    <div class="item-overlay">
+                                        <span class="item-name">@file.Name</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+                        catch (Exception ex)
+                        {
+                            <div style="background: black; color: yellow; padding: 10px; margin: 10px; font-family: monospace;">
+                                EXCEPTION: @ex.Message<br/>
+                                TYPE: @ex.GetType().Name
+                            </div>
+                        }
                     }
                 </div>
             }
@@ -78,9 +100,24 @@
     </section>
 </div>
 
+@if (_isModalOpen && _selectedFileId.HasValue)
+{
+    <div class="details-modal-overlay" @onclick="CloseModal">
+        <div class="details-modal-content" @onclick:stopPropagation="true">
+            <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
+            <div class="details-modal-body">
+                <MediaFilesOnDvd.UI.Pages.MediaFileDetails Id="@_selectedFileId" IsModal="true" />
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private List<PerformerWithGalleryDto>? _randomPerformers;
     private List<MediaFile>? _randomFiles;
+    
+    private bool _isModalOpen = false;
+    private int? _selectedFileId;
 
     protected override void OnInitialized()
     {
@@ -102,8 +139,14 @@
         Nav.NavigateTo($"/performers/{id}");
     }
 
-    private void NavigateToMediaFile(int id)
+    private void OpenMediaFileModal(int id)
     {
-        Nav.NavigateTo($"/mediafiles/{id}");
+        _selectedFileId = id;
+        _isModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        _isModalOpen = false;
     }
 }
