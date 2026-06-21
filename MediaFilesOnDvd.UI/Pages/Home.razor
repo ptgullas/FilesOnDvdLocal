@@ -8,7 +8,10 @@
 
 <div class="dashboard">
     <section class="carousel-section">
-        <h2 class="section-title">Explore Performers (@(_randomPerformers?.Count ?? 0) loaded)</h2>
+        <h2 class="section-title">
+            Explore Performers (@(_randomPerformers?.Count ?? 0) loaded)
+            <i class="fas fa-sync-alt ms-2 text-muted" style="cursor:pointer; font-size: 0.6em;" @onclick="RefreshPerformers" title="Refresh Performers"></i>
+        </h2>
         <div class="carousel-container">
             @if (_randomPerformers == null)
             {
@@ -21,7 +24,7 @@
                     @foreach (var performer in _randomPerformers)
                     {
                         try {
-                            <div class="dash-carousel-item performer-card" @onclick="() => NavigateToPerformer(performer.Id)">
+                            <div class="dash-carousel-item performer-card" @onclick="() => OpenPerformerModal(performer.Id)">
                                 <div class="image-wrapper">
                                     @if (!string.IsNullOrEmpty(performer.GalleryPhotoUrl))
                                     {
@@ -55,7 +58,10 @@
     </section>
 
     <section class="carousel-section">
-        <h2 class="section-title">Recent Media (@(_randomFiles?.Count ?? 0) loaded)</h2>
+        <h2 class="section-title">
+            Recent Media (@(_randomFiles?.Count ?? 0) loaded)
+            <i class="fas fa-sync-alt ms-2 text-muted" style="cursor:pointer; font-size: 0.6em;" @onclick="RefreshMedia" title="Refresh Media"></i>
+        </h2>
         <div class="carousel-container">
             @if (_randomFiles == null)
             {
@@ -98,13 +104,81 @@
     </section>
 </div>
 
-@if (_isModalOpen && _selectedFileId.HasValue)
+@if (_isModalOpen && _selectedFileId.HasValue && _selectedPerformer == null)
 {
     <div class="details-modal-overlay" @onclick="CloseModal">
         <div class="details-modal-content" @onclick:stopPropagation="true">
             <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
             <div class="details-modal-body">
-                <MediaFilesOnDvd.UI.Pages.MediaFileDetails Id="@_selectedFileId" IsModal="true" />
+                <MediaFilesOnDvd.UI.Shared.MediaFileDetail File="@_selectedFile" />
+            </div>
+        </div>
+    </div>
+}
+
+@if (_isModalOpen && _selectedPerformer != null)
+{
+    <div class="details-modal-overlay" @onclick="CloseModal">
+        <div class="details-modal-content performer-combo-modal" style="width: 95vw; max-width: 1600px; flex-direction: row; display: flex;" @onclick:stopPropagation="true">
+            <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
+            
+            <!-- Left Side: Performer Details -->
+            <div class="performer-side" style="flex: 1; border-right: 1px solid var(--border-color); padding: 2rem; overflow-y: auto;">
+                <div class="d-flex mb-4">
+                    <div class="headshot" style="width: 150px; height: 150px; border-radius: 8px; overflow: hidden; margin-right: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                        @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
+                        {
+                            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" style="width: 100%; height: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div style="width: 100%; height: 100%; background: #333; display: flex; justify-content: center; align-items: center;"><i class="fas fa-user fa-4x"></i></div>
+                        }
+                    </div>
+                    <div>
+                        <h1 style="cursor: pointer; color: var(--primary-color); transition: color 0.2s; margin-bottom: 0.5rem;" @onclick="() => NavigateToPerformer(_selectedPerformer.Id)" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--primary-color)'">
+                            @_selectedPerformer.Name <i class="fas fa-external-link-alt ms-2" style="font-size: 0.5em;"></i>
+                        </h1>
+                        <p class="text-muted">Aliases: @(_selectedPerformer.Aliases.Any() ? string.Join(", ", _selectedPerformer.Aliases) : "--")</p>
+                    </div>
+                </div>
+
+                <h3>Appears In (@_selectedPerformer.MediaFiles.Count files)</h3>
+                <div class="media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    @foreach(var file in _selectedPerformer.MediaFiles)
+                    {
+                        <div class="media-item" style="cursor: pointer; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; border: @(_selectedFileId == file.Id ? "2px solid var(--primary-color)" : "2px solid transparent"); transition: border-color 0.2s;" @onclick="() => OpenMediaFileModal(file.Id)">
+                            <div class="media-thumb" style="height: 100px; background: #222;">
+                                @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" style="width: 100%; height: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center align-items-center h-100"><i class="fas fa-file-video fa-2x"></i></div>
+                                }
+                            </div>
+                            <div class="p-2" style="font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white;">
+                                @file.Name
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Right Side: MediaFile Details -->
+            <div class="media-side" style="flex: 1; padding: 2rem; overflow-y: auto; background: rgba(0,0,0,0.15);">
+                @if (_selectedFileId.HasValue)
+                {
+                    <MediaFilesOnDvd.UI.Shared.MediaFileDetail File="@_selectedFile" />
+                }
+                else
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
+                        <i class="fas fa-hand-pointer fa-3x mb-3"></i>
+                        <h4>Select a media file to view details</h4>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -116,15 +190,27 @@
     
     private bool _isModalOpen = false;
     private int? _selectedFileId;
+    private MediaFile? _selectedFile;
+    
+    private PerformerDetailDto? _selectedPerformer;
 
     protected override void OnInitialized()
+    {
+        RefreshPerformers();
+        RefreshMedia();
+    }
+    
+    private void RefreshPerformers()
     {
         // Get 10 random performers
         _randomPerformers = PerformerService.GetWithGalleries()
             .OrderBy(x => Guid.NewGuid())
             .Take(10)
             .ToList();
-
+    }
+    
+    private void RefreshMedia()
+    {
         // Get 10 random files
         _randomFiles = MediaFileService.Get()
             .Where(mf => mf.FileGenreId == 3)
@@ -138,14 +224,26 @@
         Nav.NavigateTo($"/performers/{id}");
     }
 
+    private void OpenPerformerModal(int id)
+    {
+        _selectedPerformer = PerformerService.GetDetails(id);
+        _selectedFileId = null; // Clear the selected file when opening a new performer
+        _selectedFile = null;
+        _isModalOpen = true;
+    }
+
     private void OpenMediaFileModal(int id)
     {
         _selectedFileId = id;
+        _selectedFile = MediaFileService.Get(id);
         _isModalOpen = true;
     }
 
     private void CloseModal()
     {
         _isModalOpen = false;
+        _selectedFileId = null;
+        _selectedFile = null;
+        _selectedPerformer = null;
     }
 }
