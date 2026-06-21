@@ -23,6 +23,7 @@ namespace MediaFilesOnDvd.Services {
                 .Select(p => new PerformerSummaryDto {
                     Id = p.Id,
                     Name = p.Name,
+                    Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
                     HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault()
                 });
         }

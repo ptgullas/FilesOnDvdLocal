@@ -167,7 +167,10 @@
     private List<PerformerSummaryDto> FilteredPerformers => 
         string.IsNullOrWhiteSpace(_searchTerm) 
             ? _allPerformers 
-            : _allPerformers.Where(p => p.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            : _allPerformers.Where(p => 
+                p.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                p.Aliases.Any(a => a.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))
+              ).ToList();
 
     private async Task SelectPerformer(int id)
     {
