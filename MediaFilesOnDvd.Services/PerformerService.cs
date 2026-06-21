@@ -110,13 +110,19 @@ namespace MediaFilesOnDvd.Services {
         }
 
         public OperationResult Update(PerformerEditDto dto) {
-            var performer = _context.Performers
-                .Include(p => p.HeadshotUrls)
-                .Include(p => p.GalleryPhotoUrls)
-                .Include(p => p.PerformerAliases)
-                .FirstOrDefault(p => p.Id == dto.Id);
-
-            if (performer == null) return new(false, "Performer not found");
+            Performer? performer = null;
+            if (dto.Id > 0) {
+                performer = _context.Performers
+                    .Include(p => p.HeadshotUrls)
+                    .Include(p => p.GalleryPhotoUrls)
+                    .Include(p => p.PerformerAliases)
+                    .FirstOrDefault(p => p.Id == dto.Id);
+                
+                if (performer == null) return new(false, "Performer not found");
+            } else {
+                performer = new Performer { Name = dto.Name };
+                _context.Performers.Add(performer);
+            }
 
             performer.Name = dto.Name;
             
@@ -146,6 +152,9 @@ namespace MediaFilesOnDvd.Services {
 
             try {
                 _context.SaveChanges();
+                if (dto.Id == 0) {
+                    dto.Id = performer.Id;
+                }
                 return new(true);
             }
             catch (Exception ex) {

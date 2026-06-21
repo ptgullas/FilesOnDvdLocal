@@ -6,6 +6,18 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
+<SectionContent SectionName="header-center">
+    <div class="d-flex align-items-center w-100" style="max-width: 600px;">
+        <div class="search-container flex-grow-1 me-3">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search / filter performers..." class="search-input w-100" @bind="_searchTerm" @bind:event="oninput" />
+        </div>
+        <button class="btn btn-primary text-nowrap" @onclick="CreateNewPerformer">
+            <i class="fas fa-plus"></i> New Performer
+        </button>
+    </div>
+</SectionContent>
+
 <div class="performer-browse">
     <!-- Left Panel: Master List -->
     <aside class="performer-list-panel">
@@ -35,7 +47,7 @@
 
     <!-- Center Panel: Detail -->
     <main class="performer-detail-panel">
-        @if (_selectedPerformer == null)
+        @if (_selectedPerformer == null && !_isEditing)
         {
             <div class="empty-state">
                 <i class="fas fa-users fa-4x"></i>
@@ -45,7 +57,7 @@
         else
         {
             <div class="detail-header">
-                @if (!_isEditing)
+                @if (!_isEditing && _selectedPerformer != null)
                 {
                     <div class="headshot-large">
                         @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
@@ -73,7 +85,7 @@
                 else
                 {
                     <div class="edit-form w-100 p-3" style="background: rgba(255,255,255,0.05); border-radius: 8px;">
-                        <h3>Edit Performer</h3>
+                        <h3>@(_editModel.Id == 0 ? "New Performer" : "Edit Performer")</h3>
                         <div class="form-group mb-2">
                             <label>Name</label>
                             <input class="form-control" @bind="_editModel.Name" />
@@ -109,30 +121,33 @@
                 }
             </div>
 
-            <div class="media-list-section">
-                <h3>Appears In (@(_selectedPerformer.MediaFiles.Count) files)</h3>
-                <div class="media-grid">
-                    @foreach (var file in _selectedPerformer.MediaFiles)
-                    {
-                        <div class="media-item" @onclick="() => ViewMediaFile(file.Id)">
-                            <div class="media-thumb">
-                                @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
-                                {
-                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" alt="" />
-                                }
-                                else
-                                {
-                                    <i class="fas fa-file-video"></i>
-                                }
+            @if (_selectedPerformer != null)
+            {
+                <div class="media-list-section">
+                    <h3>Appears In (@(_selectedPerformer.MediaFiles.Count) files)</h3>
+                    <div class="media-grid">
+                        @foreach (var file in _selectedPerformer.MediaFiles)
+                        {
+                            <div class="media-item" @onclick="() => ViewMediaFile(file.Id)">
+                                <div class="media-thumb">
+                                    @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
+                                    {
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" alt="" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-file-video"></i>
+                                    }
+                                </div>
+                                <div class="media-info">
+                                    <span class="file-name">@file.Name</span>
+                                    <span class="disc-name">@file.DiscName</span>
+                                </div>
                             </div>
-                            <div class="media-info">
-                                <span class="file-name">@file.Name</span>
-                                <span class="disc-name">@file.DiscName</span>
-                            </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
+            }
         }
     </main>
 
@@ -241,6 +256,19 @@
         }
     }
 
+    private void CreateNewPerformer()
+    {
+        _selectedPerformer = null;
+        _selectedMediaFile = null;
+        
+        _editModel = new PerformerEditDto {
+            Id = 0, // 0 means new
+            Name = "",
+            Aliases = new List<string>()
+        };
+        _isEditing = true;
+    }
+
     private void CancelEdit()
     {
         _isEditing = false;
@@ -261,6 +289,18 @@
             {
                 summary.Name = _editModel.Name;
                 summary.HeadshotUrl = _editModel.HeadshotUrl;
+                summary.Aliases = _editModel.Aliases.ToList();
+            }
+            else 
+            {
+                // New performer!
+                _allPerformers.Add(new PerformerSummaryDto {
+                    Id = _editModel.Id,
+                    Name = _editModel.Name,
+                    HeadshotUrl = _editModel.HeadshotUrl,
+                    Aliases = _editModel.Aliases.ToList()
+                });
+                _allPerformers = _allPerformers.OrderBy(p => p.Name).ToList();
             }
         }
     }
