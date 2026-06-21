@@ -1,4 +1,4 @@
-﻿using MediaFilesOnDvd.Data;
+using MediaFilesOnDvd.Data;
 using MediaFilesOnDvd.Data.Entities;
 using MediaFilesOnDvd.Services.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,9 @@ namespace MediaFilesOnDvd.Services {
                 .Select(p => new PerformerDetailDto {
                     Id = p.Id,
                     Name = p.Name,
+                    Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
                     HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
+                    GalleryPhotoUrl = p.GalleryPhotoUrls.Select(g => g.Url).FirstOrDefault(),
                     MediaFiles = p.MediaFiles.Select(m => new MediaFileSummaryDto {
                         Id = m.Id,
                         Name = m.Name,
@@ -44,7 +46,7 @@ namespace MediaFilesOnDvd.Services {
                 .FirstOrDefault();
         }
 
-        public IEnumerable<PerformerWithGalleryDto?> GetWithGalleries() {
+        public IEnumerable<PerformerWithGalleryDto> GetWithGalleries() {
             return _context.Performers
                 .OrderBy(p => p.Name)
                 .Select(p => new PerformerWithGalleryDto {
@@ -104,6 +106,50 @@ namespace MediaFilesOnDvd.Services {
             _context.Performers.Add(performer);
             _context.SaveChanges();
             return new(true);
+        }
+
+        public OperationResult Update(PerformerEditDto dto) {
+            var performer = _context.Performers
+                .Include(p => p.HeadshotUrls)
+                .Include(p => p.GalleryPhotoUrls)
+                .Include(p => p.PerformerAliases)
+                .FirstOrDefault(p => p.Id == dto.Id);
+
+            if (performer == null) return new(false, "Performer not found");
+
+            performer.Name = dto.Name;
+            
+            // Handle Aliases
+            performer.PerformerAliases.Clear();
+            if (dto.Aliases != null && dto.Aliases.Any()) {
+                foreach(var alias in dto.Aliases) {
+                    if (!string.IsNullOrWhiteSpace(alias)) {
+                        performer.PerformerAliases.Add(new PerformerAlias { Name = alias.Trim(), PerformerId = performer.Id });
+                    }
+                }
+            }
+
+            // Handle HeadshotUrl
+            if (!string.IsNullOrEmpty(dto.HeadshotUrl)) {
+                if (!performer.HeadshotUrls.Any(h => h.Url == dto.HeadshotUrl)) {
+                    performer.HeadshotUrls.Add(new HeadshotUrl(dto.HeadshotUrl));
+                }
+            }
+
+            // Handle GalleryPhotoUrl
+            if (!string.IsNullOrEmpty(dto.GalleryPhotoUrl)) {
+                if (!performer.GalleryPhotoUrls.Any(g => g.Url == dto.GalleryPhotoUrl)) {
+                    performer.GalleryPhotoUrls.Add(new GalleryPhotoUrl() { Url = dto.GalleryPhotoUrl });
+                }
+            }
+
+            try {
+                _context.SaveChanges();
+                return new(true);
+            }
+            catch (Exception ex) {
+                return new(false, ex.Message);
+            }
         }
 
         public OperationResult Add(string newPerformerName) {

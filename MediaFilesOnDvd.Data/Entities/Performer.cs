@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +16,9 @@ namespace MediaFilesOnDvd.Data.Entities {
         // Used for matching MediaFile with Performer during Access migration
         public int? LegacyId { get; set; }
 
-        // Aliases should probably be in its own table, if we're going to query on it
-        // public List<string> Aliases { get; set; } = new List<string>();
-        public List<HeadshotUrl> HeadshotUrls { get; set; } = new List<HeadshotUrl>();
+        public virtual ICollection<HeadshotUrl> HeadshotUrls { get; set; } = new List<HeadshotUrl>();
         public virtual ICollection<GalleryPhotoUrl> GalleryPhotoUrls { get; set; } = new List<GalleryPhotoUrl>();
+        public virtual ICollection<PerformerAlias> PerformerAliases { get; set; } = new List<PerformerAlias>();
         // comment this out until I'm ready
         public virtual ICollection<MediaFile>? MediaFiles { get; set; } = new List<MediaFile>();
 

@@ -8,7 +8,9 @@ namespace MediaFilesOnDvd.Services.Dtos {
     public class PerformerDetailDto {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public List<string> Aliases { get; set; } = new List<string>();
         public string? HeadshotUrl { get; set; }
+        public string? GalleryPhotoUrl { get; set; }
         public List<MediaFileSummaryDto> MediaFiles { get; set; } = new();
     }
 
