@@ -59,7 +59,7 @@
             <div class="detail-header">
                 @if (!_isEditing && _selectedPerformer != null)
                 {
-                    <div class="headshot-large">
+                    <div class="headshot-large" @onclick="EnterEditMode" title="Click to edit performer">
                         @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
                         {
                             <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" alt="@_selectedPerformer.Name" />
@@ -68,13 +68,13 @@
                         {
                             <div class="placeholder-large"><i class="fas fa-user fa-5x"></i></div>
                         }
+                        <div class="edit-overlay">
+                            <i class="fas fa-edit fa-2x"></i>
+                        </div>
                     </div>
                     <div class="header-info">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <h1>@_selectedPerformer.Name</h1>
-                            <button class="btn btn-outline-light btn-sm" @onclick="EnterEditMode">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
                         </div>
                         <p class="aliases">Aliases: @(_selectedPerformer.Aliases.Any() ? string.Join(", ", _selectedPerformer.Aliases) : "--")</p>
                         <div class="gallery-preview">
