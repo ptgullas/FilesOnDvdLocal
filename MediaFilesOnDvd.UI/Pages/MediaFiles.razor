@@ -362,7 +362,16 @@
 
     private void SaveChanges()
     {
-        _isEditMode = false;
+        if (_currentFile != null)
+        {
+            var result = MediaFileService.Update(_currentFile);
+            if (result.Success)
+            {
+                // _isEditMode = false;
+                // Re-fetch to ensure navigation properties (like GenreName) are updated
+                _currentFile = MediaFileService.GetDetailDto(_currentFile.Id);
+            }
+        }
     }
 
     private void PreviousFile()

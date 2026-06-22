@@ -118,6 +118,23 @@ namespace MediaFilesOnDvd.Services {
                 .FirstOrDefault();
         }
 
+        public OperationResult Update(MediaFileDetailDto dto) {
+            var mf = _context.MediaFiles.FirstOrDefault(f => f.Id == dto.Id);
+            if (mf == null) return new OperationResult(false, "File not found");
+
+            mf.FileGenreId = dto.GenreId;
+            mf.DiscId = dto.DiscId;
+            mf.SeriesId = dto.SeriesId;
+            mf.Notes = dto.Notes;
+
+            try {
+                _context.SaveChanges();
+                return new OperationResult(true, "Successfully updated.");
+            } catch (Exception e) {
+                return new OperationResult(false, $"Error updating file: {e.Message}");
+            }
+        }
+
         public OperationResult Add(MediaFile mediaFile) {
             try {
                 _context.MediaFiles.Add(mediaFile);
