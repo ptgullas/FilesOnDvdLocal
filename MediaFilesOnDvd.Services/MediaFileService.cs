@@ -1,4 +1,4 @@
-﻿using MediaFilesOnDvd.Data;
+using MediaFilesOnDvd.Data;
 using MediaFilesOnDvd.Data.Entities;
 using MediaFilesOnDvd.Services.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +23,17 @@ namespace MediaFilesOnDvd.Services {
                 .Include(m => m.FileGenre)
                 .Include(m => m.Tags)
                 .OrderBy(f => f.Id);
+        }
+
+        public IEnumerable<MediaFileSummaryDto> GetSummaries() {
+            return _context.MediaFiles
+                .OrderBy(f => f.Name)
+                .Select(f => new MediaFileSummaryDto {
+                    Id = f.Id,
+                    Name = f.Name,
+                    DiscName = f.Disc.Name,
+                    ScreenshotUrl = f.Screenshots.Select(s => s.Url).FirstOrDefault()
+                });
         }
 
         public MediaFile? Get(int id) {

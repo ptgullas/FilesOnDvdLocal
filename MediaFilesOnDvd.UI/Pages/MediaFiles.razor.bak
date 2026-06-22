@@ -8,45 +8,7 @@
 @inject PathResolverService PathResolver
 @inject NavigationManager Nav
 
-<div class="@(IsModal ? "" : "media-browse")">
-    @if (!IsModal)
-    {
-        <aside class="media-list-panel">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search media files..." @bind="_searchTerm" @bind:event="oninput" />
-                <button class="btn btn-sm btn-outline-secondary ms-2" @onclick="ToggleViewMode" title="Toggle View">
-                    <i class="fas @(_isThumbnailView ? "fa-list" : "fa-th")"></i>
-                </button>
-            </div>
-            <div class="media-scroll-list">
-                <Virtualize Items="FilteredMediaFiles" Context="file" OverscanCount="10">
-                    <div class="media-list-item @(file.Id == _currentFile?.Id ? "selected" : "") @(_isThumbnailView ? "thumb-mode" : "list-mode")" 
-                         @onclick="() => SelectFile(file.Id)">
-                        @if (_isThumbnailView)
-                        {
-                            <div class="media-thumb-result">
-                                @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
-                                {
-                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" />
-                                }
-                                else
-                                {
-                                    <i class="fas fa-file-video fa-2x"></i>
-                                }
-                            </div>
-                        }
-                        <div class="media-info-result">
-                            <span class="file-name">@file.Name</span>
-                            <span class="disc-name text-muted" style="font-size: 0.85em;">@file.DiscName</span>
-                        </div>
-                    </div>
-                </Virtualize>
-            </div>
-        </aside>
-    }
-
-    <div class="media-file-view">
+<div class="media-file-view">
     <header class="view-header">
         <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
         <div class="mode-toggle">
@@ -233,7 +195,6 @@
             </div>
         </div>
     }
-    </div>
 </div>
 
 @code {
@@ -251,45 +212,9 @@
     private int? _firstId;
     private int? _lastId;
 
-    private List<MediaFileSummaryDto> _allMediaFiles = new();
-    private string _searchTerm = "";
-    private bool _isThumbnailView = false;
-
-    private List<MediaFileSummaryDto> FilteredMediaFiles => string.IsNullOrWhiteSpace(_searchTerm) 
-        ? _allMediaFiles 
-        : _allMediaFiles.Where(f => f.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || (f.DiscName != null && f.DiscName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))).ToList();
-
-    protected override void OnInitialized()
-    {
-        if (!IsModal)
-        {
-            _allMediaFiles = MediaFileService.GetSummaries().ToList();
-        }
-    }
-
     protected override void OnParametersSet()
     {
         LoadFile();
-    }
-
-    private void ToggleViewMode()
-    {
-        _isThumbnailView = !_isThumbnailView;
-    }
-
-    private void SelectFile(int id)
-    {
-        if (IsModal)
-        {
-            Id = id;
-            LoadFile();
-        }
-        else
-        {
-            Nav.NavigateTo($"/mediafiles/{id}", replace: true);
-            Id = id;
-            LoadFile();
-        }
     }
 
     private void LoadFile()
