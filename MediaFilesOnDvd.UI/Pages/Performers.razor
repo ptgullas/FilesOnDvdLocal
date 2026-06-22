@@ -171,7 +171,7 @@
     <!-- Full Size Photo Modal -->
     @if (_isPhotoModalOpen && !string.IsNullOrEmpty(_selectedPhotoUrl))
     {
-        <div class="photo-modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px);" @onclick="ClosePhotoModal">
+        <div @ref="_modalOverlay" class="photo-modal-overlay" tabindex="0" @onkeydown="HandleKeyDown" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); outline: none;" @onclick="ClosePhotoModal">
             
             @if (_selectedPerformer?.GalleryPhotoUrls.Count > 1)
             {
@@ -208,6 +208,8 @@
     
     private bool _isPhotoModalOpen = false;
     private string _selectedPhotoUrl = "";
+    private ElementReference _modalOverlay;
+    private bool _focusModalNextRender = false;
 
     protected override void OnInitialized()
     {
@@ -217,6 +219,19 @@
     protected override void OnParametersSet() {
         if (Id.HasValue) {
             SelectPerformer(Id.Value);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusModalNextRender)
+        {
+            _focusModalNextRender = false;
+            try
+            {
+                await _modalOverlay.FocusAsync();
+            }
+            catch { }
         }
     }
 
@@ -319,6 +334,7 @@
     {
         _selectedPhotoUrl = url;
         _isPhotoModalOpen = true;
+        _focusModalNextRender = true;
     }
     
     private void ClosePhotoModal()
@@ -351,6 +367,22 @@
             previousIndex = _selectedPerformer.GalleryPhotoUrls.Count - 1;
         }
         _selectedPhotoUrl = _selectedPerformer.GalleryPhotoUrls[previousIndex];
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "ArrowRight")
+        {
+            NextPhoto();
+        }
+        else if (e.Key == "ArrowLeft")
+        {
+            PreviousPhoto();
+        }
+        else if (e.Key == "Escape")
+        {
+            ClosePhotoModal();
+        }
     }
 
     private void SaveChanges()
