@@ -59,18 +59,28 @@
             <div class="detail-header">
                 @if (!_isEditing && _selectedPerformer != null)
                 {
-                    <div class="headshot-large" @onclick="EnterEditMode" title="Click to edit performer">
-                        @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
-                        {
-                            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" alt="@_selectedPerformer.Name" />
-                        }
-                        else
-                        {
-                            <div class="placeholder-large"><i class="fas fa-user fa-5x"></i></div>
-                        }
-                        <div class="edit-overlay">
-                            <i class="fas fa-edit"></i>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="headshot-large" @onclick="EnterEditMode" title="Click to edit performer">
+                            @if (!string.IsNullOrEmpty(_currentViewedHeadshotUrl))
+                            {
+                                <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_currentViewedHeadshotUrl))" alt="@_selectedPerformer.Name" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-large"><i class="fas fa-user fa-5x"></i></div>
+                            }
+                            <div class="edit-overlay">
+                                <i class="fas fa-edit"></i>
+                            </div>
                         </div>
+                        @if (_selectedPerformer.HeadshotUrls != null && _selectedPerformer.HeadshotUrls.Count > 1)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mt-2 w-100 px-2">
+                                <button class="btn btn-sm btn-link text-white p-0" @onclick="PreviousHeadshot"><i class="fas fa-chevron-left"></i></button>
+                                <span class="text-muted" style="font-size: 0.8em;">@(_selectedPerformer.HeadshotUrls.IndexOf(_currentViewedHeadshotUrl) + 1) of @_selectedPerformer.HeadshotUrls.Count</span>
+                                <button class="btn btn-sm btn-link text-white p-0" @onclick="NextHeadshot"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        }
                     </div>
                     <div class="header-info">
                         <div class="d-flex justify-content-between align-items-center w-100">
@@ -223,6 +233,7 @@
     private PerformerDetailDto? _selectedPerformer;
     private MediaFile? _selectedMediaFile;
     private string _searchTerm = "";
+    private string? _currentViewedHeadshotUrl;
 
     private bool _isEditing = false;
     private PerformerEditDto _editModel = new();
@@ -277,6 +288,7 @@
         _isEditing = false;
         _selectedPerformer = PerformerService.GetDetails(id);
         _selectedMediaFile = null;
+        _currentViewedHeadshotUrl = _selectedPerformer?.HeadshotUrl ?? _selectedPerformer?.HeadshotUrls?.FirstOrDefault();
         
         // Update URL without reloading so that route parameter matches current state
         if (Id != id)
@@ -427,6 +439,32 @@
         _selectedPhotoUrl = _selectedPerformer.GalleryPhotoUrls[previousIndex];
     }
 
+    private void NextHeadshot()
+    {
+        if (_selectedPerformer == null || _selectedPerformer.HeadshotUrls == null || _selectedPerformer.HeadshotUrls.Count < 2) return;
+        
+        var currentIndex = _selectedPerformer.HeadshotUrls.IndexOf(_currentViewedHeadshotUrl);
+        if (currentIndex == -1) currentIndex = 0;
+
+        var nextIndex = (currentIndex + 1) % _selectedPerformer.HeadshotUrls.Count;
+        _currentViewedHeadshotUrl = _selectedPerformer.HeadshotUrls[nextIndex];
+    }
+
+    private void PreviousHeadshot()
+    {
+        if (_selectedPerformer == null || _selectedPerformer.HeadshotUrls == null || _selectedPerformer.HeadshotUrls.Count < 2) return;
+        
+        var currentIndex = _selectedPerformer.HeadshotUrls.IndexOf(_currentViewedHeadshotUrl);
+        if (currentIndex == -1) currentIndex = 0;
+
+        var previousIndex = currentIndex - 1;
+        if (previousIndex < 0)
+        {
+            previousIndex = _selectedPerformer.HeadshotUrls.Count - 1;
+        }
+        _currentViewedHeadshotUrl = _selectedPerformer.HeadshotUrls[previousIndex];
+    }
+
     private void HandleKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "ArrowRight")
@@ -451,6 +489,7 @@
             _isEditing = false;
             // Refresh detail view
             _selectedPerformer = PerformerService.GetDetails(_editModel.Id);
+            _currentViewedHeadshotUrl = _selectedPerformer?.HeadshotUrl ?? _selectedPerformer?.HeadshotUrls?.FirstOrDefault();
             
             // Refresh master list summary if name changed
             var summary = _allPerformers.FirstOrDefault(p => p.Id == _editModel.Id);
