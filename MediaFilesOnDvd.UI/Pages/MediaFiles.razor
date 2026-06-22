@@ -99,7 +99,7 @@
                     }
                     else
                     {
-                        <div class="field-value">@_currentFile.DiscName</div>
+                            <div class="field-value value-link" @onclick="() => NavigateTo('d', _currentFile.DiscId)">@_currentFile.DiscName</div>
                     }
                 </div>
 
@@ -138,7 +138,7 @@
                                 }
                                 else
                                 {
-                                    <span class="actor-name">@actor.Name</span>
+                                    <span class="actor-name value-link" @onclick="() => NavigateTo('p', actor.Id)">@actor.Name</span>
                                 }
                             </div>
                         }
@@ -378,5 +378,15 @@
             if (IsModal) { Id = _lastId.Value; LoadFile(); }
             else { Nav.NavigateTo($"/mediafiles/{_lastId.Value}"); }
         }
+    }
+
+    private void NavigateTo(char type, int id) {
+        var url = type switch {
+            'd' => $"/discs/{id}",
+            'p' => $"/performers/{id}",
+            't' => $"/tags/{id}",
+            _ => "/"
+        };
+        Nav.NavigateTo(url);
     }
 }

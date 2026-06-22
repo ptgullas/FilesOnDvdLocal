@@ -251,6 +251,13 @@ input:checked + .slider:before {
     font-size: 0.95rem;
 }
 
+.value-link {
+    display: block;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-weight: 500;
+}
+
 /* Media Column */
 .screenshot-large {
     width: 100%;
