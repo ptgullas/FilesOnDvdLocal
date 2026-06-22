@@ -55,7 +55,14 @@
 
     <div class="media-file-view">
     <header class="view-header">
-        <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
+            @if (IsModal && _currentFile != null)
+            {
+                <h1 class="value-link" @onclick="NavigateToFullView" title="Open full page">@_currentFile.Name</h1>
+            }
+            else
+            {
+                <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
+            }
         <div class="mode-toggle">
             <label class="switch">
                 <input type="checkbox" @bind="_isEditMode" @onclick="OnToggleEditMode" />
@@ -292,6 +299,14 @@
     private void ToggleViewMode()
     {
         _isThumbnailView = !_isThumbnailView;
+    }
+
+    private void NavigateToFullView()
+    {
+        if (_currentFile != null)
+        {
+            Nav.NavigateTo($"/mediafiles/{_currentFile.Id}");
+        }
     }
 
     private void FilterBySeries(int seriesId, string? seriesName)
