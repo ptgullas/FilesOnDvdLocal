@@ -10,7 +10,7 @@
     <div class="d-flex align-items-center w-100" style="max-width: 600px;">
         <div class="search-container flex-grow-1 me-3">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Search / filter performers..." class="search-input w-100" @bind="_searchTerm" @bind:event="oninput" />
+            <input type="text" placeholder="Search / filter performers..." class="search-input w-90" @bind="_searchTerm" @bind:event="oninput" />
         </div>
         <button class="btn btn-primary text-nowrap" @onclick="CreateNewPerformer">
             <i class="fas fa-plus"></i> New Performer
@@ -77,9 +77,21 @@
                             <h1>@_selectedPerformer.Name</h1>
                         </div>
                         <p class="aliases">Aliases: @(_selectedPerformer.Aliases.Any() ? string.Join(", ", _selectedPerformer.Aliases) : "--")</p>
-                        <div class="gallery-preview">
-                            <span class="badge">Gallery coming soon</span>
-                        </div>
+                        @if (_selectedPerformer.GalleryPhotoUrls.Any())
+                        {
+                            <div class="gallery-preview d-flex flex-wrap gap-2 mt-3">
+                                @foreach (var photoUrl in _selectedPerformer.GalleryPhotoUrls)
+                                {
+                                    <div class="gallery-thumb" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.3); cursor: pointer;" @onclick="() => ViewGalleryPhoto(photoUrl)">
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(photoUrl))" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" alt="Gallery photo" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted mt-3" style="font-size: 0.9em;"><i class="fas fa-image me-2"></i>No gallery photos</p>
+                        }
                     </div>
                 }
                 else
@@ -155,6 +167,32 @@
     <aside class="media-detail-panel">
         <MediaFileDetail File="_selectedMediaFile" />
     </aside>
+
+    <!-- Full Size Photo Modal -->
+    @if (_isPhotoModalOpen && !string.IsNullOrEmpty(_selectedPhotoUrl))
+    {
+        <div class="photo-modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px);" @onclick="ClosePhotoModal">
+            
+            @if (_selectedPerformer?.GalleryPhotoUrls.Count > 1)
+            {
+                <button class="btn btn-link text-white" style="position: absolute; left: 20px; font-size: 3rem; z-index: 2001;" @onclick="PreviousPhoto" @onclick:stopPropagation="true">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            }
+
+            <div class="photo-modal-content" style="position: relative; max-width: 80vw; max-height: 90vh;" @onclick:stopPropagation="true">
+                <button class="btn btn-link text-white" style="position: absolute; top: -40px; right: -40px; font-size: 1.5rem;" @onclick="ClosePhotoModal"><i class="fas fa-times"></i></button>
+                <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(_selectedPhotoUrl))" style="max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="Full size photo" />
+            </div>
+
+            @if (_selectedPerformer?.GalleryPhotoUrls.Count > 1)
+            {
+                <button class="btn btn-link text-white" style="position: absolute; right: 20px; font-size: 3rem; z-index: 2001;" @onclick="NextPhoto" @onclick:stopPropagation="true">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            }
+        </div>
+    }
 </div>
 
 @code {
@@ -167,6 +205,9 @@
 
     private bool _isEditing = false;
     private PerformerEditDto _editModel = new();
+    
+    private bool _isPhotoModalOpen = false;
+    private string _selectedPhotoUrl = "";
 
     protected override void OnInitialized()
     {
@@ -211,7 +252,7 @@
             Name = _selectedPerformer.Name,
             Aliases = _selectedPerformer.Aliases.ToList(),
             HeadshotUrl = _selectedPerformer.HeadshotUrl,
-            GalleryPhotoUrl = _selectedPerformer.GalleryPhotoUrl
+            GalleryPhotoUrl = _selectedPerformer.GalleryPhotoUrls.FirstOrDefault()
         };
         _isEditing = true;
     }
@@ -272,6 +313,44 @@
     private void CancelEdit()
     {
         _isEditing = false;
+    }
+    
+    private void ViewGalleryPhoto(string url)
+    {
+        _selectedPhotoUrl = url;
+        _isPhotoModalOpen = true;
+    }
+    
+    private void ClosePhotoModal()
+    {
+        _isPhotoModalOpen = false;
+        _selectedPhotoUrl = "";
+    }
+
+    private void NextPhoto()
+    {
+        if (_selectedPerformer == null || !_selectedPerformer.GalleryPhotoUrls.Any()) return;
+        
+        var currentIndex = _selectedPerformer.GalleryPhotoUrls.IndexOf(_selectedPhotoUrl);
+        if (currentIndex == -1) return;
+
+        var nextIndex = (currentIndex + 1) % _selectedPerformer.GalleryPhotoUrls.Count;
+        _selectedPhotoUrl = _selectedPerformer.GalleryPhotoUrls[nextIndex];
+    }
+
+    private void PreviousPhoto()
+    {
+        if (_selectedPerformer == null || !_selectedPerformer.GalleryPhotoUrls.Any()) return;
+        
+        var currentIndex = _selectedPerformer.GalleryPhotoUrls.IndexOf(_selectedPhotoUrl);
+        if (currentIndex == -1) return;
+
+        var previousIndex = currentIndex - 1;
+        if (previousIndex < 0)
+        {
+            previousIndex = _selectedPerformer.GalleryPhotoUrls.Count - 1;
+        }
+        _selectedPhotoUrl = _selectedPerformer.GalleryPhotoUrls[previousIndex];
     }
 
     private void SaveChanges()

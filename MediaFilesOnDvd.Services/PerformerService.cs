@@ -36,7 +36,7 @@ namespace MediaFilesOnDvd.Services {
                     Name = p.Name,
                     Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
                     HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
-                    GalleryPhotoUrl = p.GalleryPhotoUrls.Select(g => g.Url).FirstOrDefault(),
+                    GalleryPhotoUrls = p.GalleryPhotoUrls.Select(g => g.Url).ToList(),
                     MediaFiles = p.MediaFiles.Select(m => new MediaFileSummaryDto {
                         Id = m.Id,
                         Name = m.Name,
