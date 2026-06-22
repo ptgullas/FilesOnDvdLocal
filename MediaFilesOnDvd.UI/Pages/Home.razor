@@ -110,7 +110,7 @@
         <div class="details-modal-content" @onclick:stopPropagation="true">
             <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
             <div class="details-modal-body">
-                <MediaFilesOnDvd.UI.Shared.MediaFileDetail File="@_selectedFile" />
+                <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" />
             </div>
         </div>
     </div>
@@ -170,7 +170,9 @@
             <div class="media-side" style="flex: 1; padding: 2rem; overflow-y: auto; background: rgba(0,0,0,0.15);">
                 @if (_selectedFileId.HasValue)
                 {
-                    <MediaFilesOnDvd.UI.Shared.MediaFileDetail File="@_selectedFile" />
+                    <div class="details-modal-body">
+                        <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" />
+                    </div>
                 }
                 else
                 {

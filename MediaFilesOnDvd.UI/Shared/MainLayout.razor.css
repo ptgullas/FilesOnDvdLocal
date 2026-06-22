@@ -53,11 +53,22 @@ main {
 }
 
 .header-right {
-    width: 50px;
+    width: 150px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     color: var(--text-secondary);
+    gap: 15px;
+}
+
+.header-icon-link {
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.header-icon-link:hover {
+    color: var(--accent-color);
 }
 
 .hamburger-btn {
