@@ -11,6 +11,7 @@ namespace MediaFilesOnDvd.Services.Dtos {
         public string Name { get; set; } = string.Empty;
         public List<string> Aliases { get; set; } = new List<string>();
         public string? HeadshotUrl { get; set; }
+        public List<string> HeadshotUrls { get; set; } = new();
         public List<string> GalleryPhotoUrls { get; set; } = new();
         public List<MediaFileSummaryDto> MediaFiles { get; set; } = new();
     }

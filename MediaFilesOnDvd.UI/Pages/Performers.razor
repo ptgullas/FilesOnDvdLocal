@@ -118,12 +118,32 @@
                             </div>
                         </div>
                         <div class="form-group mb-2">
-                            <label>Add Headshot</label>
-                            <InputFile OnChange="UploadHeadshot" accept="image/*" class="form-control" />
+                            <label>Headshots</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                @foreach (var h in _editModel.HeadshotUrls) {
+                                    var isPref = h == _editModel.PreferredHeadshotUrl;
+                                    <div class="position-relative" style="width: 80px; height: 80px;">
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(h))" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: @(isPref ? "2px solid var(--accent-color)" : "none");" />
+                                        <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-1" style="font-size: 0.7rem; line-height: 1;" @onclick="() => RemoveHeadshot(h)"><i class="fas fa-times"></i></button>
+                                        @if (!isPref) {
+                                            <button class="btn btn-sm btn-success position-absolute bottom-0 end-0 p-1" style="font-size: 0.7rem; line-height: 1;" @onclick="() => SetPreferredHeadshot(h)" title="Set as preferred"><i class="fas fa-check"></i></button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <InputFile OnChange="UploadHeadshots" accept="image/*" class="form-control" multiple />
                         </div>
                         <div class="form-group mb-3">
-                            <label>Add Gallery Photo</label>
-                            <InputFile OnChange="UploadGalleryPhoto" accept="image/*" class="form-control" />
+                            <label>Gallery Photos</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                @foreach (var g in _editModel.GalleryPhotoUrls) {
+                                    <div class="position-relative" style="width: 80px; height: 80px;">
+                                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerGalleryPath(g))" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" />
+                                        <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-1" style="font-size: 0.7rem; line-height: 1;" @onclick="() => RemoveGalleryPhoto(g)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                }
+                            </div>
+                            <InputFile OnChange="UploadGalleryPhotos" accept="image/*" class="form-control" multiple />
                         </div>
                         <div>
                             <button class="btn btn-primary" @onclick="SaveChanges">Save</button>
@@ -287,8 +307,9 @@
             Id = _selectedPerformer.Id,
             Name = _selectedPerformer.Name,
             Aliases = _selectedPerformer.Aliases.ToList(),
-            HeadshotUrl = _selectedPerformer.HeadshotUrl,
-            GalleryPhotoUrl = _selectedPerformer.GalleryPhotoUrls.FirstOrDefault()
+            HeadshotUrls = _selectedPerformer.HeadshotUrls.ToList(),
+            PreferredHeadshotUrl = _selectedPerformer.HeadshotUrl,
+            GalleryPhotoUrls = _selectedPerformer.GalleryPhotoUrls.ToList()
         };
         _isEditing = true;
     }
@@ -307,30 +328,46 @@
         }
     }
 
-    private async Task UploadHeadshot(InputFileChangeEventArgs e) {
-        var file = e.File;
-        if (file != null) {
+    private async Task UploadHeadshots(InputFileChangeEventArgs e) {
+        foreach (var file in e.GetMultipleFiles(maximumFileCount: 20)) {
             var fileName = $"{_editModel.Name.Replace(" ", "_")}_headshot_{Guid.NewGuid().ToString().Substring(0,8)}{Path.GetExtension(file.Name)}";
             var savePath = PathResolver.GetPerformerHeadshotPath(fileName);
             using var stream = file.OpenReadStream(maxAllowedSize: 10485760); // 10MB
             using var fs = new FileStream(savePath, FileMode.Create);
             await stream.CopyToAsync(fs);
             
-            _editModel.HeadshotUrl = fileName;
+            _editModel.HeadshotUrls.Add(fileName);
+            if (string.IsNullOrEmpty(_editModel.PreferredHeadshotUrl)) {
+                _editModel.PreferredHeadshotUrl = fileName;
+            }
         }
     }
 
-    private async Task UploadGalleryPhoto(InputFileChangeEventArgs e) {
-        var file = e.File;
-        if (file != null) {
+    private async Task UploadGalleryPhotos(InputFileChangeEventArgs e) {
+        foreach (var file in e.GetMultipleFiles(maximumFileCount: 50)) {
             var fileName = $"{_editModel.Name.Replace(" ", "_")}_gallery_{Guid.NewGuid().ToString().Substring(0,8)}{Path.GetExtension(file.Name)}";
             var savePath = PathResolver.GetPerformerGalleryPath(fileName);
             using var stream = file.OpenReadStream(maxAllowedSize: 10485760);
             using var fs = new FileStream(savePath, FileMode.Create);
             await stream.CopyToAsync(fs);
             
-            _editModel.GalleryPhotoUrl = fileName;
+            _editModel.GalleryPhotoUrls.Add(fileName);
         }
+    }
+
+    private void RemoveHeadshot(string url) {
+        _editModel.HeadshotUrls.Remove(url);
+        if (_editModel.PreferredHeadshotUrl == url) {
+            _editModel.PreferredHeadshotUrl = _editModel.HeadshotUrls.FirstOrDefault();
+        }
+    }
+
+    private void SetPreferredHeadshot(string url) {
+        _editModel.PreferredHeadshotUrl = url;
+    }
+
+    private void RemoveGalleryPhoto(string url) {
+        _editModel.GalleryPhotoUrls.Remove(url);
     }
 
     private void CreateNewPerformer()
@@ -420,7 +457,7 @@
             if (summary != null)
             {
                 summary.Name = _editModel.Name;
-                summary.HeadshotUrl = _editModel.HeadshotUrl;
+                summary.HeadshotUrl = _editModel.PreferredHeadshotUrl ?? _editModel.HeadshotUrls.FirstOrDefault();
                 summary.Aliases = _editModel.Aliases.ToList();
             }
             else 
@@ -429,7 +466,7 @@
                 _allPerformers.Add(new PerformerSummaryDto {
                     Id = _editModel.Id,
                     Name = _editModel.Name,
-                    HeadshotUrl = _editModel.HeadshotUrl,
+                    HeadshotUrl = _editModel.PreferredHeadshotUrl ?? _editModel.HeadshotUrls.FirstOrDefault(),
                     Aliases = _editModel.Aliases.ToList()
                 });
                 _allPerformers = _allPerformers.OrderBy(p => p.Name).ToList();

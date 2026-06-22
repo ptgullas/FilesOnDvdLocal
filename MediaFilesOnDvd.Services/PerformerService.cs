@@ -18,26 +18,33 @@ namespace MediaFilesOnDvd.Services {
 
 
         public IEnumerable<PerformerSummaryDto> GetSummaries() {
-            return _context.Performers
+            var query = _context.Performers
                 .OrderBy(p => p.Name)
-                .Select(p => new PerformerSummaryDto {
-                    Id = p.Id,
-                    Name = p.Name,
+                .Select(p => new {
+                    p.Id,
+                    p.Name,
                     Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
-                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault()
-                });
+                    Headshots = p.HeadshotUrls.Select(h => new { h.Url, h.IsPreferred }).ToList()
+                }).ToList();
+
+            return query.Select(p => new PerformerSummaryDto {
+                Id = p.Id,
+                Name = p.Name,
+                Aliases = p.Aliases,
+                HeadshotUrl = p.Headshots.OrderByDescending(h => h.IsPreferred).Select(h => h.Url).FirstOrDefault()
+            });
         }
 
         public PerformerDetailDto? GetDetails(int id) {
-            return _context.Performers
-                .Where(p => p.Id == id)
-                .Select(p => new PerformerDetailDto {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
-                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
-                    GalleryPhotoUrls = p.GalleryPhotoUrls.Select(g => g.Url).ToList(),
-                    MediaFiles = p.MediaFiles.Select(m => new MediaFileSummaryDto {
+            var p = _context.Performers
+                .Where(x => x.Id == id)
+                .Select(x => new {
+                    x.Id,
+                    x.Name,
+                    Aliases = x.PerformerAliases.Select(a => a.Name).ToList(),
+                    Headshots = x.HeadshotUrls.Select(h => new { h.Url, h.IsPreferred }).ToList(),
+                    GalleryPhotoUrls = x.GalleryPhotoUrls.Select(g => g.Url).ToList(),
+                    MediaFiles = x.MediaFiles.Select(m => new MediaFileSummaryDto {
                         Id = m.Id,
                         Name = m.Name,
                         DiscName = m.Disc.Name,
@@ -45,18 +52,36 @@ namespace MediaFilesOnDvd.Services {
                     }).OrderBy(m => m.Name).ToList()
                 })
                 .FirstOrDefault();
+
+            if (p == null) return null;
+
+            return new PerformerDetailDto {
+                Id = p.Id,
+                Name = p.Name,
+                Aliases = p.Aliases,
+                HeadshotUrl = p.Headshots.OrderByDescending(h => h.IsPreferred).Select(h => h.Url).FirstOrDefault(),
+                HeadshotUrls = p.Headshots.Select(h => h.Url).ToList(),
+                GalleryPhotoUrls = p.GalleryPhotoUrls,
+                MediaFiles = p.MediaFiles
+            };
         }
 
         public IEnumerable<PerformerWithGalleryDto> GetWithGalleries() {
-            return _context.Performers
+            var query = _context.Performers
                 .OrderBy(p => p.Name)
-                .Select(p => new PerformerWithGalleryDto {
-                    Id = p.Id,
-                    Name = p.Name,
-                    HeadshotUrl = p.HeadshotUrls.Select(h => h.Url).FirstOrDefault(),
+                .Select(p => new {
+                    p.Id,
+                    p.Name,
+                    Headshots = p.HeadshotUrls.Select(h => new { h.Url, h.IsPreferred }).ToList(),
                     GalleryPhotoUrl = p.GalleryPhotoUrls.Select(g => g.Url).FirstOrDefault()
-                });
+                }).ToList();
 
+            return query.Select(p => new PerformerWithGalleryDto {
+                Id = p.Id,
+                Name = p.Name,
+                HeadshotUrl = p.Headshots.OrderByDescending(h => h.IsPreferred).Select(h => h.Url).FirstOrDefault(),
+                GalleryPhotoUrl = p.GalleryPhotoUrl
+            });
         }
 
         public IEnumerable<Performer> GetWithMediaFiles() {
@@ -136,17 +161,37 @@ namespace MediaFilesOnDvd.Services {
                 }
             }
 
-            // Handle HeadshotUrl
-            if (!string.IsNullOrEmpty(dto.HeadshotUrl)) {
-                if (!performer.HeadshotUrls.Any(h => h.Url == dto.HeadshotUrl)) {
-                    performer.HeadshotUrls.Add(new HeadshotUrl(dto.HeadshotUrl));
+            // Handle HeadshotUrls
+            var headshotsToRemove = performer.HeadshotUrls.Where(h => !dto.HeadshotUrls.Contains(h.Url)).ToList();
+            foreach (var h in headshotsToRemove) {
+                performer.HeadshotUrls.Remove(h);
+            }
+
+            foreach (var url in dto.HeadshotUrls) {
+                if (!string.IsNullOrWhiteSpace(url)) {
+                    var existing = performer.HeadshotUrls.FirstOrDefault(h => h.Url == url);
+                    if (existing == null) {
+                        existing = new HeadshotUrl(url);
+                        performer.HeadshotUrls.Add(existing);
+                    }
+                    existing.IsPreferred = (url == dto.PreferredHeadshotUrl);
                 }
             }
 
-            // Handle GalleryPhotoUrl
-            if (!string.IsNullOrEmpty(dto.GalleryPhotoUrl)) {
-                if (!performer.GalleryPhotoUrls.Any(g => g.Url == dto.GalleryPhotoUrl)) {
-                    performer.GalleryPhotoUrls.Add(new GalleryPhotoUrl() { Url = dto.GalleryPhotoUrl });
+            // Ensure exactly one is preferred if any exist
+            if (performer.HeadshotUrls.Any() && !performer.HeadshotUrls.Any(h => h.IsPreferred)) {
+                performer.HeadshotUrls.First().IsPreferred = true;
+            }
+
+            // Handle GalleryPhotoUrls
+            var galleriesToRemove = performer.GalleryPhotoUrls.Where(g => !dto.GalleryPhotoUrls.Contains(g.Url)).ToList();
+            foreach (var g in galleriesToRemove) {
+                performer.GalleryPhotoUrls.Remove(g);
+            }
+
+            foreach (var url in dto.GalleryPhotoUrls) {
+                if (!string.IsNullOrWhiteSpace(url) && !performer.GalleryPhotoUrls.Any(g => g.Url == url)) {
+                    performer.GalleryPhotoUrls.Add(new GalleryPhotoUrl() { Url = url });
                 }
             }
 
