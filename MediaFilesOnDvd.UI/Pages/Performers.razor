@@ -196,6 +196,7 @@
 </div>
 
 @code {
+    [CascadingParameter] public MainLayout? Layout { get; set; }
     [Parameter] public int? Id { get; set; }
     [Inject] private MediaFileService MediaFileService { get; set; } = default!;
     private List<PerformerSummaryDto> _allPerformers = new();
@@ -216,8 +217,11 @@
         _allPerformers = PerformerService.GetSummaries().ToList();
     }
 
+    private int? _lastLoadedId;
+
     protected override void OnParametersSet() {
-        if (Id.HasValue) {
+        if (Id.HasValue && Id != _lastLoadedId) {
+            _lastLoadedId = Id.Value;
             SelectPerformer(Id.Value);
         }
     }
@@ -245,15 +249,32 @@
 
     private async Task SelectPerformer(int id)
     {
+        // Prevent clearing state if we're just re-selecting the current performer
+        // unless we need to force a refresh
+        if (_selectedPerformer?.Id == id) return;
+
+        _lastLoadedId = id;
         _isEditing = false;
         _selectedPerformer = PerformerService.GetDetails(id);
         _selectedMediaFile = null;
-        await JS.InvokeVoidAsync("scrollToTop", ".performer-detail-panel");
+        
+        // Update URL without reloading so that route parameter matches current state
+        if (Id != id)
+        {
+            Nav.NavigateTo($"/performers/{id}", replace: true);
+        }
+
+        try 
+        {
+            await JS.InvokeVoidAsync("scrollToTop", ".performer-detail-panel");
+        }
+        catch { }
     }
 
     private void ViewMediaFile(int id)
     {
         _selectedMediaFile = MediaFileService.Get(id);
+        Layout?.CollapseSidebar();
     }
 
     private string _newAlias = "";

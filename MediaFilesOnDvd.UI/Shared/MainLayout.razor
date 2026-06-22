@@ -27,7 +27,9 @@
         </header>
 
         <article class="content">
-            @Body
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
         </article>
     </main>
 </div>
@@ -40,5 +42,14 @@
     private void ToggleSidebar()
     {
         _sidebarCollapsed = !_sidebarCollapsed;
+    }
+
+    public void CollapseSidebar()
+    {
+        if (!_sidebarCollapsed)
+        {
+            _sidebarCollapsed = true;
+            StateHasChanged();
+        }
     }
 }
