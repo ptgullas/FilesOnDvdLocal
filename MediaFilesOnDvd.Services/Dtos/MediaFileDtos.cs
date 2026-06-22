@@ -4,6 +4,8 @@ namespace MediaFilesOnDvd.Services.Dtos {
         public string Name { get; set; } = string.Empty;
         public string? DiscName { get; set; }
         public string? ScreenshotUrl { get; set; }
+        public int? SeriesId { get; set; }
+        public string? SeriesName { get; set; }
     }
 
     public class MediaFileDetailDto {

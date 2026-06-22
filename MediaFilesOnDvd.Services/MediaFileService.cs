@@ -32,7 +32,9 @@ namespace MediaFilesOnDvd.Services {
                     Id = f.Id,
                     Name = f.Name,
                     DiscName = f.Disc.Name,
-                    ScreenshotUrl = f.Screenshots.Select(s => s.Url).FirstOrDefault()
+                    ScreenshotUrl = f.Screenshots.Select(s => s.Url).FirstOrDefault(),
+                    SeriesId = f.SeriesId,
+                    SeriesName = f.Series != null ? f.Series.Name : null
                 });
         }
 

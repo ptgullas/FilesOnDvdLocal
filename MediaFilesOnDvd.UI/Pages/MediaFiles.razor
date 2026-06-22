@@ -19,6 +19,13 @@
                     <i class="fas @(_isThumbnailView ? "fa-list" : "fa-th")"></i>
                 </button>
             </div>
+            @if (_filterSeriesId.HasValue)
+            {
+                <div class="active-filter p-2 border-bottom border-secondary d-flex justify-content-between align-items-center" style="background-color: var(--hover-color);">
+                    <span class="text-white" style="font-size: 0.9em;"><i class="fas fa-filter text-muted me-2"></i>Series: <strong>@_filterSeriesName</strong></span>
+                    <button class="btn btn-sm btn-link text-danger p-0 m-0" @onclick="ClearSeriesFilter" title="Clear Filter"><i class="fas fa-times"></i></button>
+                </div>
+            }
             <div class="media-scroll-list">
                 <Virtualize Items="FilteredMediaFiles" Context="file" OverscanCount="10">
                     <div class="media-list-item @(file.Id == _currentFile?.Id ? "selected" : "") @(_isThumbnailView ? "thumb-mode" : "list-mode")" 
@@ -117,7 +124,14 @@
                     }
                     else
                     {
-                        <div class="field-value">@(_currentFile.SeriesName ?? "None")</div>
+                        @if (_currentFile.SeriesId.HasValue)
+                        {
+                            <div class="field-value value-link" @onclick="() => FilterBySeries(_currentFile.SeriesId.Value, _currentFile.SeriesName)">@_currentFile.SeriesName</div>
+                        }
+                        else
+                        {
+                            <div class="field-value">None</div>
+                        }
                     }
                 </div>
 
@@ -254,10 +268,13 @@
     private List<MediaFileSummaryDto> _allMediaFiles = new();
     private string _searchTerm = "";
     private bool _isThumbnailView = false;
+    private int? _filterSeriesId = null;
+    private string? _filterSeriesName = null;
 
-    private List<MediaFileSummaryDto> FilteredMediaFiles => string.IsNullOrWhiteSpace(_searchTerm) 
-        ? _allMediaFiles 
-        : _allMediaFiles.Where(f => f.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || (f.DiscName != null && f.DiscName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))).ToList();
+    private List<MediaFileSummaryDto> FilteredMediaFiles => _allMediaFiles
+        .Where(f => !_filterSeriesId.HasValue || f.SeriesId == _filterSeriesId.Value)
+        .Where(f => string.IsNullOrWhiteSpace(_searchTerm) || f.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || (f.DiscName != null && f.DiscName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)))
+        .ToList();
 
     protected override void OnInitialized()
     {
@@ -275,6 +292,18 @@
     private void ToggleViewMode()
     {
         _isThumbnailView = !_isThumbnailView;
+    }
+
+    private void FilterBySeries(int seriesId, string? seriesName)
+    {
+        _filterSeriesId = seriesId;
+        _filterSeriesName = seriesName;
+    }
+
+    private void ClearSeriesFilter()
+    {
+        _filterSeriesId = null;
+        _filterSeriesName = null;
     }
 
     private void SelectFile(int id)
