@@ -50,6 +50,7 @@ namespace MediaFilesOnDvd.Desktop
             builder.Services.AddScoped<MediaFileService>();
             builder.Services.AddScoped<FileTagService>();
             builder.Services.AddScoped<PathResolverService>();
+            builder.Services.AddSingleton<SettingsService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

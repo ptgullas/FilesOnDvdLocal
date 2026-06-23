@@ -1,8 +1,17 @@
 @page "/discs"
 @page "/discs/{ID:int}"
+@using MediaFilesOnDvd.Services.Dtos
 @inject DiscService DiscService
 @inject MediaFileService MediaFileService
 
+@inject PathResolverService PathResolver
+
+@if (Layout?.IsScreensaverMode == true)
+{
+    <ScreensaverDiscs />
+}
+else
+{
 <div class="disc-browse">
     <!-- Top Left: Disc List -->
     <aside class="disc-list-panel">
@@ -38,6 +47,7 @@
                     <div class="meta-grid">
                         <div class="meta-item"><label>ID:</label> <span>@_selectedDisc.Id</span></div>
                         <div class="meta-item"><label>Wallet:</label> <span>@(_selectedDisc.Wallet?.Name ?? "None")</span></div>
+                        <div class="meta-item"><label>File count:</label><span>@_selectedDisc.Files.Count</span></div>
                     </div>
                     <div class="notes-box">
                         <label>Notes</label>
@@ -67,25 +77,31 @@
         <MediaFileDetailPanel File="_selectedFile" />
     </aside>
 </div>
+}
+
+
 
 @code {
+    [CascadingParameter] public MainLayout? Layout { get; set; }
     [Parameter] public int? Id { get; set; }
     private List<Disc> _allDiscs = new();
     private Disc? _selectedDisc;
     private MediaFile? _selectedFile;
+
+
 
     protected override void OnInitialized()
     {
         _allDiscs = DiscService.Get().ToList();
     }
 
-
     protected override void OnParametersSet() {
         if (Id.HasValue) {
-            // SelectDisc(Id.Value);
             _selectedDisc = _allDiscs.FirstOrDefault(d => d.Id == Id.Value);
         }
     }
+
+
 
     private void SelectDisc(int id)
     {
@@ -102,4 +118,5 @@
     {
         _selectedFile = MediaFileService.Get().FirstOrDefault(f => f.Id == id);
     }
+
 }

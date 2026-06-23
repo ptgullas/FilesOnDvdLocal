@@ -1,0 +1,71 @@
+@page "/reports/performers-no-headshots"
+@using MediaFilesOnDvd.Services
+@using MediaFilesOnDvd.Services.Dtos
+@inject PerformerService PerformerService
+
+<div class="reports-page p-4">
+    <h1 class="mb-4">Performers Without Headshots</h1>
+
+    @if (_performers == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if (!_performers.Any())
+    {
+        <p>All performers have headshots!</p>
+    }
+    else
+    {
+        <div class="mb-3 d-flex align-items-center">
+            <span class="me-3">Found <strong>@_performers.Count</strong> performers without headshots.</span>
+            
+            <div class="form-check form-switch ms-3">
+                <input class="form-check-input" type="checkbox" id="filterHasCredits" @bind="FilterHasCredits" />
+                <label class="form-check-label" for="filterHasCredits">Has Credits (Subreport)</label>
+            </div>
+        </div>
+
+        <div class="performer-list">
+            @foreach (var performer in FilteredPerformers)
+            {
+                <div class="card bg-dark text-light border-secondary mb-2">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <a href="/performers/@performer.Id" class="text-accent text-decoration-none">@performer.Name</a>
+                        </h5>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<PerformerSummaryDto>? _performers;
+    private bool _filterHasCredits = false;
+
+    private bool FilterHasCredits
+    {
+        get => _filterHasCredits;
+        set
+        {
+            if (_filterHasCredits != value)
+            {
+                _filterHasCredits = value;
+                StateHasChanged();
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _performers = PerformerService.GetSummaries()
+            .Where(p => string.IsNullOrWhiteSpace(p.HeadshotUrl))
+            .ToList();
+    }
+
+    private IEnumerable<PerformerSummaryDto> FilteredPerformers => 
+        _filterHasCredits 
+            ? _performers?.Where(p => p.CreditCount > 0) ?? Enumerable.Empty<PerformerSummaryDto>()
+            : _performers ?? Enumerable.Empty<PerformerSummaryDto>();
+}

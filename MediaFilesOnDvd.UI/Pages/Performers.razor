@@ -7,17 +7,26 @@
 @inject IJSRuntime JS
 
 <SectionContent SectionName="header-center">
-    <div class="d-flex align-items-center w-100" style="max-width: 600px;">
-        <div class="search-container flex-grow-1 me-3">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Search / filter performers..." class="search-input w-75" @bind="_searchTerm" @bind:event="oninput" />
+    @if (!(Layout?.IsScreensaverMode ?? false))
+    {
+        <div class="d-flex align-items-center w-100" style="max-width: 600px;">
+            <div class="search-container flex-grow-1 me-3">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Search / filter performers..." class="search-input w-75" @bind="_searchTerm" @bind:event="oninput" />
+            </div>
+            <button class="btn btn-primary text-nowrap" @onclick="CreateNewPerformer">
+                <i class="fas fa-plus"></i> New Performer
+            </button>
         </div>
-        <button class="btn btn-primary text-nowrap" @onclick="CreateNewPerformer">
-            <i class="fas fa-plus"></i> New Performer
-        </button>
-    </div>
+    }
 </SectionContent>
 
+@if (Layout?.IsScreensaverMode == true)
+{
+    <ScreensaverPerformers />
+}
+else
+{
 <div class="performer-browse">
     <!-- Left Panel: Master List -->
     <aside class="performer-list-panel">
@@ -224,6 +233,9 @@
         </div>
     }
 </div>
+}
+
+
 
 @code {
     [CascadingParameter] public MainLayout? Layout { get; set; }
@@ -242,6 +254,8 @@
     private string _selectedPhotoUrl = "";
     private ElementReference _modalOverlay;
     private bool _focusModalNextRender = false;
+
+
 
     protected override void OnInitialized()
     {
@@ -268,6 +282,7 @@
             }
             catch { }
         }
+
     }
 
     private List<PerformerSummaryDto> FilteredPerformers => 

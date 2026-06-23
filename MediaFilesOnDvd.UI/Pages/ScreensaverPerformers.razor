@@ -1,0 +1,158 @@
+@using MediaFilesOnDvd.Services.Dtos
+@using MediaFilesOnDvd.Services
+@inject PerformerService PerformerService
+@inject PathResolverService PathResolver
+
+<div class="screensaver-fullscreen">
+    <div class="screensaver-headshot">
+        @if (!string.IsNullOrEmpty(_selectedPerformer?.HeadshotUrl))
+        {
+            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" alt="@_selectedPerformer?.Name" />
+        }
+        <div class="screensaver-headshot-info">
+            <h1 class="screensaver-title">@_selectedPerformer?.Name</h1>
+            @if (_selectedPerformer != null && _selectedPerformer.MediaFiles.Any())
+            {
+                <h2 class="screensaver-subtitle">Number of Credits: @_selectedPerformer.MediaFiles.Count</h2>
+            }
+        </div>
+    </div>
+    <div class="screensaver-collage">
+        @if (_row1Items.Any())
+        {
+            <div class="collage-track @(_row1ScrollsLeft ? "scroll-left" : "scroll-right")">
+                @foreach (var loop in new[] { 1, 2 })
+                {
+                    @foreach (var item in _row1Items)
+                    {
+                        if (item.IsBlank)
+                        {
+                            <div class="collage-item blank-item" style="background: transparent; box-shadow: none; width: 426px;"></div>
+                        }
+                        else
+                        {
+                            <div class="collage-item @(item.IsGalleryPhoto ? "gallery-photo" : "")">
+                                <img src="@PathResolver.GetImageAsBase64(item.IsGalleryPhoto ? PathResolver.GetPerformerGalleryPath(item.ImageUrl) : PathResolver.GetMediaScreenshotPath(item.ImageUrl))" />
+                                <div class="collage-label">@item.Label</div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        }
+        @if (_row2Items.Any())
+        {
+            <div class="collage-track @(_row1ScrollsLeft ? "scroll-right" : "scroll-left")">
+                @foreach (var loop in new[] { 1, 2 })
+                {
+                    @foreach (var item in _row2Items)
+                    {
+                        if (item.IsBlank)
+                        {
+                            <div class="collage-item blank-item" style="background: transparent; box-shadow: none; width: 426px;"></div>
+                        }
+                        else
+                        {
+                            <div class="collage-item @(item.IsGalleryPhoto ? "gallery-photo" : "")">
+                                <img src="@PathResolver.GetImageAsBase64(item.IsGalleryPhoto ? PathResolver.GetPerformerGalleryPath(item.ImageUrl) : PathResolver.GetMediaScreenshotPath(item.ImageUrl))" />
+                                <div class="collage-label">@item.Label</div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@implements IDisposable
+
+@code {
+    private List<PerformerSummaryDto> _allPerformers = new();
+    private PerformerDetailDto? _selectedPerformer;
+    private System.Threading.Timer? _screensaverTimer;
+
+    private class CollageItem
+    {
+        public string ImageUrl { get; set; } = "";
+        public string Label { get; set; } = "";
+        public bool IsGalleryPhoto { get; set; }
+        public bool IsBlank { get; set; }
+    }
+
+    private List<CollageItem> _row1Items = new();
+    private List<CollageItem> _row2Items = new();
+    private bool _row1ScrollsLeft = true;
+
+    protected override void OnInitialized()
+    {
+        _allPerformers = PerformerService.GetSummaries().ToList();
+        _screensaverTimer = new System.Threading.Timer(ScreensaverTick, null, 0, 8000);
+    }
+
+    private void ScreensaverTick(object? state)
+    {
+        if (_allPerformers.Count > 0)
+        {
+            InvokeAsync(() => {
+                PerformerDetailDto? validPerformer = null;
+                int attempts = 0;
+                while (validPerformer == null && attempts < 20)
+                {
+                    var randomIdx = new Random().Next(_allPerformers.Count);
+                    var randomId = _allPerformers[randomIdx].Id;
+                    var detail = PerformerService.GetDetails(randomId);
+                    if (detail != null && detail.MediaFiles.Any())
+                    {
+                        validPerformer = detail;
+                    }
+                    attempts++;
+                }
+
+                if (validPerformer != null)
+                {
+                    _selectedPerformer = validPerformer;
+                    
+                    var allItems = new List<CollageItem>();
+                    foreach (var file in validPerformer.MediaFiles)
+                    {
+                        if (!string.IsNullOrEmpty(file.ScreenshotUrl))
+                        {
+                            allItems.Add(new CollageItem { ImageUrl = file.ScreenshotUrl, Label = file.Name, IsGalleryPhoto = false });
+                        }
+                    }
+                    foreach (var photo in validPerformer.GalleryPhotoUrls)
+                    {
+                        allItems.Add(new CollageItem { ImageUrl = photo, Label = "Gallery Photo", IsGalleryPhoto = true });
+                    }
+
+                    _row1Items.Clear();
+                    _row2Items.Clear();
+                    for (int i = 0; i < allItems.Count; i++)
+                    {
+                        if (i % 2 == 0) _row1Items.Add(allItems[i]);
+                        else _row2Items.Add(allItems[i]);
+                    }
+
+                    while (_row1Items.Count > 0 && _row1Items.Count < 4)
+                    {
+                        _row1Items.Add(new CollageItem { IsBlank = true });
+                    }
+                    while (_row2Items.Count > 0 && _row2Items.Count < 4)
+                    {
+                        _row2Items.Add(new CollageItem { IsBlank = true });
+                    }
+
+                    _row1ScrollsLeft = new Random().Next(2) == 0;
+
+                    StateHasChanged();
+                }
+            });
+        }
+    }
+
+    public void Dispose()
+    {
+        _screensaverTimer?.Dispose();
+    }
+}

@@ -23,6 +23,7 @@ namespace MediaFilesOnDvd.Services {
                 .Select(p => new {
                     p.Id,
                     p.Name,
+                    CreditCount = p.MediaFiles.Count,
                     Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
                     Headshots = p.HeadshotUrls.Select(h => new { h.Url, h.IsPreferred }).ToList()
                 }).ToList();
@@ -31,6 +32,7 @@ namespace MediaFilesOnDvd.Services {
                 Id = p.Id,
                 Name = p.Name,
                 Aliases = p.Aliases,
+                CreditCount = p.CreditCount,
                 HeadshotUrl = p.Headshots.OrderByDescending(h => h.IsPreferred).Select(h => h.Url).FirstOrDefault()
             });
         }

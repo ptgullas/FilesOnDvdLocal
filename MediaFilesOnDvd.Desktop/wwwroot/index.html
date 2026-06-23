@@ -72,6 +72,27 @@
 				element.scrollTop = 0;
 			}
 		};
+
+		window.initializeIdleTimer = (dotNetHelper, timeoutSeconds) => {
+			if (window.idleTimer) clearTimeout(window.idleTimer);
+			
+			const resetTimer = () => {
+				if (window.idleTimer) clearTimeout(window.idleTimer);
+				window.idleTimer = setTimeout(() => {
+					dotNetHelper.invokeMethodAsync('OnIdleTimeout');
+				}, timeoutSeconds * 1000);
+			};
+
+			const events = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+			events.forEach(e => document.addEventListener(e, resetTimer));
+			
+			resetTimer();
+
+            window.updateIdleTimeout = (newTimeoutSeconds) => {
+                timeoutSeconds = newTimeoutSeconds;
+                resetTimer();
+            };
+		};
 	</script>
 
 </body>
