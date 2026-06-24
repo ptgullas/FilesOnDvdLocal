@@ -12,71 +12,88 @@
 }
 else
 {
-<div class="disc-browse">
-    <!-- Top Left: Disc List -->
-    <aside class="disc-list-panel">
-        <div class="panel-header">
-            <h3>Discs</h3>
-        </div>
-        <div class="disc-scroll-list">
-            @foreach (var disc in _allDiscs)
+    <div class="disc-browse">
+        <!-- Top Left: Disc List -->
+        <aside class="disc-list-panel">
+            <div class="panel-header">
+                <h3>Discs</h3>
+            </div>
+            <div class="disc-scroll-list">
+                @foreach (var disc in _allDiscs)
+                {
+                    <div class="disc-list-item @(disc.Id == _selectedDisc?.Id ? "selected" : "")" 
+                    @onclick="() => SelectDisc(disc)">
+                        <i class="fas fa-compact-disc"></i>
+                        <span class="disc-name">@disc.Name</span>
+                    </div>
+                }
+            </div>
+        </aside>
+
+        <!-- Main Section: Disc Detail & Files -->
+        <main class="disc-content">
+            @if (_selectedDisc == null)
             {
-                <div class="disc-list-item @(disc.Id == _selectedDisc?.Id ? "selected" : "")" 
-                @onclick="() => SelectDisc(disc)">
-                    <i class="fas fa-compact-disc"></i>
-                    <span class="disc-name">@disc.Name</span>
+                <div class="empty-state">
+                    <i class="fas fa-compact-disc fa-4x"></i>
+                    <h3>Select a disc to view contents</h3>
                 </div>
             }
-        </div>
-    </aside>
-
-    <!-- Main Section: Disc Detail & Files -->
-    <main class="disc-content">
-        @if (_selectedDisc == null)
-        {
-            <div class="empty-state">
-                <i class="fas fa-compact-disc fa-4x"></i>
-                <h3>Select a disc to view contents</h3>
-            </div>
-        }
-        else
-        {
-            <div class="disc-detail-header">
-                <div class="disc-meta">
-                    <h1>@_selectedDisc.Name</h1>
-                    <div class="meta-grid">
-                        <div class="meta-item"><label>ID:</label> <span>@_selectedDisc.Id</span></div>
-                        <div class="meta-item"><label>Wallet:</label> <span>@(_selectedDisc.Wallet?.Name ?? "None")</span></div>
-                        <div class="meta-item"><label>File count:</label><span>@_selectedDisc.Files.Count</span></div>
-                    </div>
-                    <div class="notes-box">
-                        <label>Notes</label>
-                        <p>@(_selectedDisc.Notes ?? "No notes available.")</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="file-list-section">
-                <h3>Files on this Disc</h3>
-                <div class="file-grid">
-                    @foreach (var file in _selectedDisc.Files)
-                    {
-                        <div class="file-row @(file.Id == _selectedFile?.Id ? "active" : "")" 
-                        @onclick="() => SelectFile(file.Id)">
-                            <span class="file-name">@file.Name</span>
-                            <i class="fas fa-chevron-right"></i>
+            else
+            {
+                <div class="disc-detail-header">
+                    <div class="disc-meta">
+                        <h1>@_selectedDisc.Name</h1>
+                        <div class="meta-grid">
+                            <div class="meta-item"><label>ID:</label> <span>@_selectedDisc.Id</span></div>
+                            <div class="meta-item"><label>Wallet:</label> <span>@(_selectedDisc.Wallet?.Name ?? "None")</span></div>
+                            <div class="meta-item"><label>File count:</label><span>@_selectedDisc.Files.Count</span></div>
                         </div>
-                    }
+                        <div class="notes-box">
+                            <label>Notes</label>
+                            <p>@(_selectedDisc.Notes ?? "No notes available.")</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        }
-    </main>
 
-    <!-- Right Panel: File Detail -->
-    <aside class="file-detail-panel">
-        <MediaFileDetailPanel File="_selectedFile" />
-    </aside>
-</div>
+                <div class="file-list-section">
+                    <div class="file-list-section-header">
+                        <span class="header">Files on this Disc</span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" @onclick="ToggleViewMode" title="Toggle View">
+                            <i class="fas @(_isThumbnailView ? "fa-list" : "fa-th")"></i>
+                        </button>
+                    </div>
+                    <div class="file-grid">
+                        @foreach (var file in _selectedDisc.Files)
+                        {
+                            <div class="file-row @(file.Id == _selectedFile?.Id ? "active" : "")" 
+                            @onclick="() => SelectFile(file.Id)">
+                                @if (_isThumbnailView) {
+                                    <div class="media-thumb-result">
+                                        @if (!string.IsNullOrEmpty(file.Screenshots?.FirstOrDefault()?.Url)) {
+                                            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.Screenshots.FirstOrDefault().Url))" />
+                                        }
+                                        else {
+                                            <i class="fas fa-file-video fa-2x"></i>
+                                        }
+                                    </div>
+                                }
+                                <div class="media-info-result">
+                                    <span class="file-name">@file.Name</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </main>
+
+        <!-- Right Panel: File Detail -->
+        <aside class="file-detail-panel">
+            <MediaFileDetailPanel File="_selectedFile" />
+        </aside>
+    </div>
 }
 
 
@@ -87,7 +104,7 @@ else
     private List<Disc> _allDiscs = new();
     private Disc? _selectedDisc;
     private MediaFile? _selectedFile;
-
+    private bool _isThumbnailView = false;
 
 
     protected override void OnInitialized()
@@ -100,8 +117,6 @@ else
             _selectedDisc = _allDiscs.FirstOrDefault(d => d.Id == Id.Value);
         }
     }
-
-
 
     private void SelectDisc(int id)
     {
@@ -118,5 +133,10 @@ else
     {
         _selectedFile = MediaFileService.Get().FirstOrDefault(f => f.Id == id);
     }
+
+    private void ToggleViewMode() {
+        _isThumbnailView = !_isThumbnailView;
+    }
+
 
 }
