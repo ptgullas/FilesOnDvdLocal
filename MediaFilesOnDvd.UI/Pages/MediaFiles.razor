@@ -9,6 +9,16 @@
 @inject NavigationManager Nav
 @inject FileTagService TagService
 
+<SectionContent SectionName="header-center">
+    <div class="mode-toggle d-flex align-items-center">
+        <label class="switch">
+            <input type="checkbox" @bind="_isEditMode" @onclick="OnToggleEditMode" />
+            <span class="slider round"></span>
+        </label>
+        <span class="mode-label text-white ms-2">Edit Mode: @(_isEditMode ? "ON" : "OFF")</span>
+    </div>
+</SectionContent>
+
 <div class="@(IsModal ? "" : "media-browse")">
     @if (!IsModal)
     {
@@ -64,13 +74,6 @@
             {
                 <h1>@(_currentFile?.Name ?? "No File Selected")</h1>
             }
-        <div class="mode-toggle">
-            <label class="switch">
-                <input type="checkbox" @bind="_isEditMode" @onclick="OnToggleEditMode" />
-                <span class="slider round"></span>
-            </label>
-            <span class="mode-label">Edit Mode: @(_isEditMode ? "ON" : "OFF")</span>
-        </div>
     </header>
 
     @if (_currentFile == null)
