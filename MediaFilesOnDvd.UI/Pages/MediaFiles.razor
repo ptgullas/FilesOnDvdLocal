@@ -7,6 +7,7 @@
 @inject SeriesService SeriesService
 @inject PathResolverService PathResolver
 @inject NavigationManager Nav
+@inject FileTagService TagService
 
 <div class="@(IsModal ? "" : "media-browse")">
     @if (!IsModal)
@@ -226,14 +227,17 @@
                         @tag
                         @if (_isEditMode)
                         {
-                            <i class="fas fa-times ml-2"></i>
+                            <i class="fas fa-times ml-2" style="cursor:pointer" @onclick="() => RemoveTag(tag)"></i>
                         }
                     </span>
                 }
-                <div class="add-tag">
-                    <input type="text" placeholder="Add new tag..." />
-                    <button class="btn-icon"><i class="fas fa-plus"></i></button>
-                </div>
+                @if (_isEditMode)
+                {
+                    <div class="add-tag">
+                        <input type="text" placeholder="Add new tag..." @bind="_newTag" @bind:event="oninput" @onkeyup="HandleTagInput" />
+                        <button class="btn-icon" @onclick="AddTag"><i class="fas fa-plus"></i></button>
+                    </div>
+                }
             </div>
         </footer>
 
@@ -277,6 +281,7 @@
     private bool _isThumbnailView = false;
     private int? _filterSeriesId = null;
     private string? _filterSeriesName = null;
+    private string _newTag = "";
 
     private List<MediaFileSummaryDto> FilteredMediaFiles => _allMediaFiles
         .Where(f => !_filterSeriesId.HasValue || f.SeriesId == _filterSeriesId.Value)
@@ -441,5 +446,49 @@
             _ => "/"
         };
         Nav.NavigateTo(url);
+    }
+
+    private void HandleTagInput(KeyboardEventArgs e) {
+        if (e.Key == "Enter") {
+            AddTag();
+        }
+    }
+
+    private void AddTag()
+    {
+        if (string.IsNullOrWhiteSpace(_newTag) || _currentFile == null) return;
+
+        var fileEntity = MediaFileService.Get(_currentFile.Id);
+        if (fileEntity == null) return;
+
+        var tagEntity = TagService.Get(_newTag);
+        if (tagEntity == null) {
+            var addResult = TagService.Add(_newTag);
+            if (addResult.Success) {
+                tagEntity = TagService.Get(_newTag);
+            }
+        }
+        if (tagEntity != null) {
+            var result = MediaFileService.AddTagToMediaFile(fileEntity, tagEntity);
+            if (result.Success) {
+                _newTag = "";
+                LoadFile(); // Refresh to show new tag
+            }
+        }
+    }
+
+    private void RemoveTag(string tagName)
+    {
+        if (_currentFile == null) return;
+        var fileEntity = MediaFileService.Get(_currentFile.Id);
+        if (fileEntity == null) return;
+
+        var tagEntity = TagService.Get(tagName);
+        if (tagEntity != null) {
+            var result = MediaFileService.RemoveTagFromMediaFile(fileEntity, tagEntity);
+            if (result.Success) {
+                LoadFile(); // Refresh to remove tag
+            }
+        }
     }
 }
