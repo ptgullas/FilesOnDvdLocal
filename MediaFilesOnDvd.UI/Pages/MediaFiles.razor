@@ -227,7 +227,7 @@
                 @foreach (var tag in _currentFile.Tags)
                 {
                     <span class="tag-pill">
-                        @tag
+                            <span class="tag-text">@tag</span>
                         @if (_isEditMode)
                         {
                             <i class="fas fa-times ml-2" style="cursor:pointer" @onclick="() => RemoveTag(tag)"></i>
@@ -236,9 +236,20 @@
                 }
                 @if (_isEditMode)
                 {
-                    <div class="add-tag">
-                        <input type="text" placeholder="Add new tag..." @bind="_newTag" @bind:event="oninput" @onkeyup="HandleTagInput" />
-                        <button class="btn-icon" @onclick="AddTag"><i class="fas fa-plus"></i></button>
+                    <div class="add-tag-container">
+                        <div class="add-tag">
+                            <input type="text" placeholder="Add new tag..." @bind="_newTag" @bind:event="oninput" @onkeyup="HandleTagInput" @onfocus="() => _showTagDropdown = true" @onblur="HideTagDropdown" />
+                            <button class="btn-icon" @onclick="AddTag"><i class="fas fa-plus"></i></button>
+                        </div>
+                        @if (_showTagDropdown && FilteredTags.Any())
+                        {
+                            <ul class="tag-dropdown">
+                                @foreach (var t in FilteredTags)
+                                {
+                                    <li @onmousedown="() => SelectTag(t)">@t</li>
+                                }
+                            </ul>
+                        }
                     </div>
                 }
             </div>
@@ -273,6 +284,7 @@
     private List<FileGenre> _allGenres = new();
     private List<Disc> _allDiscs = new();
     private List<Series> _allSeries = new();
+    private List<string> _allTags = new();
 
     private bool _isFirst = false;
     private bool _isLast = false;
@@ -285,6 +297,18 @@
     private int? _filterSeriesId = null;
     private string? _filterSeriesName = null;
     private string _newTag = "";
+    private bool _showTagDropdown = false;
+
+    private IEnumerable<string> FilteredTags
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(_newTag)) return Enumerable.Empty<string>();
+            return _allTags
+                .Where(t => t.Contains(_newTag, StringComparison.OrdinalIgnoreCase) && (_currentFile == null || !_currentFile.Tags.Contains(t, StringComparer.OrdinalIgnoreCase)))
+                .Take(5);
+        }
+    }
 
     private List<MediaFileSummaryDto> FilteredMediaFiles => _allMediaFiles
         .Where(f => !_filterSeriesId.HasValue || f.SeriesId == _filterSeriesId.Value)
@@ -381,6 +405,7 @@
         _allGenres = GenreService.Get().ToList();
         _allDiscs = DiscService.Get().ToList();
         _allSeries = SeriesService.Get().ToList();
+        _allTags = TagService.Get().Select(t => t.Name).ToList();
     }
 
     private void SaveChanges()
@@ -493,5 +518,18 @@
                 LoadFile(); // Refresh to remove tag
             }
         }
+    }
+
+    private void SelectTag(string tagName)
+    {
+        _newTag = tagName;
+        AddTag();
+        _showTagDropdown = false;
+    }
+
+    private async Task HideTagDropdown()
+    {
+        await Task.Delay(200); // Give time for mousedown to register
+        _showTagDropdown = false;
     }
 }

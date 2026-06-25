@@ -306,10 +306,19 @@ input:checked + .slider:before {
     align-items: center;
 }
 
+.tag-text {
+    padding-right: .75em;
+}
+
 .add-tag {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+}
+
+.add-tag-container {
+    position: relative;
+    display: inline-block;
 }
 
 .add-tag input {
@@ -319,6 +328,34 @@ input:checked + .slider:before {
     padding: 4px 12px;
     border-radius: 4px;
     font-size: 0.85rem;
+}
+
+.tag-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 200px;
+    background-color: #2d2d2d;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 4px;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tag-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: white;
+}
+
+.tag-dropdown li:hover {
+    background-color: var(--accent-color);
 }
 
 /* Navigation Overlay */
