@@ -9,6 +9,7 @@ namespace MediaFilesOnDvd.Services
     {
         public int ScreensaverTimeoutSeconds { get; set; } = 300;
         public string Theme { get; set; } = "Dark";
+        public string AccentColor { get; set; } = "#e50914";
     }
 
     public class SettingsService

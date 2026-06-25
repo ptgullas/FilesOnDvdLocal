@@ -5,6 +5,12 @@
 @inject IJSRuntime JS
 @implements IDisposable
 
+<style>
+    :root {
+        --accent-color: @(SettingsService.Get().AccentColor);
+    }
+</style>
+
 <div class="page">
     <div class="@SidebarCssClass">
         <NavMenu OnToggle="ToggleSidebar" IsCollapsed="@_sidebarCollapsed" />
@@ -112,6 +118,7 @@
     {
         var timeout = SettingsService.Get().ScreensaverTimeoutSeconds;
         await JS.InvokeVoidAsync("updateIdleTimeout", timeout);
+        InvokeAsync(StateHasChanged);
     }
 
     private void ToggleSidebar()

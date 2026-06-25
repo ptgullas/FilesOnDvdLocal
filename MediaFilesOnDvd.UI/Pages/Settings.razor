@@ -17,6 +17,16 @@
                 </div>
                 <small class="text-muted">How long the application must be idle before the screensaver starts.</small>
             </div>
+
+            <h5 class="card-title text-accent mt-4">Theme Settings</h5>
+            <div class="form-group mb-4">
+                <label for="accentColor" class="form-label">Accent Color</label>
+                <div class="input-group" style="max-width: 200px;">
+                    <input type="color" id="accentColor" class="form-control form-control-color bg-dark border-secondary p-1" @bind="_settings.AccentColor" style="max-width: 60px; height: 38px;" />
+                    <input type="text" class="form-control bg-dark text-light border-secondary" @bind="_settings.AccentColor" />
+                </div>
+                <small class="text-muted">Choose the primary accent color for the app.</small>
+            </div>
             
             <button class="btn btn-primary" @onclick="SaveSettings">Save Settings</button>
         </div>
