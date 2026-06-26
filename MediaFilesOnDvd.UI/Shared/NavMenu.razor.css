@@ -5,7 +5,7 @@
 }
 
 .nav-header {
-    height: 60px;
+    height: 30px;
     display: flex;
     align-items: center;
     padding: 0 1rem;
@@ -91,4 +91,24 @@
 .child-link {
     padding: 0.5rem 1.25rem;
     font-size: 0.9rem;
+}
+
+/* Collapsed State */
+.nav-container.collapsed .app-title,
+.nav-container.collapsed .nav-text {
+    display: none;
+}
+
+.nav-container.collapsed .nav-child {
+    display: none; /* Hide child submenus when collapsed */
+}
+
+.nav-container.collapsed .nav-icon,
+.nav-container.collapsed .nav-icon-small {
+    margin-right: 0;
+}
+
+.nav-container.collapsed ::deep .nav-link {
+    padding: 0.75rem 0;
+    justify-content: center;
 }

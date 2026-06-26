@@ -1,4 +1,4 @@
-<div class="nav-container">
+<div class="nav-container @(IsCollapsed ? "collapsed" : "")">
     <div class="nav-header">
         <button class="hamburger-btn" @onclick="ToggleNav">
             <i class="fas fa-bars"></i>
@@ -8,50 +8,51 @@
 
     <nav class="nav-content">
         <div class="nav-item">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" title="Home">
                 <i class="fas fa-home nav-icon"></i>
                 <span class="nav-text">Home</span>
             </NavLink>
         </div>
 
         <div class="nav-item">
-            <NavLink class="nav-link" href="performers">
+            <NavLink class="nav-link" href="performers" title="Performers">
                 <i class="fas fa-users nav-icon"></i>
                 <span class="nav-text">Performers</span>
             </NavLink>
         </div>
 
         <div class="nav-item">
-            <NavLink class="nav-link" href="discs">
+            <NavLink class="nav-link" href="discs" title="Disc Browse">
                 <i class="fas fa-compact-disc nav-icon"></i>
                 <span class="nav-text">Disc Browse</span>
             </NavLink>
         </div>
 
         <div class="nav-item">
-            <NavLink class="nav-link" href="mediafiles">
+            <NavLink class="nav-link" href="mediafiles" title="MediaFile View">
                 <i class="fas fa-file-video nav-icon"></i>
                 <span class="nav-text">MediaFile View</span>
             </NavLink>
-            <div class="nav-child">
-                <NavLink class="nav-link child-link" href="tags">
-                    <i class="fas fa-tags nav-icon-small"></i>
-                    <span class="nav-text">Tag Cloud</span>
-                </NavLink>
-            </div>
         </div>
 
         <div class="nav-item">
-            <div class="nav-link" style="cursor:default">
+            <NavLink class="nav-link" href="tags" title="Tag Cloud">
+                <i class="fas fa-tags nav-icon-small"></i>
+                <span class="nav-text">Tag Cloud</span>
+            </NavLink>
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-link" style="cursor:default" title="Reports">
                 <i class="fas fa-chart-bar nav-icon"></i>
                 <span class="nav-text">Reports</span>
             </div>
             <div class="nav-child">
-                <NavLink class="nav-link child-link" href="reports/performers-no-headshots">
+                <NavLink class="nav-link child-link" href="reports/performers-no-headshots" title="No Headshots">
                     <i class="fas fa-user-slash nav-icon-small"></i>
                     <span class="nav-text">No Headshots</span>
                 </NavLink>
-                <NavLink class="nav-link child-link" href="reports/performers-no-credits">
+                <NavLink class="nav-link child-link" href="reports/performers-no-credits" title="No Credits">
                     <i class="fas fa-film nav-icon-small"></i>
                     <span class="nav-text">No Credits</span>
                 </NavLink>
@@ -59,7 +60,7 @@
         </div>
 
         <div class="nav-item">
-            <NavLink class="nav-link" href="settings">
+            <NavLink class="nav-link" href="settings" title="Settings">
                 <i class="fas fa-cog nav-icon"></i>
                 <span class="nav-text">Settings</span>
             </NavLink>

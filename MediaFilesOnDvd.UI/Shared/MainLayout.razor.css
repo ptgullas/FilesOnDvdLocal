@@ -24,9 +24,8 @@ main {
 }
 
 .sidebar.collapsed {
-    width: 0;
+    width: 65px;
     overflow: hidden;
-    border-right: none;
 }
 
 .top-header {
