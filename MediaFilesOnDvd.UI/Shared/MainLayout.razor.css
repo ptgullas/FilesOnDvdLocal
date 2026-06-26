@@ -30,19 +30,26 @@ main {
 }
 
 .top-header {
-    height: 60px;
-    background-color: var(--header-bg);
+    height: 30px;
+    background-color: rebeccapurple;
     border-bottom: 1px solid var(--border-color);
     display: flex;
-    align-items: center;
-    padding: 0 1rem;
+    align-items: flex-start;
+    padding: 0.2rem 1rem;
+    padding-right: 150px; /* Space for OS window controls */
     justify-content: space-between;
+    -webkit-app-region: drag;
+}
+
+.top-header button, .top-header a, .top-header input, .header-center {
+    -webkit-app-region: no-drag;
 }
 
 .header-left {
-    width: 50px;
     display: flex;
     align-items: center;
+    gap: 15px;
+    min-width: 150px;
 }
 
 .header-center {

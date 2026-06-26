@@ -32,6 +32,7 @@ namespace MediaFilesOnDvd.Desktop
             window ??= new Window();
 
             window.Title = "MediaFiles on DVD";
+            window.ExtendsContentIntoTitleBar = true;
 
             if (window.Content is not Frame rootFrame)
             {
