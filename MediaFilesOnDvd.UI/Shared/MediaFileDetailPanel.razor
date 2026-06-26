@@ -38,7 +38,7 @@
                 <div class="list-values">
                     @foreach (var p in File.Performers)
                     {
-                        <span class="value-link" @onclick="() => NavigateTo('p', p.Id)">@p.Name</span>
+                        <span class="value-link" @onclick="() => OpenPerformerModal(p.Id)">@p.Name</span>
                     }
                 </div>
             </div>
@@ -68,10 +68,13 @@
     </div>
 }
 
+<MediaFilesOnDvd.UI.Shared.PerformerModal @ref="_performerModal" />
+
 @code {
     [Parameter] public MediaFile? File { get; set; }
     
     private bool _isModalOpen = false;
+    private MediaFilesOnDvd.UI.Shared.PerformerModal? _performerModal;
 
     private void OpenModal()
     {
@@ -81,6 +84,11 @@
     private void CloseModal()
     {
         _isModalOpen = false;
+    }
+
+    private void OpenPerformerModal(int id)
+    {
+        _performerModal?.Open(id);
     }
 
     private void NavigateTo(char type, int id)

@@ -1,0 +1,114 @@
+@using MediaFilesOnDvd.Services.Dtos
+@inject PathResolverService PathResolver
+@inject NavigationManager Nav
+@inject MediaFileService MediaFileService
+@inject PerformerService PerformerService
+
+@if (_isModalOpen && _selectedPerformer != null)
+{
+    <div class="details-modal-overlay" @onclick="CloseModal">
+        <div class="details-modal-content performer-combo-modal" style="width: 95vw; max-width: 1600px; flex-direction: row; display: flex;" @onclick:stopPropagation="true">
+            <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
+
+            <!-- Left Side: Performer Details -->
+            <div class="performer-side" style="flex: 1; border-right: 1px solid var(--border-color); padding: 2rem; overflow-y: auto;">
+                <div class="d-flex mb-4">
+                    <div class="headshot" style="width: 150px; height: 150px; border-radius: 8px; overflow: hidden; margin-right: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                        @if (!string.IsNullOrEmpty(_selectedPerformer.HeadshotUrl))
+                        {
+                            <img src="@PathResolver.GetImageAsBase64(PathResolver.GetPerformerHeadshotPath(_selectedPerformer.HeadshotUrl))" style="width: 100%; height: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div style="width: 100%; height: 100%; background: #333; display: flex; justify-content: center; align-items: center;"><i class="fas fa-user fa-4x"></i></div>
+                        }
+                    </div>
+                    <div>
+                        <h1 style="cursor: pointer; color: var(--primary-color); transition: color 0.2s; margin-bottom: 0.5rem;" @onclick="() => NavigateToPerformer(_selectedPerformer.Id)" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--primary-color)'">
+                            @_selectedPerformer.Name <i class="fas fa-external-link-alt ms-2" style="font-size: 0.5em;"></i>
+                        </h1>
+                        <p class="text-muted">Aliases: @(_selectedPerformer.Aliases.Any() ? string.Join(", ", _selectedPerformer.Aliases) : "--")</p>
+                    </div>
+                </div>
+
+                <h3>Appears In (@_selectedPerformer.MediaFiles.Count files)</h3>
+                <div class="media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    @foreach(var file in _selectedPerformer.MediaFiles)
+                    {
+                        <div class="media-item" style="cursor: pointer; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; border: @(_selectedFileId == file.Id ? "2px solid var(--primary-color)" : "2px solid transparent"); transition: border-color 0.2s;" @onclick="() => OpenMediaFileModal(file.Id)">
+                            <div class="media-thumb" style="height: 100px; background: #222;">
+                                @if (!string.IsNullOrEmpty(file.ScreenshotUrl))
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.ScreenshotUrl))" style="width: 100%; height: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center align-items-center h-100"><i class="fas fa-file-video fa-2x"></i></div>
+                                }
+                            </div>
+                            <div class="p-2" style="font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white;">
+                                @file.Name
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Right Side: MediaFile Details -->
+            <div class="media-side" style="flex: 1; padding: 2rem; overflow-y: auto; background: rgba(0,0,0,0.15);">
+                @if (_selectedFileId.HasValue)
+                {
+                    <div class="details-modal-body">
+                        <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" />
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
+                        <i class="fas fa-hand-pointer fa-3x mb-3"></i>
+                        <h4>Select a media file to view details</h4>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+
+
+    private bool _isModalOpen = false;
+    private int? _selectedFileId;
+    private MediaFilesOnDvd.Data.Entities.MediaFile? _selectedFile;
+    private PerformerDetailDto? _selectedPerformer;
+
+    public void Open(int performerId)
+    {
+        _selectedPerformer = PerformerService.GetDetails(performerId);
+        _selectedFileId = null;
+        _selectedFile = null;
+        _isModalOpen = true;
+        StateHasChanged();
+    }
+
+    private void NavigateToPerformer(int id)
+    {
+        CloseModal();
+        Nav.NavigateTo($"/performers/{id}");
+    }
+
+    private void OpenMediaFileModal(int id)
+    {
+        _selectedFileId = id;
+        _selectedFile = MediaFileService.Get(id);
+    }
+
+    private void CloseModal()
+    {
+        _isModalOpen = false;
+        _selectedFileId = null;
+        _selectedFile = null;
+        _selectedPerformer = null;
+    }
+}
