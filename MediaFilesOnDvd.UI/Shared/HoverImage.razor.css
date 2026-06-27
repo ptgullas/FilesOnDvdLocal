@@ -16,6 +16,7 @@
     align-items: center;
     backdrop-filter: blur(8px);
     outline: none; /* Remove focus outline */
+    animation: fadeIn 0.3s ease-out;
 }
 
 .image-modal-content {
@@ -25,7 +26,7 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     border-radius: 8px;
     overflow: hidden;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: growOut 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.15);
 }
 
 .full-size-img {
@@ -57,9 +58,18 @@
     background: rgba(0, 0, 0, 0.8);
 }
 
-@keyframes popIn {
+@keyframes fadeIn {
     0% {
-        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes growOut {
+    0% {
+        transform: scale(0.2);
         opacity: 0;
     }
     100% {
