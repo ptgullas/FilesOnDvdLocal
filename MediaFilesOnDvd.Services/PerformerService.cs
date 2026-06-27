@@ -16,6 +16,32 @@ namespace MediaFilesOnDvd.Services {
             _context = context;
         }
 
+        public IEnumerable<PerformerReportDto> GetForReport() {
+            var query = _context.Performers
+                .OrderBy(p => p.Name)
+                .Select(p => new {
+                    p.Id,
+                    p.Name,
+                    CreditCount = p.MediaFiles.Count,
+                    Aliases = p.PerformerAliases.Select(a => a.Name).ToList(),
+                    Headshots = p.HeadshotUrls.Select(h => new { h.Url, h.IsPreferred }).ToList(),
+                    MediaFiles = p.MediaFiles.Select(mf => new { mf.Id, mf.Name }).ToList()
+                }).ToList();
+
+            return query.Select(p => new PerformerReportDto {
+                Id = p.Id,
+                Name = p.Name,
+                Aliases = p.Aliases,
+                CreditCount = p.CreditCount,
+                HeadshotUrl = p.Headshots.OrderByDescending(h => h.IsPreferred).Select(h => h.Url).FirstOrDefault(),
+                MediaFiles = p.MediaFiles.Select(m => new MediaFileSummaryDto {
+                    Id = m.Id,
+                    Name = m.Name
+                }).OrderBy(m => m.Name).ToList()
+            });
+        }
+
+
 
         public IEnumerable<PerformerSummaryDto> GetSummaries() {
             var query = _context.Performers

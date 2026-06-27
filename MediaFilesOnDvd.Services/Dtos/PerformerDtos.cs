@@ -1,4 +1,15 @@
 namespace MediaFilesOnDvd.Services.Dtos {
+
+    public class PerformerReportDto {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? HeadshotUrl { get; set; }
+        public List<string> Aliases { get; set; } = new List<string>();
+        public int CreditCount { get; set; }
+        public List<MediaFileSummaryDto> MediaFiles { get; set; } = new();
+
+    }
+
     public class PerformerSummaryDto {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

@@ -17,8 +17,21 @@
     else
     {
         <div class="mb-3 d-flex align-items-center">
-            <span class="me-3">Found <strong>@_performers.Count</strong> performers without headshots.</span>
-            
+            @if (_performers.Count == 1)
+            {
+                <span class="me-3">Found 1 performer without headshots.</span>
+            }
+            else {
+                if (_filterHasCredits)
+                {
+                    <span class="me-3">Found <strong>@FilteredPerformers.Count()</strong> performers without headshots WITH credits.</span>
+                }
+                else
+                {
+                    <span class="me-3">Found <strong>@_performers.Count</strong> performers without headshots.</span>
+                }
+            }
+
             <div class="form-check form-switch ms-3">
                 <input class="form-check-input" type="checkbox" id="filterHasCredits" @bind="FilterHasCredits" />
                 <label class="form-check-label" for="filterHasCredits">Has Credits (Subreport)</label>
@@ -34,6 +47,14 @@
                             <span style="cursor: pointer;" class="text-accent text-decoration-none" @onclick="() => OpenModal(performer.Id)">@performer.Name</span>
                         </h5>
                     </div>
+                    @if (_filterHasCredits)
+                    {
+                        @foreach (var mf in performer.MediaFiles)
+                        {
+                            <h6 class="mediafile-name">@mf.Name</h6>
+                        }
+                        
+                    }
                 </div>
             }
         </div>
@@ -43,7 +64,7 @@
 <MediaFilesOnDvd.UI.Shared.PerformerModal @ref="_performerModal" />
 
 @code {
-    private List<PerformerSummaryDto>? _performers;
+    private List<PerformerReportDto>? _performers;
     private bool _filterHasCredits = false;
     private MediaFilesOnDvd.UI.Shared.PerformerModal? _performerModal;
 
@@ -62,7 +83,7 @@
 
     protected override void OnInitialized()
     {
-        _performers = PerformerService.GetSummaries()
+        _performers = PerformerService.GetForReport()
             .Where(p => string.IsNullOrWhiteSpace(p.HeadshotUrl))
             .ToList();
     }
@@ -72,8 +93,8 @@
         _performerModal?.Open(id);
     }
 
-    private IEnumerable<PerformerSummaryDto> FilteredPerformers => 
+    private IEnumerable<PerformerReportDto> FilteredPerformers => 
         _filterHasCredits 
-            ? _performers?.Where(p => p.CreditCount > 0) ?? Enumerable.Empty<PerformerSummaryDto>()
-            : _performers ?? Enumerable.Empty<PerformerSummaryDto>();
+            ? _performers?.Where(p => p.CreditCount > 0) ?? Enumerable.Empty<PerformerReportDto>()
+            : _performers ?? Enumerable.Empty<PerformerReportDto>();
 }
