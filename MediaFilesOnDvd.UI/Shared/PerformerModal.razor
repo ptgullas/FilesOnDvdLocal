@@ -59,7 +59,7 @@
                 @if (_selectedFileId.HasValue)
                 {
                     <div class="details-modal-body">
-                        <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" />
+                        <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" OnPerformerClicked="Open" />
                     </div>
                 }
                 else
