@@ -111,7 +111,7 @@
 @code {
     private List<PerformerWithGalleryDto>? _randomPerformers;
     private List<MediaFile>? _randomFiles;
-    
+
     private MediaFilesOnDvd.UI.Shared.PerformerModal? _performerModal;
     private MediaFilesOnDvd.UI.Shared.MediaFileModal? _mediaFileModal;
 
@@ -120,7 +120,7 @@
         RefreshPerformers();
         RefreshMedia();
     }
-    
+
     private void RefreshPerformers()
     {
         // Get 10 random performers
@@ -128,6 +128,9 @@
             .OrderBy(x => Guid.NewGuid())
             .Take(10)
             .ToList();
+
+        // show a specific performer with a known gallery for testing purposes
+        // _randomPerformers[0] = PerformerService.GetWithGalleries().FirstOrDefault(p => p.Id == 2021);
     }
     
     private void RefreshMedia()
