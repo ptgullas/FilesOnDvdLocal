@@ -104,17 +104,7 @@
     </section>
 </div>
 
-@if (_isModalOpen && _selectedFileId.HasValue)
-{
-    <div class="details-modal-overlay" @onclick="CloseModal">
-        <div class="details-modal-content" @onclick:stopPropagation="true">
-            <button class="details-modal-close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
-            <div class="details-modal-body">
-                <MediaFilesOnDvd.UI.Shared.MediaFileDetailPanel File="@_selectedFile" />
-            </div>
-        </div>
-    </div>
-}
+<MediaFilesOnDvd.UI.Shared.MediaFileModal @ref="_mediaFileModal" />
 
 <MediaFilesOnDvd.UI.Shared.PerformerModal @ref="_performerModal" />
 
@@ -122,11 +112,8 @@
     private List<PerformerWithGalleryDto>? _randomPerformers;
     private List<MediaFile>? _randomFiles;
     
-    private bool _isModalOpen = false;
-    private int? _selectedFileId;
-    private MediaFile? _selectedFile;
-    
     private MediaFilesOnDvd.UI.Shared.PerformerModal? _performerModal;
+    private MediaFilesOnDvd.UI.Shared.MediaFileModal? _mediaFileModal;
 
     protected override void OnInitialized()
     {
@@ -165,15 +152,6 @@
 
     private void OpenMediaFileModal(int id)
     {
-        _selectedFileId = id;
-        _selectedFile = MediaFileService.Get(id);
-        _isModalOpen = true;
-    }
-
-    private void CloseModal()
-    {
-        _isModalOpen = false;
-        _selectedFileId = null;
-        _selectedFile = null;
+        _mediaFileModal?.Open(id);
     }
 }
