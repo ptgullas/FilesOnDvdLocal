@@ -15,7 +15,7 @@
             <div class="screenshot-preview">
                 @if (File.Screenshots.Any())
                 {
-                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(File.Screenshots.First().Url))" alt="@File.Name" />
+                    <MediaFilesOnDvd.UI.Shared.HoverImage Src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(File.Screenshots.First().Url))" Alt="@File.Name" />
                 }
                 else
                 {

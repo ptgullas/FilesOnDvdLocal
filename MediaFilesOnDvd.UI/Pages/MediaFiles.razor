@@ -206,7 +206,7 @@
                 <div class="screenshot-large">
                     @if (_currentFile.ScreenshotUrls.Any())
                     {
-                        <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(_currentFile.ScreenshotUrls.First()))" alt="" />
+                        <MediaFilesOnDvd.UI.Shared.HoverImage Src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(_currentFile.ScreenshotUrls.First()))" Alt="@_currentFile.Name" />
                     }
                     else
                     {

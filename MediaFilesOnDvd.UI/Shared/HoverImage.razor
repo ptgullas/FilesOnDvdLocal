@@ -1,0 +1,69 @@
+<div class="hover-image-container" @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave" style="width: 100%; height: 100%;">
+    <img src="@Src" alt="@Alt" class="@ImageClass" style="width: 100%; height: 100%; object-fit: cover;" />
+</div>
+
+@if (_isModalOpen)
+{
+    <div @ref="_overlay" class="image-modal-overlay" tabindex="-1" @onclick="CloseModal" @onkeydown="HandleKeyDown">
+        <div class="image-modal-content" @onclick:stopPropagation="true">
+            <img src="@Src" alt="@Alt" class="full-size-img" />
+            <button class="close-btn" @onclick="CloseModal"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Src { get; set; } = "";
+    [Parameter] public string Alt { get; set; } = "";
+    [Parameter] public string ImageClass { get; set; } = "";
+    
+    private bool _isHovering = false;
+    private bool _isModalOpen = false;
+    private bool _focusRequested = false;
+    private ElementReference _overlay;
+
+    private async Task OnMouseEnter()
+    {
+        _isHovering = true;
+        await Task.Delay(1200); // 1.2 seconds hover delay
+        if (_isHovering && !_isModalOpen)
+        {
+            _isModalOpen = true;
+            _focusRequested = true;
+            StateHasChanged();
+        }
+    }
+
+    private void OnMouseLeave()
+    {
+        _isHovering = false;
+    }
+
+    private void CloseModal()
+    {
+        _isModalOpen = false;
+        _isHovering = false;
+        StateHasChanged();
+    }
+    
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            CloseModal();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isModalOpen && _focusRequested)
+        {
+            _focusRequested = false;
+            try 
+            {
+                await _overlay.FocusAsync();
+            }
+            catch {}
+        }
+    }
+}
