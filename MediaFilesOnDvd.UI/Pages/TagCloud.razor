@@ -2,6 +2,7 @@
 @page "/tags/{SelectedTagId:int}"
 @inject FileTagService TagService
 @inject MediaFileService MediaFileService
+@inject PathResolverService PathResolver
 
 <div class="tag-cloud-view">
     <!-- Left Panel: The Cloud -->
@@ -28,29 +29,61 @@
             <h2>@(_selectedTag?.Name ?? "Select a tag")</h2>
             @if (_selectedTag != null)
             {
-                <span class="count-badge">@_taggedFiles.Count files</span>
+                <div class="d-flex align-items-center">
+                    <span class="count-badge me-3">@_taggedFiles.Count files</span>
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="ToggleViewMode" title="Toggle View">
+                        <i class="fas @(_isThumbnailView ? "fa-list" : "fa-th")"></i>
+                    </button>
+                </div>
             }
         </header>
 
         <div class="results-grid">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th @onclick='() => Sort("Name")'>MediaFile <i class="fas fa-sort"></i></th>
-                        <th @onclick='() => Sort("Disc")'>Disc <i class="fas fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
+            @if (_isThumbnailView)
+            {
+                <div class="media-scroll-list p-2" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; align-content: flex-start; overflow-y: auto;">
                     @foreach (var file in _taggedFiles)
                     {
-                        <tr class="@(file.Id == _selectedFile?.Id ? "selected" : "")" 
-                            @onclick="() => SelectFile(file)">
-                            <td>@file.Name</td>
-                            <td>@file.Disc?.Name</td>
-                        </tr>
+                        <div class="media-list-item @(file.Id == _selectedFile?.Id ? "selected" : "") thumb-mode" 
+                             @onclick="() => SelectFile(file)" style="cursor: pointer; display: flex; flex-direction: column; background: var(--card-bg, rgba(255,255,255,0.05)); border: @(file.Id == _selectedFile?.Id ? "2px solid var(--primary-color)" : "2px solid transparent"); border-radius: 8px; overflow: hidden; transition: transform 0.2s;">
+                            <div class="media-thumb-result" style="height: 100px; background: #222; display: flex; justify-content: center; align-items: center;">
+                                @if (file.Screenshots != null && file.Screenshots.Any())
+                                {
+                                    <img src="@PathResolver.GetImageAsBase64(PathResolver.GetMediaScreenshotPath(file.Screenshots.First().Url))" style="width: 100%; height: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-file-video fa-2x text-muted"></i>
+                                }
+                            </div>
+                            <div class="p-2 text-white" style="font-size: 0.85em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                @file.Name
+                            </div>
+                        </div>
                     }
-                </tbody>
-            </table>
+                </div>
+            }
+            else
+            {
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th @onclick='() => Sort("Name")'>MediaFile <i class="fas fa-sort"></i></th>
+                            <th @onclick='() => Sort("Disc")'>Disc <i class="fas fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var file in _taggedFiles)
+                        {
+                            <tr class="@(file.Id == _selectedFile?.Id ? "selected" : "")" 
+                                @onclick="() => SelectFile(file)">
+                                <td>@file.Name</td>
+                                <td>@file.Disc?.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </main>
 
@@ -67,6 +100,12 @@
     private List<MediaFile> _taggedFiles = new();
     private MediaFile? _selectedFile;
     private int _maxUsage = 1;
+    private bool _isThumbnailView = true;
+
+    private void ToggleViewMode()
+    {
+        _isThumbnailView = !_isThumbnailView;
+    }
 
     protected override void OnInitialized()
     {
