@@ -44,16 +44,21 @@
                 <div class="card bg-dark text-light border-secondary mb-2">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
-                            <span style="cursor: pointer;" class="text-accent text-decoration-none" @onclick="() => OpenModal(performer.Id)">@performer.Name</span>
+                            <span class="performer-name text-accent text-decoration-none" @onclick="() => OpenModal(performer.Id)">@performer.Name</span>
                         </h5>
                     </div>
-                    @if (_filterHasCredits)
+                    @if (_filterHasCredits && performer.MediaFiles.Any())
                     {
-                        @foreach (var mf in performer.MediaFiles)
-                        {
-                            <h6 class="mediafile-name">@mf.Name</h6>
-                        }
-                        
+                        <div class="card-footer bg-dark border-top-0 pt-0 pb-3 ps-5">
+                            <div class="d-flex flex-column gap-2">
+                                @foreach (var mf in performer.MediaFiles)
+                                {
+                                    <div class="mediafile-item text-muted" @onclick="() => OpenMediaFileModal(mf.Id)">
+                                        <i class="fas fa-file-video me-2 mediafile-icon"></i>@mf.Name
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     }
                 </div>
             }
@@ -62,11 +67,13 @@
 </div>
 
 <MediaFilesOnDvd.UI.Shared.PerformerModal @ref="_performerModal" />
+<MediaFilesOnDvd.UI.Shared.MediaFileModal @ref="_mediaFileModal" />
 
 @code {
     private List<PerformerReportDto>? _performers;
     private bool _filterHasCredits = false;
     private MediaFilesOnDvd.UI.Shared.PerformerModal? _performerModal;
+    private MediaFilesOnDvd.UI.Shared.MediaFileModal? _mediaFileModal;
 
     private bool FilterHasCredits
     {
@@ -91,6 +98,11 @@
     private void OpenModal(int id)
     {
         _performerModal?.Open(id);
+    }
+
+    private void OpenMediaFileModal(int mfId)
+    {
+        _mediaFileModal?.Open(mfId);
     }
 
     private IEnumerable<PerformerReportDto> FilteredPerformers => 

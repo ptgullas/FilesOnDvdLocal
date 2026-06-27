@@ -1,0 +1,18 @@
+.performer-name {
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.mediafile-item {
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.mediafile-item:hover {
+    color: var(--accent-color) !important;
+}
+
+.mediafile-icon {
+    opacity: 0.75;
+}
