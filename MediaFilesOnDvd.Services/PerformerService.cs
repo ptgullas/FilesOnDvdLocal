@@ -178,6 +178,7 @@ namespace MediaFilesOnDvd.Services {
             }
 
             performer.Name = dto.Name;
+            performer.PerformerTypeId = dto.PerformerTypeId;
             
             // Handle Aliases
             performer.PerformerAliases.Clear();

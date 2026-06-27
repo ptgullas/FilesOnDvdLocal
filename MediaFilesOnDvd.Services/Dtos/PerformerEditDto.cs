@@ -7,7 +7,7 @@ namespace MediaFilesOnDvd.Services.Dtos {
 
         public List<string> HeadshotUrls { get; set; } = new List<string>();
         public string? PreferredHeadshotUrl { get; set; }
-
+        public int PerformerTypeId { get; set; }
         public List<string> GalleryPhotoUrls { get; set; } = new List<string>();
 
         // List for easy tag-based editing
