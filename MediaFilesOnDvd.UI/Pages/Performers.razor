@@ -10,10 +10,6 @@
     @if (!(Layout?.IsScreensaverMode ?? false))
     {
         <div class="d-flex align-items-center w-100" style="max-width: 600px;">
-            <div class="search-container flex-grow-1 me-3">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" placeholder="Search / filter performers..." class="search-input w-75" @bind="_searchTerm" @bind:event="oninput" />
-            </div>
             <button class="btn btn-primary btn-sm text-nowrap" @onclick="CreateNewPerformer">
                 <i class="fas fa-plus"></i> New Performer
             </button>

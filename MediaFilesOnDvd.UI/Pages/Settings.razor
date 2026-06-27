@@ -39,7 +39,7 @@
             <button class="btn btn-primary" @onclick="SaveSettings">Save Settings</button>
         </div>
     </div>
-    
+
     @if (_showSuccessMessage)
     {
         <div class="alert alert-success" style="max-width: 600px;">
@@ -49,6 +49,7 @@
 </div>
 
 @code {
+
     private UserSettings _settings = new();
     private bool _showSuccessMessage = false;
 
@@ -59,6 +60,8 @@
 
     private async Task SaveSettings()
     {
+        // set Button color to a darker shade of accent color
+        _settings.ButtonColor = ColorHelper.DarkenHexColor(_settings.AccentColor, 40);
         SettingsService.SaveSettings(_settings);
         _showSuccessMessage = true;
         
